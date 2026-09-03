@@ -1,1 +1,190 @@
 @import "tailwindcss";
+
+@theme {
+  --color-ink: #1b1712;
+  --color-coal: #2a241c;
+  --color-paper: #f2eee4;
+  --color-sand: #e6e0d0;
+  --color-flame: #f04e23;
+  --color-cobalt: #2e45e8;
+  --color-mute: #7d7566;
+
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-flame);
+  color: var(--color-paper);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-paper);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink);
+  border: 2px solid var(--color-paper);
+}
+
+/* ---------- keyframes ---------- */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes kenburns {
+  from {
+    transform: scale(1) translateY(0);
+  }
+  to {
+    transform: scale(1.08) translateY(-1.5%);
+  }
+}
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+  50% {
+    transform: translateY(-12px) rotate(var(--tilt, 0deg));
+  }
+}
+@keyframes pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.7);
+    opacity: 0.45;
+  }
+}
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+.animate-marquee-fast {
+  animation: marquee 18s linear infinite;
+}
+.animate-spin-slower {
+  animation: spin-slow 16s linear infinite;
+}
+.animate-kenburns {
+  animation: kenburns 10s ease-in-out infinite alternate;
+}
+.animate-floaty {
+  animation: floaty 6s ease-in-out infinite;
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+.animate-scroll-line {
+  animation: scroll-line 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+/* ---------- textures ---------- */
+.noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+.blueprint {
+  background-image: linear-gradient(
+      to right,
+      rgb(27 23 18 / 0.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgb(27 23 18 / 0.055) 1px, transparent 1px);
+  background-size: 76px 76px;
+}
+.blueprint-dark {
+  background-image: linear-gradient(
+      to right,
+      rgb(242 238 228 / 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgb(242 238 228 / 0.05) 1px, transparent 1px);
+  background-size: 76px 76px;
+}
+
+.hard-shadow {
+  box-shadow: 10px 10px 0 0 var(--color-ink);
+}
+.hard-shadow-flame {
+  box-shadow: 10px 10px 0 0 var(--color-flame);
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(27 23 18 / 0.35);
+}
+.text-outline-paper {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(242 238 228 / 0.3);
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-marquee,
+  .animate-marquee-fast,
+  .animate-spin-slower,
+  .animate-kenburns,
+  .animate-floaty,
+  .animate-pulse-dot,
+  .animate-scroll-line {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

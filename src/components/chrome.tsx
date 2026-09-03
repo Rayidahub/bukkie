@@ -316,12 +316,6 @@ export function Footer() {
           </div>
         </div>
 
-        {/* giant wordmark */}
-        <div aria-hidden className="select-none overflow-hidden pb-2">
-          <p className="text-outline whitespace-nowrap text-center font-display text-[clamp(3.2rem,13.5vw,12rem)] font-extrabold uppercase leading-[0.85] tracking-tight">
-            Esther Bukola
-          </p>
-        </div>
 
         <div className="flex flex-col items-start justify-between gap-3 border-t border-ink/10 py-6 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink/45 md:flex-row md:items-center">
           <p>© {year} Olowomakan Esther Bukola — All rights reserved</p>

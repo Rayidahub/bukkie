@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { CONTACT, NAV_LINKS } from "../data";
 import {
   IcArrowUpRight,
@@ -8,7 +9,6 @@ import {
   IcPhone,
   IcPin,
   IcSpark,
-  useActiveSection,
   useReducedMotion,
 } from "../lib";
 
@@ -96,12 +96,12 @@ export function Cursor() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Navigation                                                         */
+/*  Navigation (router-aware)                                          */
 /* ------------------------------------------------------------------ */
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const active = useActiveSection(["home", ...NAV_LINKS.map((l) => l.id)]);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 24);
@@ -109,6 +109,11 @@ export function Nav() {
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
+
+  /* close the mobile menu whenever the route changes */
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -121,46 +126,47 @@ export function Nav() {
     <>
       <nav
         className={`fixed inset-x-0 top-0 z-[100] transition-all duration-300 ${
-          scrolled
+          scrolled || open
             ? "border-b border-ink/15 bg-paper"
             : "border-b border-transparent bg-transparent"
         }`}
       >
         <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 md:h-[72px] md:px-10">
-          <a
-            href="#home"
+          <Link
+            to="/"
             className="group flex items-center gap-2.5 font-display text-lg font-bold uppercase tracking-tight"
-            onClick={() => setOpen(false)}
           >
             <IcSpark className="h-5 w-5 text-flame transition-transform duration-500 group-hover:rotate-90" />
             <span>
               Esther<span className="text-flame">&nbsp;B.</span>
             </span>
-          </a>
+          </Link>
 
           <div className="hidden items-center gap-7 lg:flex">
             {NAV_LINKS.map((l) => (
-              <a
+              <NavLink
                 key={l.id}
-                href={`#${l.id}`}
-                className={`font-mono text-[11px] uppercase tracking-[0.18em] transition-colors hover:text-flame ${
-                  active === l.id ? "text-flame" : "text-ink/70"
-                }`}
+                to={`/${l.id}`}
+                className={({ isActive }) =>
+                  `font-mono text-[11px] uppercase tracking-[0.18em] transition-colors hover:text-flame ${
+                    isActive ? "text-flame" : "text-ink/70"
+                  }`
+                }
               >
                 <span className="mr-1.5 opacity-50">/</span>
                 {l.label}
-              </a>
+              </NavLink>
             ))}
           </div>
 
           <div className="flex items-center gap-3">
-            <a
-              href="#contact"
+            <Link
+              to="/contact"
               className="hidden items-center gap-2 border border-ink bg-ink px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-paper transition-colors duration-300 hover:border-flame hover:bg-flame hover:text-ink sm:flex"
             >
               Let's talk
               <IcArrowUpRight className="h-3.5 w-3.5" />
-            </a>
+            </Link>
             <button
               aria-label="Toggle menu"
               onClick={() => setOpen((v) => !v)}
@@ -179,19 +185,34 @@ export function Nav() {
         }`}
       >
         <div className="flex flex-col gap-1">
-          {NAV_LINKS.map((l, i) => (
-            <a
-              key={l.id}
-              href={`#${l.id}`}
-              onClick={() => setOpen(false)}
-              style={{ transitionDelay: open ? `${90 + i * 55}ms` : "0ms" }}
-              className={`group flex items-baseline gap-4 border-b border-paper/10 py-4 font-display text-4xl font-bold uppercase tracking-tight transition-all duration-500 hover:text-flame ${
+          <NavLink
+            to="/"
+            onClick={() => setOpen(false)}
+            style={{ transitionDelay: open ? "60ms" : "0ms" }}
+            className={({ isActive }) =>
+              `group flex items-baseline gap-4 border-b border-paper/10 py-4 font-display text-4xl font-bold uppercase tracking-tight transition-all duration-500 hover:text-flame ${
                 open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-              }`}
+              } ${isActive ? "text-flame" : ""}`
+            }
+          >
+            <span className="font-mono text-xs text-flame">00</span>
+            Home
+          </NavLink>
+          {NAV_LINKS.map((l, i) => (
+            <NavLink
+              key={l.id}
+              to={`/${l.id}`}
+              onClick={() => setOpen(false)}
+              style={{ transitionDelay: open ? `${110 + i * 55}ms` : "0ms" }}
+              className={({ isActive }) =>
+                `group flex items-baseline gap-4 border-b border-paper/10 py-4 font-display text-4xl font-bold uppercase tracking-tight transition-all duration-500 hover:text-flame ${
+                  open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                } ${isActive ? "text-flame" : ""}`
+              }
             >
               <span className="font-mono text-xs text-flame">0{i + 1}</span>
               {l.label}
-            </a>
+            </NavLink>
           ))}
         </div>
         <div className="space-y-2 font-mono text-xs text-paper/60">
@@ -240,15 +261,24 @@ export function Footer() {
               Sitemap
             </p>
             <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 md:grid-cols-1">
+              <li>
+                <Link
+                  to="/"
+                  className="group flex items-center gap-2 text-sm text-paper/70 transition-colors hover:text-flame"
+                >
+                  <span className="h-px w-3 bg-paper/30 transition-all group-hover:w-5 group-hover:bg-flame" />
+                  Home
+                </Link>
+              </li>
               {NAV_LINKS.map((l) => (
                 <li key={l.id}>
-                  <a
-                    href={`#${l.id}`}
+                  <Link
+                    to={`/${l.id}`}
                     className="group flex items-center gap-2 text-sm text-paper/70 transition-colors hover:text-flame"
                   >
                     <span className="h-px w-3 bg-paper/30 transition-all group-hover:w-5 group-hover:bg-flame" />
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

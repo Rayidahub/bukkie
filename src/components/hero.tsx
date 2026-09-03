@@ -45,7 +45,7 @@ export function Marquee({
 function OrbitBadge({ className = "" }: { className?: string }) {
   return (
     <a
-      href="#contact"
+      href="#/contact"
       data-hot
       aria-label="Open for projects — go to contact"
       className={`group relative block h-36 w-36 md:h-40 md:w-40 ${className}`}
@@ -168,14 +168,14 @@ export function Hero() {
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
-                href="#work"
+                href="#/work"
                 className="group flex items-center gap-3 border border-ink px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-all duration-300 hover:bg-ink hover:text-paper"
               >
                 Selected work
                 <IcArrowDown className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-y-0.5" />
               </a>
               <a
-                href="#contact"
+                href="#/contact"
                 className="group flex items-center gap-3 border border-ink bg-flame px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.2em] text-ink transition-all duration-300 hover:bg-ink hover:text-paper"
               >
                 Start a project

@@ -237,7 +237,7 @@ export function Nav() {
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="blueprint-dark relative overflow-hidden border-t border-paper/10 bg-ink text-paper">
+    <footer className="blueprint-dark relative overflow-hidden border-t border-ink/10 bg-coal text-ink">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <div className="grid gap-10 py-14 md:grid-cols-12">
           <div className="md:col-span-5">
@@ -250,23 +250,23 @@ export function Footer() {
             </h3>
             <a
               href={`mailto:${CONTACT.email}`}
-              className="mt-6 inline-flex items-center gap-2 border border-paper/30 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:border-flame hover:bg-flame hover:text-ink"
+              className="mt-6 inline-flex items-center gap-2 border border-ink/25 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:border-flame hover:bg-flame hover:text-ink"
             >
               {CONTACT.email} <IcArrowUpRight className="h-3.5 w-3.5" />
             </a>
           </div>
 
           <div className="md:col-span-3">
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-paper/40">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ink/40">
               Sitemap
             </p>
             <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 md:grid-cols-1">
               <li>
                 <Link
                   to="/"
-                  className="group flex items-center gap-2 text-sm text-paper/70 transition-colors hover:text-flame"
+                  className="group flex items-center gap-2 text-sm text-ink/70 transition-colors hover:text-flame"
                 >
-                  <span className="h-px w-3 bg-paper/30 transition-all group-hover:w-5 group-hover:bg-flame" />
+                  <span className="h-px w-3 bg-ink/30 transition-all group-hover:w-5 group-hover:bg-flame" />
                   Home
                 </Link>
               </li>
@@ -274,9 +274,9 @@ export function Footer() {
                 <li key={l.id}>
                   <Link
                     to={`/${l.id}`}
-                    className="group flex items-center gap-2 text-sm text-paper/70 transition-colors hover:text-flame"
+                    className="group flex items-center gap-2 text-sm text-ink/70 transition-colors hover:text-flame"
                   >
-                    <span className="h-px w-3 bg-paper/30 transition-all group-hover:w-5 group-hover:bg-flame" />
+                    <span className="h-px w-3 bg-ink/30 transition-all group-hover:w-5 group-hover:bg-flame" />
                     {l.label}
                   </Link>
                 </li>
@@ -285,10 +285,10 @@ export function Footer() {
           </div>
 
           <div className="md:col-span-4">
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-paper/40">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ink/40">
               Reach me
             </p>
-            <ul className="mt-4 space-y-3 text-sm text-paper/70">
+            <ul className="mt-4 space-y-3 text-sm text-ink/70">
               <li className="flex items-start gap-3">
                 <IcPin className="mt-0.5 h-4 w-4 shrink-0 text-flame" />
                 {CONTACT.location}
@@ -306,7 +306,7 @@ export function Footer() {
                 {CONTACT.email}
               </li>
             </ul>
-            <p className="mt-5 inline-flex items-center gap-2 border border-paper/15 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-paper/60">
+            <p className="mt-5 inline-flex items-center gap-2 border border-ink/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/60">
               <span className="relative flex h-2 w-2">
                 <span className="animate-pulse-dot absolute h-2 w-2 rounded-full bg-flame" />
                 <span className="h-2 w-2 rounded-full bg-flame" />
@@ -318,12 +318,12 @@ export function Footer() {
 
         {/* giant wordmark */}
         <div aria-hidden className="select-none overflow-hidden pb-2">
-          <p className="text-outline-paper whitespace-nowrap text-center font-display text-[clamp(3.2rem,13.5vw,12rem)] font-extrabold uppercase leading-[0.85] tracking-tight">
+          <p className="text-outline whitespace-nowrap text-center font-display text-[clamp(3.2rem,13.5vw,12rem)] font-extrabold uppercase leading-[0.85] tracking-tight">
             Esther Bukola
           </p>
         </div>
 
-        <div className="flex flex-col items-start justify-between gap-3 border-t border-paper/10 py-6 font-mono text-[10.5px] uppercase tracking-[0.18em] text-paper/45 md:flex-row md:items-center">
+        <div className="flex flex-col items-start justify-between gap-3 border-t border-ink/10 py-6 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink/45 md:flex-row md:items-center">
           <p>© {year} Olowomakan Esther Bukola — All rights reserved</p>
           <p className="flex items-center gap-2">
             <IcSpark className="h-3 w-3 text-flame" />

@@ -31,7 +31,7 @@ export function SectionHead({
       <div>
         <p
           className={`flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] ${
-            dark ? "text-paper/50" : "text-mute"
+            dark ? "text-ink/50" : "text-mute"
           }`}
         >
           <IcSpark className="h-3.5 w-3.5 text-flame" />
@@ -46,7 +46,7 @@ export function SectionHead({
         <Reveal
           delay={200}
           className={`max-w-sm text-[15px] leading-relaxed ${
-            dark ? "text-paper/60" : "text-ink/65"
+            dark ? "text-ink/60" : "text-ink/65"
           }`}
         >
           {right}

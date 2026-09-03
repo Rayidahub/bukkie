@@ -93,7 +93,7 @@ function Polaroid({
   return (
     <figure
       style={{ "--tilt": `${tilt}deg` } as CSSProperties}
-      className={`border border-ink/15 bg-white p-2 pb-3 shadow-[0_18px_40px_-18px_rgb(27_23_18/0.45)] ${
+      className={`border border-ink/15 bg-white p-2 pb-3 shadow-[0_18px_40px_-18px_rgb(0_0_0/0.7)] ${
         floaty ? "animate-floaty" : ""
       } ${className}`}
     >

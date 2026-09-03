@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #1b1712;
-  --color-coal: #2a241c;
-  --color-paper: #f2eee4;
-  --color-sand: #e6e0d0;
-  --color-flame: #f04e23;
-  --color-cobalt: #2e45e8;
-  --color-mute: #7d7566;
+  --color-ink: #edf1ea;
+  --color-coal: #121714;
+  --color-paper: #0b0e0c;
+  --color-sand: #18201b;
+  --color-flame: #c8f24b;
+  --color-cobalt: #11281f;
+  --color-mute: #7c877e;
 
   --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Space Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
@@ -20,6 +20,17 @@ html {
 
 body {
   background-color: var(--color-paper);
+  background-image: radial-gradient(
+      60rem 42rem at 12% -8%,
+      rgb(200 242 75 / 0.07),
+      transparent 60%
+    ),
+    radial-gradient(
+      52rem 40rem at 96% 12%,
+      rgb(45 212 154 / 0.06),
+      transparent 62%
+    );
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -38,8 +49,11 @@ body {
   background: var(--color-paper);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-ink);
+  background: #2a332c;
   border: 2px solid var(--color-paper);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-flame);
 }
 
 /* ---------- keyframes ---------- */
@@ -116,9 +130,6 @@ body {
 .animate-marquee {
   animation: marquee 28s linear infinite;
 }
-.page-in {
-  animation: page-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
 .animate-marquee-fast {
   animation: marquee 18s linear infinite;
 }
@@ -137,6 +148,9 @@ body {
 .animate-scroll-line {
   animation: scroll-line 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
+.page-in {
+  animation: page-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 
 /* ---------- textures ---------- */
 .noise {
@@ -147,24 +161,24 @@ body {
 .blueprint {
   background-image: linear-gradient(
       to right,
-      rgb(27 23 18 / 0.055) 1px,
+      rgb(237 241 234 / 0.045) 1px,
       transparent 1px
     ),
-    linear-gradient(to bottom, rgb(27 23 18 / 0.055) 1px, transparent 1px);
+    linear-gradient(to bottom, rgb(237 241 234 / 0.045) 1px, transparent 1px);
   background-size: 76px 76px;
 }
 .blueprint-dark {
   background-image: linear-gradient(
       to right,
-      rgb(242 238 228 / 0.05) 1px,
+      rgb(237 241 234 / 0.05) 1px,
       transparent 1px
     ),
-    linear-gradient(to bottom, rgb(242 238 228 / 0.05) 1px, transparent 1px);
+    linear-gradient(to bottom, rgb(237 241 234 / 0.05) 1px, transparent 1px);
   background-size: 76px 76px;
 }
 
 .hard-shadow {
-  box-shadow: 10px 10px 0 0 var(--color-ink);
+  box-shadow: 10px 10px 0 0 rgb(237 241 234 / 0.16);
 }
 .hard-shadow-flame {
   box-shadow: 10px 10px 0 0 var(--color-flame);
@@ -172,11 +186,11 @@ body {
 
 .text-outline {
   color: transparent;
-  -webkit-text-stroke: 1.5px rgb(27 23 18 / 0.35);
+  -webkit-text-stroke: 1.5px rgb(237 241 234 / 0.3);
 }
 .text-outline-paper {
   color: transparent;
-  -webkit-text-stroke: 1.5px rgb(242 238 228 / 0.3);
+  -webkit-text-stroke: 1.5px rgb(237 241 234 / 0.3);
 }
 
 /* ---------- reduced motion ---------- */

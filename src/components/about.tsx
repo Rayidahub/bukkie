@@ -111,7 +111,7 @@ export function ServicesSection() {
               <article
                 className={`group flex h-full flex-col rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${
                   s.featured
-                    ? "bg-forest text-white shadow-lift hover:shadow-[0_44px_80px_-32px_rgb(22_56_38/0.75)]"
+                    ? "bg-forest text-white shadow-lift hover:shadow-[0_44px_80px_-32px_rgb(0_67_154/0.75)]"
                     : "card shadow-soft hover:shadow-lift"
                 }`}
               >

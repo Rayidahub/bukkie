@@ -24,13 +24,13 @@ export function Experience() {
   return (
     <section
       id="experience"
-      className="blueprint-dark relative border-t border-ink bg-ink py-24 text-paper md:py-32"
+      className="blueprint-dark relative border-t border-ink/10 bg-coal py-24 text-ink md:py-32"
     >
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-4">
             <div className="lg:sticky lg:top-28">
-              <p className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-paper/50">
+              <p className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-ink/50">
                 <IcSpark className="h-3.5 w-3.5 text-flame" />
                 ( 05 ) — Experience
               </p>
@@ -40,12 +40,12 @@ export function Experience() {
                 shaped <span className="text-flame">the craft.</span>
               </h2>
               <Reveal delay={150}>
-                <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-paper/60">
+                <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-ink/60">
                   From ministry IT support to print-press floors to digital
                   media teams — every seat taught me a different side of how
                   communication actually gets produced.
                 </p>
-                <p className="mt-8 flex items-center gap-3 font-mono text-[10.5px] uppercase tracking-[0.22em] text-paper/40">
+                <p className="mt-8 flex items-center gap-3 font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink/40">
                   <IcSpark className="h-3 w-3 text-flame" />
                   References available on request
                 </p>
@@ -57,7 +57,7 @@ export function Experience() {
             <ul>
               {EXPERIENCE.map((r, i) => (
                 <Reveal as="li" key={r.org} delay={i * 80}>
-                  <div className="group grid gap-2 border-b border-paper/15 px-2 py-7 transition-all duration-300 hover:bg-paper/[0.04] hover:pl-5 md:grid-cols-12 md:items-baseline md:gap-6 md:py-8">
+                  <div className="group grid gap-2 border-b border-ink/10 px-2 py-7 transition-all duration-300 hover:bg-ink/[0.04] hover:pl-5 md:grid-cols-12 md:items-baseline md:gap-6 md:py-8">
                     <p className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-flame md:col-span-3">
                       {r.current && (
                         <span className="relative flex h-2 w-2 shrink-0">
@@ -71,8 +71,8 @@ export function Experience() {
                       {r.title}
                     </h3>
                     <div className="md:col-span-4">
-                      <p className="text-sm font-semibold text-paper/85">{r.org}</p>
-                      <p className="mt-1 text-[13.5px] leading-relaxed text-paper/50">
+                      <p className="text-sm font-semibold text-ink/85">{r.org}</p>
+                      <p className="mt-1 text-[13.5px] leading-relaxed text-ink/50">
                         {r.note}
                       </p>
                     </div>
@@ -83,7 +83,7 @@ export function Experience() {
 
             {/* certifications */}
             <Reveal delay={100}>
-              <p className="mt-14 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-paper/50">
+              <p className="mt-14 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-ink/50">
                 <span className="h-px w-10 bg-flame" />
                 Certifications & training
               </p>
@@ -91,14 +91,14 @@ export function Experience() {
             <ul className="mt-6">
               {CERTS.map((c, i) => (
                 <Reveal as="li" key={c.title} delay={i * 70}>
-                  <div className="group grid gap-1 border-b border-paper/10 px-2 py-4.5 transition-all duration-300 hover:pl-5 md:grid-cols-12 md:items-baseline md:gap-6 md:py-5">
+                  <div className="group grid gap-1 border-b border-ink/10 px-2 py-4.5 transition-all duration-300 hover:pl-5 md:grid-cols-12 md:items-baseline md:gap-6 md:py-5">
                     <p className="font-mono text-[11px] tracking-[0.18em] text-flame md:col-span-2">
                       {c.year}
                     </p>
                     <h4 className="font-display text-base font-bold uppercase tracking-tight transition-colors group-hover:text-flame md:col-span-6 md:text-lg">
                       {c.title}
                     </h4>
-                    <p className="text-[13.5px] text-paper/50 md:col-span-4">{c.org}</p>
+                    <p className="text-[13.5px] text-ink/50 md:col-span-4">{c.org}</p>
                   </div>
                 </Reveal>
               ))}

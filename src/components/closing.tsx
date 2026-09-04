@@ -84,7 +84,7 @@ export function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="blueprint-dark relative border-t border-ink bg-cobalt py-24 text-paper md:py-32"
+      className="blueprint-dark relative border-t border-ink/10 bg-cobalt py-24 text-ink md:py-32"
     >
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <SectionHead
@@ -101,18 +101,18 @@ export function Testimonials() {
 
         <div className="grid gap-6 lg:grid-cols-12">
           <Reveal className="lg:col-span-7">
-            <figure className="flex h-full flex-col justify-between border border-paper/25 bg-ink/25 p-8 transition-colors duration-300 hover:border-flame md:p-11">
+            <figure className="flex h-full flex-col justify-between border border-ink/15 bg-ink/[0.06] p-8 transition-colors duration-300 hover:border-flame md:p-11">
               <div>
                 <IcQuote className="h-9 w-9 text-flame" />
                 <blockquote className="mt-6 font-display text-2xl font-bold leading-snug tracking-tight md:text-[1.85rem]">
                   “{first.quote}”
                 </blockquote>
               </div>
-              <figcaption className="mt-8 border-t border-paper/20 pt-5">
+              <figcaption className="mt-8 border-t border-ink/15 pt-5">
                 <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-flame">
                   {first.name}
                 </p>
-                <p className="mt-1 text-sm text-paper/60">
+                <p className="mt-1 text-sm text-ink/60">
                   {first.role} — {first.org}
                 </p>
               </figcaption>
@@ -122,18 +122,18 @@ export function Testimonials() {
           <div className="flex flex-col gap-6 lg:col-span-5">
             {rest.map((t, i) => (
               <Reveal key={t.org} delay={140 + i * 120} className={i === 1 ? "lg:translate-y-6" : ""}>
-                <figure className="flex h-full flex-col justify-between border border-paper/25 bg-ink/25 p-7 transition-colors duration-300 hover:border-flame md:p-9">
+                <figure className="flex h-full flex-col justify-between border border-ink/15 bg-ink/[0.06] p-7 transition-colors duration-300 hover:border-flame md:p-9">
                   <div>
                     <IcQuote className="h-7 w-7 text-flame" />
-                    <blockquote className="mt-4 text-[15.5px] font-medium leading-relaxed text-paper/90">
+                    <blockquote className="mt-4 text-[15.5px] font-medium leading-relaxed text-ink/90">
                       “{t.quote}”
                     </blockquote>
                   </div>
-                  <figcaption className="mt-6 border-t border-paper/20 pt-4">
+                  <figcaption className="mt-6 border-t border-ink/15 pt-4">
                     <p className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-flame">
                       {t.name}
                     </p>
-                    <p className="mt-1 text-[13px] text-paper/60">
+                    <p className="mt-1 text-[13px] text-ink/60">
                       {t.role} — {t.org}
                     </p>
                   </figcaption>
@@ -184,22 +184,22 @@ function CopyRow({
     }
   };
   return (
-    <div className="group flex items-center justify-between gap-4 border-b border-paper/15 py-4">
+    <div className="group flex items-center justify-between gap-4 border-b border-ink/10 py-4">
       <div className="flex min-w-0 items-center gap-3.5">
         <span className="text-flame">{icon}</span>
         <div className="min-w-0">
-          <p className="font-mono text-[9.5px] uppercase tracking-[0.25em] text-paper/45">
+          <p className="font-mono text-[9.5px] uppercase tracking-[0.25em] text-ink/45">
             {label}
           </p>
           {href ? (
             <a
               href={href}
-              className="block truncate text-sm font-medium text-paper transition-colors hover:text-flame"
+              className="block truncate text-sm font-medium text-ink transition-colors hover:text-flame"
             >
               {value}
             </a>
           ) : (
-            <p className="truncate text-sm font-medium text-paper">{value}</p>
+            <p className="truncate text-sm font-medium text-ink">{value}</p>
           )}
         </div>
       </div>
@@ -209,7 +209,7 @@ function CopyRow({
         className={`flex shrink-0 items-center gap-1.5 border px-2.5 py-1.5 font-mono text-[9.5px] uppercase tracking-[0.18em] transition-all duration-300 ${
           copied
             ? "border-flame bg-flame text-ink"
-            : "border-paper/25 text-paper/60 hover:border-flame hover:text-flame"
+            : "border-ink/20 text-ink/60 hover:border-flame hover:text-flame"
         }`}
       >
         {copied ? "Copied" : <IcCopy className="h-3.5 w-3.5" />}
@@ -277,8 +277,8 @@ export function Contact() {
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
           {/* direct line */}
           <Reveal className="lg:col-span-5">
-            <div className="hard-shadow-flame border border-ink bg-ink p-7 text-paper md:p-9">
-              <p className="flex items-center gap-2.5 font-mono text-[10.5px] uppercase tracking-[0.25em] text-paper/60">
+            <div className="hard-shadow-flame border border-ink/15 bg-coal p-7 text-ink md:p-9">
+              <p className="flex items-center gap-2.5 font-mono text-[10.5px] uppercase tracking-[0.25em] text-ink/60">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-pulse-dot absolute h-2 w-2 rounded-full bg-flame" />
                   <span className="h-2 w-2 rounded-full bg-flame" />
@@ -416,7 +416,7 @@ export function Contact() {
                 </p>
               )}
               {sent && !error && (
-                <p className="mt-5 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-cobalt">
+                <p className="mt-5 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-flame">
                   <IcSpark className="h-3 w-3" /> Draft opened in your mail app — talk soon!
                 </p>
               )}

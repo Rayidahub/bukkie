@@ -63,7 +63,7 @@ export function Gallery() {
     lightbox !== null && items[lightbox] ? items[lightbox] : null;
 
   return (
-    <section id="work" className="blueprint-dark relative border-t border-ink bg-ink py-24 text-paper md:py-32">
+    <section id="work" className="blueprint-dark relative border-t border-ink/10 bg-coal py-24 text-ink md:py-32">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         <SectionHead
           dark
@@ -91,7 +91,7 @@ export function Gallery() {
                 className={`group flex items-center gap-2 border px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.18em] transition-all duration-300 ${
                   isActive
                     ? "border-flame bg-flame text-ink"
-                    : "border-paper/25 text-paper/70 hover:-translate-y-0.5 hover:border-paper hover:text-paper"
+                    : "border-ink/20 text-ink/60 hover:-translate-y-0.5 hover:border-ink hover:text-ink"
                 }`}
               >
                 {c}
@@ -114,7 +114,7 @@ export function Gallery() {
               <article
                 data-hot
                 onClick={() => setLightbox(i)}
-                className="group cursor-pointer border border-paper/20 bg-coal p-3 pb-4 transition-colors duration-300 hover:border-flame/60"
+                className="group cursor-pointer border border-ink/15 bg-sand p-3 pb-4 transition-colors duration-300 hover:border-flame/60"
               >
                 <div className={`relative overflow-hidden ${g.ratio}`}>
                   <img
@@ -142,7 +142,7 @@ export function Gallery() {
                     <h3 className="font-display text-lg font-bold uppercase leading-tight tracking-tight">
                       {g.title}
                     </h3>
-                    <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-paper/50">
+                    <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/50">
                       {g.org}
                     </p>
                   </div>
@@ -156,7 +156,7 @@ export function Gallery() {
         </div>
 
         <Reveal delay={150}>
-          <p className="mt-14 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-paper/40">
+          <p className="mt-14 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/40">
             <IcSpark className="h-3.5 w-3.5 text-flame" />
             Portfolio continuously updated — full archive available on request.
           </p>
@@ -291,13 +291,13 @@ const THEME: Record<
   }
 > = {
   cobalt: {
-    wrap: "bg-cobalt text-paper",
-    border: "border-paper/25",
-    sub: "text-paper/70",
-    chip: "border-paper/35",
+    wrap: "bg-cobalt text-ink",
+    border: "border-ink/15",
+    sub: "text-ink/70",
+    chip: "border-ink/25",
     check: "text-flame",
-    num: "text-paper/15",
-    impact: "bg-paper/10 border-flame",
+    num: "text-ink/10",
+    impact: "bg-ink/5 border-flame",
   },
   paper: {
     wrap: "bg-paper text-ink",

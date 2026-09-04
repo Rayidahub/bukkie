@@ -154,12 +154,18 @@ export function Hero() {
 
               {/* portrait */}
               <div className="relative aspect-square overflow-hidden rounded-full shadow-lift ring-8 ring-white">
-                <img
-                  src={IMG.portrait}
-                  alt="Portrait of Olowomakan Esther Bukola"
-                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-                />
-              </div>
+            <img
+              src={IMG.portrait}
+              alt="Portrait of Olowomakan Esther Bukola"
+              className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+              onError={(e) => {
+                const el = e.currentTarget;
+                if (!el.dataset.fb) {
+                  el.dataset.fb = "1";
+                  el.src = IMG.portraitRemote;
+                }
+              }}
+            />              </div>
 
               {/* floating skill tags */}
               <FloatingTag className="-left-6 top-[12%] md:-left-14">

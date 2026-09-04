@@ -1,0 +1,22 @@
+================================================
+  HI ESTHER! You found the public folder! 🎉
+================================================
+
+This is where your photo goes.
+
+1. Copy your image:
+   /home/l2euser/Desktop/Projects/Bukkie Files/buk.jpeg
+
+2. Paste it RIGHT HERE, next to this text file:
+   public/buk.jpeg
+
+3. Restart the project (or push to GitHub).
+
+Your photo will automatically appear in:
+  - The hero circle on the homepage
+  - The About section
+
+Keep the file name exactly: buk.jpeg
+
+If this file ever loads the old portrait instead,
+the image file is missing from this folder.

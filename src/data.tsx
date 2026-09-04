@@ -3,9 +3,9 @@
 /* ------------------------------------------------------------------ */
 
 export const IMG = {
-  /** Local photo — copy your image to `public/buk.jpeg` in the project root. */
-  portrait: "./buk.jpeg",
-  /** Fallback used automatically if buk.jpeg is not found in public/. */
+  /** Local photo — lives in public/img/buk.jpeg */
+  portrait: "./img/buk.jpeg",
+  /** Fallback used automatically if buk.jpeg is not found. */
   portraitRemote:
     "https://image.qwenlm.ai/generated-images/9b7f2d14-5301-45b7-8310-df0b3938b59c/_result.png",
   bramble:

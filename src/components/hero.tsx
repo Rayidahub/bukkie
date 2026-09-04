@@ -1,37 +1,34 @@
-import type { CSSProperties } from "react";
-import { CONTACT, IMG, MARQUEE } from "../data";
-import { IcArrowDown, IcArrowUpRight, IcSpark, Scramble } from "../lib";
+import type { ReactNode } from "react";
+import { CONTACT, IMG, MARQUEE, ORGS, yearsOfExperience } from "../data";
+import {
+  GoldUnderline,
+  IcArrowDown,
+  IcArrowUpRight,
+  IcPin,
+  IcSpark,
+  MaskLines,
+  Reveal,
+} from "../lib";
 
 /* ------------------------------------------------------------------ */
-/*  Marquee band (reused in footer-adjacent sections)                  */
+/*  Category ticker (gold band)                                        */
 /* ------------------------------------------------------------------ */
-export function Marquee({
-  words = MARQUEE,
-  className = "",
-  fast = false,
-}: {
-  words?: string[];
-  className?: string;
-  fast?: boolean;
-}) {
-  const half = (ariaHidden: boolean) => (
-    <div
-      aria-hidden={ariaHidden}
-      className="flex shrink-0 items-center gap-8 pr-8"
-    >
+export function Ticker({ words = MARQUEE }: { words?: string[] }) {
+  const half = (hidden: boolean) => (
+    <div aria-hidden={hidden} className="flex shrink-0 items-center">
       {words.map((w, i) => (
-        <span key={i} className="flex items-center gap-8">
-          <span className="whitespace-nowrap font-display text-2xl font-bold uppercase tracking-wide md:text-3xl">
+        <span key={i} className="flex items-center">
+          <span className="whitespace-nowrap px-6 font-display text-xl font-bold uppercase tracking-wide text-pine md:text-2xl">
             {w}
           </span>
-          <IcSpark className="h-5 w-5 shrink-0 text-flame" />
+          <IcSpark className="h-4 w-4 shrink-0 text-pine/60" />
         </span>
       ))}
     </div>
   );
   return (
-    <div className={`overflow-hidden ${className}`}>
-      <div className={`flex w-max ${fast ? "animate-marquee-fast" : "animate-marquee"}`}>
+    <div className="ticker overflow-hidden border-y border-pine/15 bg-gold py-3.5">
+      <div className="ticker-track flex w-max">
         {half(false)}
         {half(true)}
       </div>
@@ -40,76 +37,24 @@ export function Marquee({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Rotating availability badge                                        */
+/*  Floating tag                                                       */
 /* ------------------------------------------------------------------ */
-function OrbitBadge({ className = "" }: { className?: string }) {
-  return (
-    <a
-      href="#/contact"
-      data-hot
-      aria-label="Open for projects — go to contact"
-      className={`group relative block h-36 w-36 md:h-40 md:w-40 ${className}`}
-    >
-      <div className="animate-spin-slower absolute inset-0">
-        <svg viewBox="0 0 100 100" className="h-full w-full">
-          <defs>
-            <path
-              id="badge-circle"
-              d="M50,50 m-39,0 a39,39 0 1,1 78,0 a39,39 0 1,1 -78,0"
-            />
-          </defs>
-          <text className="fill-ink font-mono text-[8.2px] uppercase tracking-[0.24em]">
-            <textPath href="#badge-circle">
-              Open for projects • Graphic design • Digital media •
-            </textPath>
-          </text>
-        </svg>
-      </div>
-      <span className="absolute inset-0 flex items-center justify-center">
-        <IcSpark className="h-9 w-9 text-flame transition-transform duration-500 group-hover:scale-125 group-hover:rotate-45" />
-      </span>
-    </a>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Polaroid                                                           */
-/* ------------------------------------------------------------------ */
-function Polaroid({
-  src,
-  alt,
-  caption,
+function FloatingTag({
+  children,
   className = "",
-  tilt = 0,
-  floaty = false,
+  late = false,
 }: {
-  src: string;
-  alt: string;
-  caption: string;
+  children: ReactNode;
   className?: string;
-  tilt?: number;
-  floaty?: boolean;
+  late?: boolean;
 }) {
   return (
-    <figure
-      style={{ "--tilt": `${tilt}deg` } as CSSProperties}
-      className={`border border-ink/15 bg-white p-2 pb-3 shadow-[0_18px_40px_-18px_rgb(0_0_0/0.7)] ${
-        floaty ? "animate-floaty" : ""
-      } ${className}`}
+    <span
+      className={`${late ? "animate-float-late" : "animate-float"} absolute z-10 inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2.5 text-[13px] font-bold text-forest shadow-soft ${className}`}
     >
-      <div className="overflow-hidden">
-        <img
-          src={src}
-          alt={alt}
-          loading="eager"
-          className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-        />
-      </div>
-      <figcaption className="mt-2 flex items-center justify-between px-0.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-ink/60">
-        {caption}
-        <IcSpark className="h-2.5 w-2.5 text-flame" />
-      </figcaption>
-    </figure>
+      <IcSpark className="h-3.5 w-3.5 text-gold" />
+      {children}
+    </span>
   );
 }
 
@@ -117,128 +62,143 @@ function Polaroid({
 /*  Hero                                                               */
 /* ------------------------------------------------------------------ */
 export function Hero() {
+  const years = yearsOfExperience();
+
   return (
-    <header id="home" className="blueprint relative overflow-hidden">
-      {/* vertical side note */}
-      <p
+    <section id="home" aria-label="Introduction" className="relative overflow-hidden bg-white">
+      {/* ambient background shapes */}
+      <div
         aria-hidden
-        className="absolute left-5 top-1/2 hidden -translate-y-1/2 font-mono text-[10px] uppercase tracking-[0.42em] text-mute [writing-mode:vertical-rl] xl:block"
-      >
-        Building brands through visual storytelling — Folio 2026
-      </p>
+        className="pointer-events-none absolute -top-32 right-[-10%] h-[480px] w-[480px] rounded-full bg-sage/60 blur-2xl"
+      />
+      <div aria-hidden className="dots-bg pointer-events-none absolute left-0 top-24 h-48 w-48 opacity-70" />
 
-      <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-        {/* top meta strip */}
-        <div className="flex items-center justify-between border-b border-ink/10 pb-4 pt-24 font-mono text-[10.5px] uppercase tracking-[0.22em] text-mute md:pt-28">
-          <span className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-pulse-dot absolute h-2 w-2 rounded-full bg-flame" />
-              <span className="h-2 w-2 rounded-full bg-flame" />
-            </span>
-            Available for projects
-          </span>
-          <span className="hidden sm:block">Creative Graphics Designer</span>
-          <span className="hidden md:block">{CONTACT.coords}</span>
-        </div>
+      <div className="container-x grid items-center gap-14 py-14 md:py-20 lg:grid-cols-12 lg:gap-8">
+        {/* -------- left : copy -------- */}
+        <div className="lg:col-span-6">
+          <Reveal>
+            <p className="eyebrow">Graphics Designer & Digital Media Specialist</p>
+          </Reveal>
 
-        <div className="grid gap-10 pt-10 md:pt-14 lg:grid-cols-12 lg:gap-6">
-          {/* name block */}
-          <div className="lg:col-span-7">
-            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-flame">
-              ( Olowomakan Esther Bukola )
+          <h1 className="mt-6 font-display text-[clamp(2.5rem,5.6vw,4.1rem)] font-black leading-[1.04] tracking-[-0.015em] text-ink">
+            <MaskLines
+              lines={[
+                <>Hello, I'm Esther —</>,
+                <>
+                  I build brands through{" "}
+                </>,
+                <>
+                  <span className="relative inline-block italic text-forest">
+                    visual storytelling.
+                    <GoldUnderline />
+                  </span>
+                </>,
+              ]}
+            />
+          </h1>
+
+          <Reveal delay={250}>
+            <p className="mt-6 max-w-lg text-[16.5px] leading-[1.7] text-slate">
+              I help organizations in Lagos and beyond communicate their ideas,
+              promote their activities, and connect with their audiences —
+              through campaigns, publications, branding, and print that
+              actually ships.
             </p>
-            <h1 className="mt-4 font-display font-extrabold uppercase leading-[0.86] tracking-[-0.02em]">
-              <span className="block text-[clamp(3.6rem,12.5vw,10rem)]">
-                <Scramble text="ESTHER" duration={850} />
-              </span>
-              <span className="flex items-center gap-[0.18em] text-[clamp(3.6rem,12.5vw,10rem)]">
-                <Scramble text="BUKOLA" delay={350} duration={950} />
-                <IcSpark className="animate-spin-slower h-[0.42em] w-[0.42em] shrink-0 self-start text-flame" />
-              </span>
-            </h1>
+          </Reveal>
 
-            <p className="mt-7 max-w-md text-[15px] leading-relaxed text-ink/75 md:text-base">
-              I design campaigns, publications and digital content for
-              organizations that want to be{" "}
-              <em className="font-display font-bold not-italic text-ink">
-                seen, understood and remembered
-              </em>{" "}
-              — blending visual storytelling with strategic communication.
-            </p>
-
+          <Reveal delay={350}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href="#/work"
-                className="group flex items-center gap-3 border border-ink px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-all duration-300 hover:bg-ink hover:text-paper"
-              >
-                Selected work
-                <IcArrowDown className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-y-0.5" />
+              <a href="#projects" className="btn btn-forest">
+                View My Work
+                <IcArrowDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
               </a>
-              <a
-                href="#/contact"
-                className="group flex items-center gap-3 border border-ink bg-flame px-6 py-3.5 font-mono text-[11px] uppercase tracking-[0.2em] text-ink transition-all duration-300 hover:bg-ink hover:text-paper"
-              >
-                Start a project
-                <IcArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <a href="#contact" className="btn btn-outline">
+                Let's Talk
+                <IcArrowUpRight className="h-4 w-4" />
               </a>
             </div>
-          </div>
+          </Reveal>
 
-          {/* polaroid cluster */}
-          <div className="relative hidden min-h-[460px] lg:col-span-5 lg:block">
-            <Polaroid
-              src={IMG.flyer}
-              alt="Shapers of Nation summit flyer design"
-              caption="Fig.01 — Event flyer"
-              tilt={-7}
-              className="absolute left-0 top-4 w-[46%] rotate-[-7deg]"
-            />
-            <Polaroid
-              src={IMG.nugget}
-              alt="Purity Is Power social media quote card"
-              caption="Fig.02 — Social nugget"
-              tilt={5}
-              floaty
-              className="absolute right-0 top-24 w-[46%] rotate-[5deg]"
-            />
-            <OrbitBadge className="absolute bottom-0 left-6" />
-            <p className="absolute bottom-3 right-2 max-w-[180px] text-right font-mono text-[10px] uppercase leading-relaxed tracking-[0.18em] text-mute">
-              Selected pieces from live campaigns, 2024 — 25
-            </p>
-          </div>
+          <Reveal delay={450}>
+            <div className="mt-10 border-t border-line pt-6">
+              <p className="text-[11.5px] font-bold uppercase tracking-[0.2em] text-slate/80">
+                Designing for teams at
+              </p>
+              <ul className="mt-3.5 flex flex-wrap gap-2.5">
+                {ORGS.map((o) => (
+                  <li key={o} className="chip cursor-default">
+                    {o}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
         </div>
 
-        {/* scroll cue */}
-        <div className="mt-12 hidden items-center gap-3 md:flex lg:mt-6">
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-mute">
-            Scroll
-          </span>
-          <span className="relative h-10 w-px overflow-hidden bg-ink/15">
-            <span className="animate-scroll-line absolute inset-0 bg-flame" />
-          </span>
-        </div>
+        {/* -------- right : portrait composition -------- */}
+        <div className="lg:col-span-6">
+          <Reveal delay={200} y={40}>
+            <div className="relative mx-auto w-[min(88%,430px)]">
+              {/* gold circle backdrop */}
+              <div
+                aria-hidden
+                className="absolute -right-5 -top-5 h-full w-full rounded-full bg-gold md:-right-8 md:-top-8"
+              />
+              {/* rotating dashed ring */}
+              <div
+                aria-hidden
+                className="animate-spin-slower absolute -inset-5 rounded-full border-2 border-dashed border-forest/30"
+              />
+              {/* dot grid */}
+              <div aria-hidden className="dots-bg absolute -bottom-10 -left-12 h-36 w-36" />
 
-        {/* discipline meta row */}
-        <div className="mt-8 grid grid-cols-2 gap-y-2 border-t border-ink/10 py-4 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink/55 md:grid-cols-4">
-          <span className="flex items-center gap-2">
-            <IcSpark className="h-3 w-3 text-flame" /> Graphic design
-          </span>
-          <span className="flex items-center gap-2">
-            <IcSpark className="h-3 w-3 text-flame" /> Digital media
-          </span>
-          <span className="flex items-center gap-2">
-            <IcSpark className="h-3 w-3 text-flame" /> Brand storytelling
-          </span>
-          <span className="flex items-center gap-2">
-            <IcSpark className="h-3 w-3 text-flame" /> Print production
-          </span>
+              {/* portrait */}
+              <div className="relative aspect-square overflow-hidden rounded-full shadow-lift ring-8 ring-white">
+                <img
+                  src={IMG.portrait}
+                  alt="Portrait of Olowomakan Esther Bukola"
+                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                />
+              </div>
+
+              {/* floating skill tags */}
+              <FloatingTag className="-left-6 top-[12%] md:-left-14">
+                Social Media Design
+              </FloatingTag>
+              <FloatingTag late className="-right-2 top-[46%] md:-right-10">
+                Brand & Print
+              </FloatingTag>
+
+              {/* experience badge */}
+              <span className="absolute -top-2 right-[6%] z-10 flex h-20 w-20 flex-col items-center justify-center rounded-full bg-forest text-center shadow-lift">
+                <span className="font-display text-2xl font-black leading-none text-gold">
+                  {years}+
+                </span>
+                <span className="mt-0.5 px-1 text-[8.5px] font-bold uppercase tracking-[0.12em] text-white/80">
+                  Years Exp.
+                </span>
+              </span>
+
+              {/* availability card */}
+              <div className="absolute -bottom-6 left-1/2 z-10 w-[240px] -translate-x-1/2 rounded-2xl border border-line bg-white p-4 shadow-lift">
+                <p className="flex items-center gap-2 text-[13px] font-bold text-forest">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-pulse-soft absolute h-2.5 w-2.5 rounded-full bg-gold" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-gold" />
+                  </span>
+                  Available for projects
+                </p>
+                <p className="mt-1.5 flex items-center gap-1.5 text-[12px] font-medium text-slate">
+                  <IcPin className="h-3.5 w-3.5 text-forest" />
+                  {CONTACT.location}
+                </p>
+              </div>
+            </div>
+          </Reveal>
         </div>
       </div>
 
-      {/* marquee */}
-      <div className="border-y border-ink bg-ink py-4 text-paper">
-        <Marquee />
-      </div>
-    </header>
+      <Ticker />
+    </section>
   );
 }

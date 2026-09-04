@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { CONTACT, NAV_LINKS } from "../data";
+import { useEffect, useRef, useState } from "react";
+import { CONTACT, FOOTER_LINKS, NAV_LINKS, SERVICES } from "../data";
 import {
+  IcArrowUp,
   IcArrowUpRight,
   IcClose,
   IcMail,
@@ -9,224 +9,210 @@ import {
   IcPhone,
   IcPin,
   IcSpark,
-  useReducedMotion,
+  useActiveSection,
 } from "../lib";
 
 /* ------------------------------------------------------------------ */
-/*  Decorative layers                                                  */
+/*  Logo                                                               */
 /* ------------------------------------------------------------------ */
-export function Noise() {
+export function Logo({ light = false }: { light?: boolean }) {
   return (
-    <div
-      aria-hidden
-      className="noise pointer-events-none fixed inset-0 z-[110] opacity-[0.055]"
-    />
-  );
-}
-
-export function Cursor() {
-  const reduced = useReducedMotion();
-  const [fine, setFine] = useState(false);
-  const dotRef = (el: HTMLDivElement | null) => {
-    (Cursor as unknown as { _d: HTMLDivElement | null })._d = el;
-  };
-  const ringRef = (el: HTMLDivElement | null) => {
-    (Cursor as unknown as { _r: HTMLDivElement | null })._r = el;
-  };
-
-  useEffect(() => {
-    setFine(window.matchMedia("(pointer: fine)").matches);
-  }, []);
-
-  useEffect(() => {
-    if (!fine || reduced) return;
-    let x = window.innerWidth / 2;
-    let y = window.innerHeight / 2;
-    let rx = x;
-    let ry = y;
-    let raf = 0;
-    let hot = false;
-    const store = Cursor as unknown as {
-      _d: HTMLDivElement | null;
-      _r: HTMLDivElement | null;
-    };
-    const move = (e: MouseEvent) => {
-      x = e.clientX;
-      y = e.clientY;
-      const t = e.target as HTMLElement | null;
-      hot = !!t?.closest?.("a,button,[data-hot]");
-      if (store._d) store._d.style.transform = `translate(${x}px, ${y}px)`;
-    };
-    const loop = () => {
-      rx += (x - rx) * 0.16;
-      ry += (y - ry) * 0.16;
-      if (store._r) {
-        store._r.style.transform = `translate(${rx}px, ${ry}px) scale(${
-          hot ? 2.1 : 1
-        })`;
-        store._r.style.borderColor = hot
-          ? "var(--color-flame)"
-          : "rgb(27 23 18 / 0.4)";
-      }
-      raf = requestAnimationFrame(loop);
-    };
-    window.addEventListener("mousemove", move, { passive: true });
-    raf = requestAnimationFrame(loop);
-    return () => {
-      window.removeEventListener("mousemove", move);
-      cancelAnimationFrame(raf);
-    };
-  }, [fine, reduced]);
-
-  if (!fine || reduced) return null;
-  return (
-    <>
-      <div
-        ref={dotRef}
-        aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[130] -ml-[3px] -mt-[3px] h-1.5 w-1.5 rounded-full bg-flame"
-      />
-      <div
-        ref={ringRef}
-        aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[129] -ml-4 -mt-4 h-8 w-8 rounded-full border transition-[border-color] duration-200"
-      />
-    </>
+    <a href="#home" className="group flex items-center gap-3" aria-label="Esther Bukola — home">
+      <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-gold transition-transform duration-300 group-hover:rotate-12">
+        <span className="font-display text-lg font-black text-pine">EB</span>
+        <IcSpark className="absolute -right-0.5 -top-0.5 h-3.5 w-3.5 text-forest" />
+      </span>
+      <span className="leading-tight">
+        <span
+          className={`block font-display text-[17px] font-bold tracking-tight ${
+            light ? "text-white" : "text-ink"
+          }`}
+        >
+          Esther Bukola
+        </span>
+        <span
+          className={`block text-[10.5px] font-bold uppercase tracking-[0.18em] ${
+            light ? "text-white/55" : "text-slate"
+          }`}
+        >
+          Design & Media
+        </span>
+      </span>
+    </a>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  Navigation (router-aware)                                          */
+/*  Navbar + mobile menu                                               */
 /* ------------------------------------------------------------------ */
-export function Nav() {
-  const [scrolled, setScrolled] = useState(false);
+const SECTION_IDS = [
+  "home",
+  "services",
+  "about",
+  "skills",
+  "projects",
+  "case-studies",
+  "experience",
+  "philosophy",
+  "testimonials",
+  "insights",
+  "contact",
+];
+
+export function Navbar() {
   const [open, setOpen] = useState(false);
-  const { pathname } = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+  const active = useActiveSection(SECTION_IDS);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 24);
-    fn();
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* close the mobile menu whenever the route changes */
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
+  const isActive = (id: string) =>
+    active === id ||
+    (id === "projects" && (active === "case-studies")) ||
+    (id === "home" && !SECTION_IDS.includes(active));
+
   return (
     <>
-      <nav
-        className={`fixed inset-x-0 top-0 z-[100] transition-all duration-300 ${
-          scrolled || open
-            ? "border-b border-ink/15 bg-paper"
-            : "border-b border-transparent bg-transparent"
+      <a
+        href="#home"
+        className="fixed left-4 top-4 z-[120] -translate-y-24 rounded-full bg-gold px-5 py-2.5 text-sm font-bold text-pine transition-transform focus:translate-y-0"
+      >
+        Skip to content
+      </a>
+
+      <header
+        className={`sticky top-0 z-[100] border-b transition-all duration-300 ${
+          scrolled
+            ? "border-white/10 bg-pine/95 shadow-[0_12px_32px_-16px_rgb(22_56_38/0.6)] backdrop-blur-sm"
+            : "border-white/10 bg-pine"
         }`}
       >
-        <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5 md:h-[72px] md:px-10">
-          <Link
-            to="/"
-            className="group flex items-center gap-2.5 font-display text-lg font-bold uppercase tracking-tight"
-          >
-            <IcSpark className="h-5 w-5 text-flame transition-transform duration-500 group-hover:rotate-90" />
-            <span>
-              Esther<span className="text-flame">&nbsp;B.</span>
-            </span>
-          </Link>
+        <div className="container-x flex h-[72px] items-center justify-between gap-6">
+          <Logo light />
 
-          <div className="hidden items-center gap-7 lg:flex">
-            {NAV_LINKS.map((l) => (
-              <NavLink
-                key={l.id}
-                to={`/${l.id}`}
-                className={({ isActive }) =>
-                  `font-mono text-[11px] uppercase tracking-[0.18em] transition-colors hover:text-flame ${
-                    isActive ? "text-flame" : "text-ink/70"
-                  }`
-                }
-              >
-                <span className="mr-1.5 opacity-50">/</span>
-                {l.label}
-              </NavLink>
-            ))}
-          </div>
+          <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
+            {NAV_LINKS.map((link) => {
+              const on = isActive(link.id);
+              return (
+                <a
+                  key={link.id}
+                  href={`#${link.id}`}
+                  aria-current={on ? "true" : undefined}
+                  className={`group relative rounded-full px-4 py-2 text-[14px] font-semibold transition-colors duration-300 ${
+                    on ? "text-gold" : "text-white/80 hover:text-white"
+                  }`}
+                >
+                  {link.label}
+                  <span
+                    className={`absolute -bottom-0.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-gold transition-all duration-300 ${
+                      on ? "opacity-100 scale-100" : "opacity-0 scale-0 group-hover:opacity-60 group-hover:scale-75"
+                    }`}
+                  />
+                </a>
+              );
+            })}
+          </nav>
 
           <div className="flex items-center gap-3">
-            <Link
-              to="/contact"
-              className="hidden items-center gap-2 border border-ink bg-ink px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-paper transition-colors duration-300 hover:border-flame hover:bg-flame hover:text-ink sm:flex"
+            <a
+              href="#contact"
+              className="btn btn-gold hidden !px-6 !py-2.5 text-[14px] lg:inline-flex"
             >
-              Let's talk
-              <IcArrowUpRight className="h-3.5 w-3.5" />
-            </Link>
+              Contact Me
+              <IcArrowUpRight className="h-4 w-4" />
+            </a>
             <button
-              aria-label="Toggle menu"
-              onClick={() => setOpen((v) => !v)}
-              className="flex h-10 w-10 items-center justify-center border border-ink/25 transition-colors hover:border-flame hover:text-flame lg:hidden"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-gold hover:text-gold lg:hidden"
+              aria-label="Open menu"
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              onClick={() => setOpen(true)}
             >
-              {open ? <IcClose className="h-5 w-5" /> : <IcMenu className="h-5 w-5" />}
+              <IcMenu />
             </button>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* mobile overlay */}
-      <div
-        className={`fixed inset-0 z-[99] flex flex-col justify-between bg-ink px-6 pb-10 pt-28 text-paper transition-all duration-500 lg:hidden ${
-          open ? "visible opacity-100" : "invisible opacity-0"
-        }`}
-      >
-        <div className="flex flex-col gap-1">
-          <NavLink
-            to="/"
-            onClick={() => setOpen(false)}
-            style={{ transitionDelay: open ? "60ms" : "0ms" }}
-            className={({ isActive }) =>
-              `group flex items-baseline gap-4 border-b border-paper/10 py-4 font-display text-4xl font-bold uppercase tracking-tight transition-all duration-500 hover:text-flame ${
-                open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-              } ${isActive ? "text-flame" : ""}`
-            }
-          >
-            <span className="font-mono text-xs text-flame">00</span>
-            Home
-          </NavLink>
-          {NAV_LINKS.map((l, i) => (
-            <NavLink
-              key={l.id}
-              to={`/${l.id}`}
+      {/* mobile menu */}
+      {open && (
+        <div
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+          className="animate-fade-in fixed inset-0 z-[110] flex flex-col bg-pine"
+        >
+          <div className="container-x flex h-[72px] items-center justify-between">
+            <Logo light />
+            <button
+              ref={closeRef}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-gold hover:text-gold"
+              aria-label="Close menu"
               onClick={() => setOpen(false)}
-              style={{ transitionDelay: open ? `${110 + i * 55}ms` : "0ms" }}
-              className={({ isActive }) =>
-                `group flex items-baseline gap-4 border-b border-paper/10 py-4 font-display text-4xl font-bold uppercase tracking-tight transition-all duration-500 hover:text-flame ${
-                  open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                } ${isActive ? "text-flame" : ""}`
-              }
             >
-              <span className="font-mono text-xs text-flame">0{i + 1}</span>
-              {l.label}
-            </NavLink>
-          ))}
+              <IcClose />
+            </button>
+          </div>
+
+          <nav aria-label="Mobile" className="container-x mt-6 flex flex-col">
+            {NAV_LINKS.concat({ id: "contact", label: "Contact" }).map((link, i) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                onClick={() => setOpen(false)}
+                className={`flex items-center justify-between border-b border-white/10 py-4 font-display text-3xl font-bold transition-colors hover:text-gold ${
+                  active === link.id ? "text-gold" : "text-white"
+                }`}
+                style={{ transitionDelay: `${i * 30}ms` }}
+              >
+                {link.label}
+                <span className="font-body text-xs font-bold uppercase tracking-[0.2em] text-white/35">
+                  0{i + 1}
+                </span>
+              </a>
+            ))}
+          </nav>
+
+          <div className="container-x mt-auto pb-10">
+            <div className="rounded-2xl border border-white/15 p-5">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold">
+                Let's talk
+              </p>
+              <a
+                href={`mailto:${CONTACT.email}`}
+                className="mt-2 block text-[15px] font-semibold text-white underline-offset-4 hover:underline"
+              >
+                {CONTACT.email}
+              </a>
+              <a
+                href={`tel:${CONTACT.phone1.replace(/\s/g, "")}`}
+                className="mt-1 block text-sm text-white/70 hover:text-white"
+              >
+                {CONTACT.phone1}
+              </a>
+            </div>
+          </div>
         </div>
-        <div className="space-y-2 font-mono text-xs text-paper/60">
-          <p className="flex items-center gap-2">
-            <IcMail className="h-3.5 w-3.5 text-flame" /> {CONTACT.email}
-          </p>
-          <p className="flex items-center gap-2">
-            <IcPhone className="h-3.5 w-3.5 text-flame" /> {CONTACT.phone1}
-          </p>
-          <p className="flex items-center gap-2">
-            <IcPin className="h-3.5 w-3.5 text-flame" /> {CONTACT.location}
-          </p>
-        </div>
-      </div>
+      )}
     </>
   );
 }
@@ -235,103 +221,122 @@ export function Nav() {
 /*  Footer                                                             */
 /* ------------------------------------------------------------------ */
 export function Footer() {
-  const year = new Date().getFullYear();
+  const [showTop, setShowTop] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 600);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <footer className="blueprint-dark relative overflow-hidden border-t border-ink/10 bg-coal text-ink">
-      <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-        <div className="grid gap-10 py-14 md:grid-cols-12">
-          <div className="md:col-span-5">
-            <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-flame">
-              <IcSpark className="h-3.5 w-3.5" /> Studio
-            </p>
-            <h3 className="mt-4 max-w-sm font-display text-3xl font-bold uppercase leading-tight md:text-4xl">
-              Let's create visuals that communicate,{" "}
-              <span className="text-flame">connect</span> & make an impact.
-            </h3>
-            <a
-              href={`mailto:${CONTACT.email}`}
-              className="mt-6 inline-flex items-center gap-2 border border-ink/25 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:border-flame hover:bg-flame hover:text-ink"
-            >
-              {CONTACT.email} <IcArrowUpRight className="h-3.5 w-3.5" />
-            </a>
-          </div>
+    <footer className="relative overflow-hidden bg-pine text-white">
+      <div className="dots-light pointer-events-none absolute right-0 top-0 h-56 w-56 opacity-60" />
+      <div className="pointer-events-none absolute -left-24 -bottom-24 h-72 w-72 rounded-full border border-white/10" />
+      <div className="pointer-events-none absolute -left-12 -bottom-12 h-72 w-72 rounded-full border border-gold/20" />
 
-          <div className="md:col-span-3">
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ink/40">
-              Sitemap
-            </p>
-            <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 md:grid-cols-1">
-              <li>
-                <Link
-                  to="/"
-                  className="group flex items-center gap-2 text-sm text-ink/70 transition-colors hover:text-flame"
-                >
-                  <span className="h-px w-3 bg-ink/30 transition-all group-hover:w-5 group-hover:bg-flame" />
-                  Home
-                </Link>
-              </li>
-              {NAV_LINKS.map((l) => (
-                <li key={l.id}>
-                  <Link
-                    to={`/${l.id}`}
-                    className="group flex items-center gap-2 text-sm text-ink/70 transition-colors hover:text-flame"
-                  >
-                    <span className="h-px w-3 bg-ink/30 transition-all group-hover:w-5 group-hover:bg-flame" />
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="md:col-span-4">
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ink/40">
-              Reach me
-            </p>
-            <ul className="mt-4 space-y-3 text-sm text-ink/70">
-              <li className="flex items-start gap-3">
-                <IcPin className="mt-0.5 h-4 w-4 shrink-0 text-flame" />
-                {CONTACT.location}
-              </li>
-              <li className="flex items-start gap-3">
-                <IcPhone className="mt-0.5 h-4 w-4 shrink-0 text-flame" />
-                <span>
-                  {CONTACT.phone1}
-                  <br />
-                  {CONTACT.phone2}
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <IcMail className="mt-0.5 h-4 w-4 shrink-0 text-flame" />
-                {CONTACT.email}
-              </li>
-            </ul>
-            <p className="mt-5 inline-flex items-center gap-2 border border-ink/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/60">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-pulse-dot absolute h-2 w-2 rounded-full bg-flame" />
-                <span className="h-2 w-2 rounded-full bg-flame" />
-              </span>
-              Open for projects — 2026
-            </p>
-          </div>
+      <div className="container-x relative grid gap-12 py-16 md:grid-cols-12 md:py-20">
+        <div className="md:col-span-5">
+          <Logo light />
+          <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/65">
+            Creative Graphics Designer & Digital Media Specialist — building
+            brands through visual storytelling, strategic communication, and
+            print that survives the real world.
+          </p>
+          <p className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-white/15 px-4 py-2 text-[12.5px] font-semibold text-white/80">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-pulse-soft absolute h-2 w-2 rounded-full bg-gold" />
+              <span className="h-2 w-2 rounded-full bg-gold" />
+            </span>
+            Open for projects — {CONTACT.location.split(",")[0]}, Lagos
+          </p>
         </div>
 
+        <nav aria-label="Footer" className="md:col-span-3">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-gold">Sitemap</p>
+          <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-3">
+            {FOOTER_LINKS.map((l) => (
+              <li key={l.id}>
+                <a
+                  href={`#${l.id}`}
+                  className="group inline-flex items-center gap-1.5 text-[14px] font-medium text-white/70 transition-colors hover:text-gold"
+                >
+                  <span className="h-px w-0 bg-gold transition-all duration-300 group-hover:w-3" />
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-        <div className="flex flex-col items-start justify-between gap-3 border-t border-ink/10 py-6 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink/45 md:flex-row md:items-center">
-          <p>© {year} Olowomakan Esther Bukola — All rights reserved</p>
-          <p className="flex items-center gap-2">
-            <IcSpark className="h-3 w-3 text-flame" />
-            Portfolio continuously updated with selected projects & case studies
+        <div className="md:col-span-4">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-gold">Contact</p>
+          <ul className="mt-5 space-y-4">
+            <li>
+              <a
+                href={`mailto:${CONTACT.email}`}
+                className="flex items-center gap-3 text-[14.5px] font-medium text-white/80 transition-colors hover:text-gold"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15">
+                  <IcMail className="h-4 w-4" />
+                </span>
+                {CONTACT.email}
+              </a>
+            </li>
+            <li>
+              <a
+                href={`tel:${CONTACT.phone1.replace(/\s/g, "")}`}
+                className="flex items-center gap-3 text-[14.5px] font-medium text-white/80 transition-colors hover:text-gold"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15">
+                  <IcPhone className="h-4 w-4" />
+                </span>
+                {CONTACT.phone1}
+              </a>
+            </li>
+            <li className="flex items-center gap-3 text-[14.5px] text-white/60">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15">
+                <IcPin className="h-4 w-4" />
+              </span>
+              {CONTACT.location}
+            </li>
+          </ul>
+
+          <p className="mt-7 text-xs font-bold uppercase tracking-[0.22em] text-gold">
+            Specialties
           </p>
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="group flex items-center gap-2 transition-colors hover:text-flame"
-          >
-            Back to top
-            <IcArrowUpRight className="h-3.5 w-3.5 -rotate-45 transition-transform group-hover:-translate-y-0.5" />
-          </button>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {SERVICES.map((s) => (
+              <li
+                key={s.no}
+                className="rounded-full border border-white/15 px-3.5 py-1.5 text-[12px] font-semibold text-white/70"
+              >
+                {s.title.split(" & ")[0]}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
+
+      <div className="border-t border-white/10">
+        <div className="container-x flex flex-col items-center justify-between gap-4 py-6 text-[13px] text-white/50 sm:flex-row">
+          <p>
+            © {new Date().getFullYear()} {CONTACT.name}. All rights reserved.
+          </p>
+          <p className="flex items-center gap-2">
+            Designed with <IcSpark className="h-3 w-3 text-gold" /> in Lagos, Nigeria
+          </p>
+        </div>
+      </div>
+
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="Back to top"
+        className={`fixed bottom-6 right-6 z-[90] flex h-12 w-12 items-center justify-center rounded-full bg-gold text-pine shadow-lift transition-all duration-300 hover:-translate-y-1 hover:bg-honey ${
+          showTop ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
+        }`}
+      >
+        <IcArrowUp className="h-5 w-5" />
+      </button>
     </footer>
   );
 }

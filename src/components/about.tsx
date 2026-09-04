@@ -1,12 +1,27 @@
-import { useState, type ReactNode } from "react";
-import { CONTACT, IMG, SERVICES, type Service } from "../data";
+import { useEffect, useState, type ReactNode } from "react";
+import {
+  CERTS,
+  DESIGN_SKILLS,
+  EXPERIENCE,
+  GALLERY,
+  IMG,
+  SERVICES,
+  SOFT_SKILLS,
+  yearsOfExperience,
+} from "../data";
 import {
   CountUp,
   IcChat,
   IcChip,
+  IcClose,
+  IcDownload,
+  IcMail,
   IcPen,
+  IcPhone,
+  IcPin,
+  IcPrinter,
   IcSpark,
-  MaskText,
+  MaskLines,
   Reveal,
 } from "../lib";
 
@@ -14,176 +29,166 @@ import {
 /*  Shared section heading                                             */
 /* ------------------------------------------------------------------ */
 export function SectionHead({
+  eyebrow,
   no,
-  kicker,
-  lines,
+  title,
   right,
   dark = false,
 }: {
-  no: string;
-  kicker: string;
-  lines: ReactNode[];
+  eyebrow: string;
+  no?: string;
+  title: ReactNode[];
   right?: ReactNode;
   dark?: boolean;
 }) {
   return (
-    <div className="mb-12 flex flex-wrap items-end justify-between gap-8 md:mb-16">
-      <div>
-        <p
-          className={`flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] ${
-            dark ? "text-ink/50" : "text-mute"
+    <div className="mb-12 grid items-end gap-6 md:mb-16 lg:grid-cols-12">
+      <div className="lg:col-span-7">
+        <Reveal>
+          <p className={`eyebrow ${dark ? "eyebrow-light" : ""}`}>
+            {no && <span className="text-gold">{no} —</span>} {eyebrow}
+          </p>
+        </Reveal>
+        <h2
+          className={`mt-4 font-display text-[clamp(2rem,4.2vw,3.25rem)] font-black leading-[1.06] tracking-[-0.015em] ${
+            dark ? "text-white" : "text-ink"
           }`}
         >
-          <IcSpark className="h-3.5 w-3.5 text-flame" />
-          ( {no} ) — {kicker}
-        </p>
-        <MaskText
-          className="mt-4 font-display text-[clamp(2.3rem,5.5vw,4.3rem)] font-extrabold uppercase leading-[0.95] tracking-[-0.01em]"
-          lines={lines}
-        />
+          <MaskLines lines={title} />
+        </h2>
       </div>
       {right && (
-        <Reveal
-          delay={200}
-          className={`max-w-sm text-[15px] leading-relaxed ${
-            dark ? "text-ink/60" : "text-ink/65"
-          }`}
-        >
-          {right}
+        <Reveal delay={150} className="lg:col-span-5">
+          <p
+            className={`max-w-md text-[15.5px] leading-[1.7] lg:ml-auto ${
+              dark ? "text-white/65" : "text-slate"
+            }`}
+          >
+            {right}
+          </p>
         </Reveal>
       )}
     </div>
   );
 }
 
-const SERVICE_ICONS = {
-  pen: IcPen,
-  chat: IcChat,
-  chip: IcChip,
-};
+/* ------------------------------------------------------------------ */
+/*  Services                                                           */
+/* ------------------------------------------------------------------ */
+function ServiceIcon({ icon, className = "h-7 w-7" }: { icon: string; className?: string }) {
+  if (icon === "pen") return <IcPen className={className} />;
+  if (icon === "chat") return <IcChat className={className} />;
+  return <IcChip className={className} />;
+}
 
-/* ------------------------------------------------------------------ */
-/*  About                                                              */
-/* ------------------------------------------------------------------ */
-export function About() {
+export function ServicesSection() {
   return (
-    <section id="about" className="relative border-t border-ink/10 py-24 md:py-32">
-      <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-        <SectionHead
-          no="01"
-          kicker="About me"
-          lines={[
-            "Detail-oriented,",
-            <>
-              result-driven <span className="text-flame">creative.</span>
-            </>,
-          ]}
-          right="Graphics designer and digital media specialist based in Ikorodu, Lagos — creating visuals that help organizations communicate ideas, promote activities, and connect with their audiences."
-        />
+    <section id="services" aria-label="Services" className="relative bg-mist py-20 md:py-28">
+      <div className="container-x">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <SectionHead
+            no="01"
+            eyebrow="Services"
+            title={[
+              <>Services I</>,
+              <>
+                <span className="italic text-forest">provide.</span>
+              </>,
+            ]}
+          />
+          <Reveal delay={200} className="-mt-6 mb-12 md:-mt-8 lg:mb-16">
+            <a href="#contact" className="btn btn-outline !py-3 text-[14px]">
+              Hire Me
+              <IcSpark className="h-3.5 w-3.5 text-gold" />
+            </a>
+          </Reveal>
+        </div>
 
-        <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
-          {/* sticky portrait column */}
-          <div className="lg:col-span-5">
-            <Reveal className="lg:sticky lg:top-28">
-              <figure className="hard-shadow border border-ink bg-white p-3 pb-4">
-                <div className="overflow-hidden">
-                  <img
-                    src={IMG.portrait}
-                    alt="Portrait of Olowomakan Esther Bukola"
-                    loading="lazy"
-                    className="w-full object-cover transition-transform duration-700 hover:scale-[1.04]"
-                  />
-                </div>
-                <figcaption className="mt-3 flex items-center justify-between px-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ink/60">
-                  <span>Olowomakan E. Bukola</span>
-                  <span className="flex items-center gap-1.5">
-                    Ikorodu, Lagos <IcSpark className="h-2.5 w-2.5 text-flame" />
-                  </span>
-                </figcaption>
-              </figure>
-
-              <dl className="mt-8 divide-y divide-ink/10 border border-ink/15">
-                {[
-                  ["Base", "Ikorodu, Lagos State, NG"],
-                  ["Email", CONTACT.email],
-                  ["Phone", CONTACT.phone1],
-                  ["Status", "Open to roles & projects"],
-                ].map(([k, v]) => (
-                  <div
-                    key={k}
-                    className="flex items-center justify-between gap-4 px-5 py-3.5 transition-colors hover:bg-sand"
-                  >
-                    <dt className="font-mono text-[10px] uppercase tracking-[0.25em] text-mute">
-                      {k}
-                    </dt>
-                    <dd className="truncate text-right text-sm font-medium">{v}</dd>
-                  </div>
-                ))}
-              </dl>
-            </Reveal>
-          </div>
-
-          {/* narrative column */}
-          <div className="lg:col-span-7">
-            <Reveal>
-              <p className="text-lg leading-relaxed text-ink/80 md:text-xl">
-                I am a creative professional with hands-on experience across{" "}
-                <strong className="font-semibold text-ink">graphics design, digital media, social media management, communications, customer service and IT support</strong>. My approach combines visual
-                storytelling, attention to detail, strategic communication — and
-                a genuine understanding of what audiences need to see.
-              </p>
-            </Reveal>
-            <Reveal delay={120}>
-              <p className="mt-6 text-lg leading-relaxed text-ink/80 md:text-xl">
-                From daily social nuggets to large-format banners, I take work
-                from first sketch to finished production — often coordinating
-                directly with print vendors so what ships matches what was
-                designed.
-              </p>
-            </Reveal>
-
-            <Reveal delay={200}>
-              <blockquote className="mt-10 border-l-4 border-flame pl-6 md:pl-8">
-                <p className="font-mono text-[10.5px] uppercase tracking-[0.3em] text-mute">
-                  My mission
-                </p>
-                <p className="mt-3 font-display text-2xl font-bold uppercase leading-tight tracking-tight md:text-[1.7rem]">
-                  Creating positive customer & audience experiences through
-                  innovative design and{" "}
-                  <span className="text-flame">strategic communication.</span>
-                </p>
-              </blockquote>
-            </Reveal>
-
-            <Reveal delay={260}>
-              <div className="mt-12 grid grid-cols-2 border border-ink md:grid-cols-4">
-                {[
-                  { n: 4, s: "+", label: "Years of practice" },
-                  { n: 4, s: "", label: "Organizations served" },
-                  { n: 25, s: "+", label: "Campaigns & projects" },
-                  { n: 12, s: "+", label: "Tools mastered" },
-                ].map((st, i) => (
-                  <div
-                    key={st.label}
-                    className={`group p-6 transition-colors duration-300 hover:bg-ink hover:text-paper md:p-7 ${
-                      i % 2 === 1 ? "border-l border-ink" : ""
-                    } ${i > 1 ? "border-t border-ink md:border-l md:border-t-0" : ""} ${
-                      i === 3 ? "md:border-l" : ""
+        <div className="grid gap-6 md:grid-cols-3">
+          {SERVICES.map((s, i) => (
+            <Reveal key={s.no} delay={i * 120}>
+              <article
+                className={`group flex h-full flex-col rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${
+                  s.featured
+                    ? "bg-forest text-white shadow-lift hover:shadow-[0_44px_80px_-32px_rgb(22_56_38/0.75)]"
+                    : "card shadow-soft hover:shadow-lift"
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <span
+                    className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105 ${
+                      s.featured ? "bg-gold text-pine" : "bg-sage text-forest"
                     }`}
                   >
-                    <CountUp
-                      to={st.n}
-                      suffix={st.s}
-                      className="font-display text-4xl font-extrabold tracking-tight text-ink transition-colors duration-300 group-hover:text-flame md:text-5xl"
-                    />
-                    <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.2em] text-mute transition-colors duration-300 group-hover:text-paper/60">
-                      {st.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
+                    <ServiceIcon icon={s.icon} />
+                  </span>
+                  <span
+                    className={`font-display text-4xl font-black ${
+                      s.featured ? "text-white/15" : "text-ink/8"
+                    }`}
+                  >
+                    {s.no}
+                  </span>
+                </div>
+
+                <p
+                  className={`mt-6 text-[11px] font-bold uppercase tracking-[0.18em] ${
+                    s.featured ? "text-gold" : "text-forest"
+                  }`}
+                >
+                  {s.kicker}
+                </p>
+                <h3
+                  className={`mt-2 font-display text-[22px] font-bold leading-snug ${
+                    s.featured ? "text-white" : "text-ink"
+                  }`}
+                >
+                  {s.title}
+                </h3>
+                <p
+                  className={`mt-3 text-[14.5px] leading-[1.65] ${
+                    s.featured ? "text-white/70" : "text-slate"
+                  }`}
+                >
+                  {s.desc}
+                </p>
+
+                <ul className="mt-5 flex flex-wrap gap-2">
+                  {s.tags.slice(0, 5).map((t) => (
+                    <li
+                      key={t}
+                      className={`rounded-full px-3 py-1 text-[11.5px] font-semibold ${
+                        s.featured
+                          ? "border border-white/20 text-white/80"
+                          : "bg-mist text-slate"
+                      }`}
+                    >
+                      {t}
+                    </li>
+                  ))}
+                  {s.tags.length > 5 && (
+                    <li
+                      className={`rounded-full px-3 py-1 text-[11.5px] font-bold ${
+                        s.featured ? "bg-gold text-pine" : "bg-forest text-white"
+                      }`}
+                    >
+                      +{s.tags.length - 5} more
+                    </li>
+                  )}
+                </ul>
+
+                <a
+                  href="#projects"
+                  className={`mt-auto inline-flex items-center gap-2 pt-6 text-[14px] font-bold transition-colors ${
+                    s.featured ? "text-gold hover:text-honey" : "text-forest hover:text-pine"
+                  }`}
+                >
+                  See related work
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </a>
+              </article>
             </Reveal>
-          </div>
+          ))}
         </div>
       </div>
     </section>
@@ -191,98 +196,242 @@ export function About() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Professional focus — accordion                                     */
+/*  CV modal (printable)                                               */
 /* ------------------------------------------------------------------ */
-export function Services() {
-  const [open, setOpen] = useState<number | null>(0);
-
-  const row = (s: Service, i: number) => {
-    const Icon = SERVICE_ICONS[s.icon];
-    const isOpen = open === i;
-    return (
-      <Reveal key={s.no} delay={i * 90}>
-        <div className={`border-t border-ink/20 ${i === SERVICES.length - 1 ? "border-b" : ""}`}>
-          <button
-            onClick={() => setOpen(isOpen ? null : i)}
-            aria-expanded={isOpen}
-            className="group flex w-full items-center gap-5 px-2 py-6 text-left md:gap-8 md:py-8"
-          >
-            <span className="font-mono text-xs text-flame md:text-sm">
-              {s.no}
-            </span>
-            <span
-              className={`flex-1 font-display text-[clamp(1.35rem,3.4vw,2.6rem)] font-bold uppercase leading-none tracking-tight transition-all duration-300 ${
-                isOpen ? "text-flame" : "group-hover:translate-x-2 group-hover:text-flame"
-              }`}
-            >
-              {s.title}
-            </span>
-            <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-mute md:block">
-              {s.kicker}
-            </span>
-            <span
-              className={`relative h-9 w-9 shrink-0 border transition-all duration-300 ${
-                isOpen
-                  ? "rotate-45 border-flame bg-flame text-ink"
-                  : "border-ink/30 group-hover:border-ink"
-              }`}
-            >
-              <span className="absolute left-1/2 top-1/2 h-3.5 w-px -translate-x-1/2 -translate-y-1/2 bg-current" />
-              <span className="absolute left-1/2 top-1/2 h-px w-3.5 -translate-x-1/2 -translate-y-1/2 bg-current" />
-            </span>
-          </button>
-
-          <div
-            className="grid transition-[grid-template-rows] duration-500 ease-out"
-            style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
-          >
-            <div className="min-h-0 overflow-hidden">
-              <div className="grid gap-8 px-2 pb-10 md:grid-cols-12 md:px-12">
-                <div className="md:col-span-5">
-                  <Icon className="h-8 w-8 text-flame" />
-                  <p className="mt-4 text-[15px] leading-relaxed text-ink/70">
-                    {s.desc}
-                  </p>
-                </div>
-                <div className="md:col-span-7">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-mute">
-                    Capabilities
-                  </p>
-                  <ul className="mt-4 flex flex-wrap gap-2.5">
-                    {s.tags.map((t) => (
-                      <li
-                        key={t}
-                        className="cursor-default border border-ink/25 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:border-ink hover:bg-ink hover:text-paper"
-                      >
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Reveal>
-    );
-  };
+function CvModal({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
 
   return (
-    <section id="services" className="border-t border-ink/10 bg-sand/60 py-24 md:py-32">
-      <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-        <SectionHead
-          no="02"
-          kicker="Professional focus"
-          lines={[
-            "Three ways I move",
-            <>
-              brands <span className="text-flame">forward.</span>
-            </>,
-          ]}
-          right="My practice spans design, communication and technical production — one connected workflow, from idea to finished output."
-        />
-        <div>{SERVICES.map(row)}</div>
+    <div
+      className="animate-fade-in fixed inset-0 z-[130] flex items-start justify-center overflow-y-auto bg-pine/70 p-4 backdrop-blur-sm md:py-10"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Curriculum vitae"
+      onClick={onClose}
+    >
+      <div
+        className="cv-sheet animate-pop-in relative w-full max-w-3xl rounded-3xl bg-white p-8 shadow-lift md:p-12"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="cv-no-print flex justify-end gap-2">
+          <button
+            onClick={() => window.print()}
+            className="btn btn-forest !px-5 !py-2.5 text-[13.5px]"
+          >
+            <IcPrinter className="h-4 w-4" /> Print / Save PDF
+          </button>
+          <button
+            onClick={onClose}
+            aria-label="Close CV"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-slate transition-colors hover:border-forest hover:text-forest"
+          >
+            <IcClose className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* CV content */}
+        <div className="mt-2">
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-forest pb-5">
+            <div>
+              <h3 className="font-display text-3xl font-black text-ink">
+                Olowomakan Esther Bukola
+              </h3>
+              <p className="mt-1 text-[15px] font-bold text-forest">
+                Creative Graphics Designer & Digital Media Specialist
+              </p>
+            </div>
+            <div className="space-y-0.5 text-[12.5px] text-slate">
+              <p className="flex items-center gap-2"><IcMail className="h-3.5 w-3.5 text-forest" /> esther.olowomakan@gmail.com</p>
+              <p className="flex items-center gap-2"><IcPhone className="h-3.5 w-3.5 text-forest" /> +234 814 590 4088 · +234 701 492 1004</p>
+              <p className="flex items-center gap-2"><IcPin className="h-3.5 w-3.5 text-forest" /> Ikorodu, Lagos State, Nigeria</p>
+            </div>
+          </div>
+
+          <p className="mt-5 text-[14px] leading-[1.7] text-slate">
+            Detail-oriented and result-driven creative professional with
+            experience in graphics design, digital media, social media
+            management, communications, customer service, and IT support.
+            Creating positive customer and audience experiences through
+            innovative design and strategic communication.
+          </p>
+
+          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-forest">
+            <span className="h-1.5 w-6 rounded bg-gold" /> Experience
+          </h4>
+          <ul className="mt-3 space-y-3">
+            {EXPERIENCE.map((r) => (
+              <li key={r.org} className="border-l-2 border-sage pl-4">
+                <p className="text-[13.5px] font-bold text-ink">{r.title} — {r.org}</p>
+                <p className="text-[12px] font-semibold uppercase tracking-wide text-forest">{r.period}</p>
+                <p className="mt-0.5 text-[13px] text-slate">{r.note}</p>
+              </li>
+            ))}
+          </ul>
+
+          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-forest">
+            <span className="h-1.5 w-6 rounded bg-gold" /> Certifications & Training
+          </h4>
+          <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+            {CERTS.map((c) => (
+              <li key={c.title} className="text-[13px] text-slate">
+                <span className="font-bold text-forest">{c.year}</span> — {c.title}
+              </li>
+            ))}
+          </ul>
+
+          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-forest">
+            <span className="h-1.5 w-6 rounded bg-gold" /> Core Skills
+          </h4>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {[...DESIGN_SKILLS.map((s) => s.name), ...SOFT_SKILLS.slice(0, 5)].map((s) => (
+              <span key={s} className="rounded-full bg-mist px-3 py-1 text-[12px] font-semibold text-slate">
+                {s}
+              </span>
+            ))}
+          </div>
+
+          <p className="mt-7 border-t border-line pt-4 text-center text-[11px] uppercase tracking-[0.2em] text-slate/60">
+            References available on request
+          </p>
+        </div>
       </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  About (dark green) + stats + CV                                    */
+/* ------------------------------------------------------------------ */
+function Statistic({
+  value,
+  suffix = "",
+  label,
+  delay,
+}: {
+  value: number;
+  suffix?: string;
+  label: string;
+  delay: number;
+}) {
+  return (
+    <Reveal delay={delay}>
+      <div className="group rounded-2xl border border-white/15 bg-white/5 p-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-gold/50">
+        <p className="font-display text-4xl font-black text-gold md:text-[44px]">
+          <CountUp to={value} suffix={suffix} />
+        </p>
+        <p className="mt-1.5 text-[12.5px] font-bold uppercase tracking-[0.14em] text-white/70">
+          {label}
+        </p>
+      </div>
+    </Reveal>
+  );
+}
+
+export function AboutSection() {
+  const [cvOpen, setCvOpen] = useState(false);
+  const years = yearsOfExperience();
+
+  return (
+    <section id="about" aria-label="About Esther Bukola" className="relative overflow-hidden bg-pine py-20 text-white md:py-28">
+      {/* ambient decor */}
+      <div aria-hidden className="dots-light pointer-events-none absolute right-8 top-16 h-44 w-44 opacity-70" />
+      <div aria-hidden className="pointer-events-none absolute -left-28 bottom-0 h-80 w-80 rounded-full border border-white/10" />
+      <div aria-hidden className="pointer-events-none absolute -left-16 bottom-12 h-80 w-80 rounded-full border border-gold/15" />
+
+      <div className="container-x grid items-center gap-14 lg:grid-cols-12">
+        {/* image composition */}
+        <div className="lg:col-span-5">
+          <Reveal y={36}>
+            <div className="relative mx-auto max-w-[440px]">
+              <div
+                aria-hidden
+                className="absolute -left-4 -top-4 h-full w-full rounded-[28px] bg-gold"
+              />
+              <div className="relative overflow-hidden rounded-[28px] shadow-lift">
+                <img
+                  src={IMG.brand}
+                  alt="Brand identity presentation board designed by Esther"
+                  loading="lazy"
+                  className="w-full object-cover transition-transform duration-700 hover:scale-105"
+                />
+              </div>
+              <span className="animate-float absolute -right-4 top-8 z-10 rounded-full bg-forest px-4 py-2 text-[12.5px] font-bold text-white shadow-lift">
+                ✦ Brand Systems
+              </span>
+              <span className="animate-float-late absolute -left-5 bottom-10 z-10 rounded-full bg-white px-4 py-2 text-[12.5px] font-bold text-forest shadow-lift">
+                Print ↔ Digital
+              </span>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* copy + stats */}
+        <div className="lg:col-span-7">
+          <Reveal>
+            <p className="eyebrow eyebrow-light">02 — About Me</p>
+          </Reveal>
+          <h2 className="mt-4 font-display text-[clamp(2rem,4.2vw,3.25rem)] font-black leading-[1.06] tracking-[-0.015em]">
+            <MaskLines
+              lines={[
+                <>Who is</>,
+                <>
+                  <span className="italic text-gold">Esther Bukola?</span>
+                </>,
+              ]}
+            />
+          </h2>
+
+          <Reveal delay={200}>
+            <p className="mt-6 max-w-2xl text-[16px] leading-[1.75] text-white/75">
+              I'm a detail-oriented, result-driven creative professional based
+              in Ikorodu, Lagos — working across graphics design, digital
+              media, social media management, communications, customer
+              service, and IT support.
+            </p>
+          </Reveal>
+          <Reveal delay={280}>
+            <p className="mt-4 max-w-2xl text-[16px] leading-[1.75] text-white/75">
+              My approach combines creative visual storytelling, attention to
+              detail, strategic communication, and a strong understanding of
+              audience needs. My mission is simple:{" "}
+              <span className="font-semibold text-gold">
+                creating positive customer and audience experiences through
+                innovative design.
+              </span>
+            </p>
+          </Reveal>
+
+          {/* stats — all derived from real project data */}
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <Statistic value={years} suffix="+" label="Years Experience" delay={0} />
+            <Statistic value={EXPERIENCE.length} label="Organizations" delay={100} />
+            <Statistic value={CERTS.length} label="Certifications" delay={200} />
+            <Statistic value={GALLERY.length} label="Selected Works" delay={300} />
+          </div>
+
+          <Reveal delay={250}>
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <button onClick={() => setCvOpen(true)} className="btn btn-gold">
+                <IcDownload className="h-4 w-4" />
+                Download CV
+              </button>
+              <a href="#experience" className="btn btn-outline-light">
+                My Experience
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+
+      {cvOpen && <CvModal onClose={() => setCvOpen(false)} />}
     </section>
   );
 }

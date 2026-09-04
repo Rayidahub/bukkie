@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ */
-/*  Content model for the portfolio of Olowomakan Esther Bukola        */
+/*  Content model — Olowomakan Esther Bukola portfolio                 */
 /* ------------------------------------------------------------------ */
 
 export const IMG = {
@@ -30,6 +30,36 @@ export const CONTACT = {
   coords: "6.6191° N — 3.5123° E",
 };
 
+/** First professional role started Oct 2021 — used to derive honest stats. */
+export const CAREER_START = new Date(2021, 9, 1);
+
+export function yearsOfExperience(): number {
+  return Math.max(1, Math.floor((Date.now() - CAREER_START.getTime()) / (365.25 * 24 * 3600 * 1000)));
+}
+
+/* ---------------- navigation --------------------------------------- */
+export const NAV_LINKS = [
+  { id: "home", label: "Home" },
+  { id: "services", label: "Services" },
+  { id: "about", label: "About" },
+  { id: "projects", label: "Projects" },
+  { id: "insights", label: "Blog" },
+  { id: "testimonials", label: "Testimonials" },
+];
+
+export const FOOTER_LINKS = [
+  { id: "home", label: "Home" },
+  { id: "services", label: "Services" },
+  { id: "about", label: "About" },
+  { id: "projects", label: "Projects" },
+  { id: "case-studies", label: "Case Studies" },
+  { id: "experience", label: "Experience" },
+  { id: "skills", label: "Skills" },
+  { id: "insights", label: "Blog" },
+  { id: "testimonials", label: "Testimonials" },
+  { id: "contact", label: "Contact" },
+];
+
 /* ---------------- services / professional focus ------------------- */
 export type Service = {
   no: string;
@@ -38,6 +68,7 @@ export type Service = {
   desc: string;
   tags: string[];
   icon: "pen" | "chat" | "chip";
+  featured?: boolean;
 };
 
 export const SERVICES: Service[] = [
@@ -60,6 +91,7 @@ export const SERVICES: Service[] = [
       "Ad creatives",
     ],
     icon: "pen",
+    featured: true,
   },
   {
     no: "02",
@@ -95,6 +127,21 @@ export const SERVICES: Service[] = [
   },
 ];
 
+/* ---------------- tools -------------------------------------------- */
+export type Tool = {
+  name: string;
+  icon: "ps" | "canva" | "figma" | "capcut" | "office" | "press";
+};
+
+export const TOOLS: Tool[] = [
+  { name: "Adobe Photoshop", icon: "ps" },
+  { name: "Canva", icon: "canva" },
+  { name: "Figma", icon: "figma" },
+  { name: "CapCut", icon: "capcut" },
+  { name: "MS Office Suite", icon: "office" },
+  { name: "Print Press & Large Format", icon: "press" },
+];
+
 /* ---------------- gallery / selected works ------------------------ */
 export type GalleryCat =
   | "Social Media"
@@ -127,7 +174,7 @@ export const GALLERY: GalleryItem[] = [
     cat: "Social Media",
     year: "2024",
     img: IMG.bramble,
-    ratio: "aspect-[4/5]",
+    ratio: "aspect-[4/3]",
     study: {
       type: "Social media campaign",
       objective:
@@ -150,7 +197,7 @@ export const GALLERY: GalleryItem[] = [
     cat: "Social Media",
     year: "2024",
     img: IMG.nugget,
-    ratio: "aspect-square",
+    ratio: "aspect-[4/3]",
     study: {
       type: "Awareness content series",
       objective:
@@ -196,7 +243,7 @@ export const GALLERY: GalleryItem[] = [
     cat: "Print Design",
     year: "2024",
     img: IMG.flyer,
-    ratio: "aspect-[3/4]",
+    ratio: "aspect-[4/3]",
     study: {
       type: "Event outreach material",
       objective:
@@ -242,7 +289,7 @@ export const GALLERY: GalleryItem[] = [
     cat: "Print Design",
     year: "2024",
     img: IMG.banner,
-    ratio: "aspect-[16/10]",
+    ratio: "aspect-[4/3]",
     study: {
       type: "Large-format print production",
       objective:
@@ -265,7 +312,7 @@ export const GALLERY: GalleryItem[] = [
     cat: "Video & Motion",
     year: "2025",
     img: IMG.video,
-    ratio: "aspect-video",
+    ratio: "aspect-[4/3]",
     study: {
       type: "Short-form video content",
       objective:
@@ -301,7 +348,7 @@ export type CaseStudy = {
   responsibilities: string[];
   tools: string[];
   impact: string;
-  theme: "cobalt" | "paper" | "flame";
+  theme: "forest" | "paper" | "gold";
 };
 
 export const CASE_STUDIES: CaseStudy[] = [
@@ -323,7 +370,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tools: ["Adobe Photoshop", "Canva"],
     impact:
       "Contributed to organizational growth, stronger audience engagement, active volunteer participation, and recognition through awards.",
-    theme: "cobalt",
+    theme: "forest",
   },
   {
     no: "02",
@@ -363,7 +410,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tools: ["Adobe Photoshop", "Canva", "CapCut"],
     impact:
       "Kept outreach consistent and visible before, during and after events — strengthening turnout and online conversation.",
-    theme: "flame",
+    theme: "gold",
   },
 ];
 
@@ -454,17 +501,17 @@ export const CERTS: { year: string; title: string; org: string }[] = [
 /* ---------------- philosophy --------------------------------------- */
 export const PRINCIPLES: { word: string; title: string; body: string }[] = [
   {
-    word: "CLARITY",
+    word: "Clarity",
     title: "Clarity",
     body: "Every design should communicate its message clearly — before it decorates, it must inform.",
   },
   {
-    word: "CREATIVITY",
+    word: "Creativity",
     title: "Creativity",
     body: "Visual communication should capture attention while remaining purposeful. Bold, never random.",
   },
   {
-    word: "CONSISTENCY",
+    word: "Consistency",
     title: "Consistency",
     body: "A strong, consistent visual identity is how organizations build trust and recognition over time.",
   },
@@ -500,6 +547,69 @@ export const TESTIMONIALS: {
   },
 ];
 
+/* ---------------- insights / blog ----------------------------------- */
+export type Insight = {
+  id: string;
+  tag: string;
+  title: string;
+  excerpt: string;
+  cover: string;
+  date: string;
+  read: string;
+  body: string[];
+};
+
+export const INSIGHTS: Insight[] = [
+  {
+    id: "outreach-design",
+    tag: "Campaign Design",
+    title: "Designing outreach that moves Lagos communities",
+    excerpt:
+      "What a youth summit flyer must do in the three seconds someone glances at it — and the visual decisions that earn the second look.",
+    cover: IMG.flyer,
+    date: "Jan 2026",
+    read: "4 min read",
+    body: [
+      "Street-level outreach in Lagos competes with a lot of noise: traffic, signage, phones, and a hundred other flyers. When I designed the Shapers of Nation summit materials, the first decision wasn't a colour — it was hierarchy. One promise, one date, one action. Everything else had to earn its place or leave.",
+      "Expressive typography does heavy lifting in campaign work. A torn-paper collage with oversized letters communicates energy before a single word is read. But expressiveness without structure reads as chaos, so every piece in the series shared the same grid, the same palette anchors, and the same call-to-action placement.",
+      "The second lesson was format discipline. The same announcement had to live as an A5 handbill, a roll-up banner, an Instagram post, and a WhatsApp status. Designing the master layout first, then adapting outward, kept the campaign recognizable everywhere it appeared — which is exactly what outreach needs.",
+      "If your organization is planning an event, my advice: decide the one thing a passerby must remember, design that first and loudest, and let consistency across formats do the persuading.",
+    ],
+  },
+  {
+    id: "screen-to-press",
+    tag: "Print Production",
+    title: "From screen to press: preparing files for print vendors",
+    excerpt:
+      "Bleed, colour mode, resolution, and the vendor conversation that saves your banner — a practical checklist from large-format production work.",
+    cover: IMG.banner,
+    date: "Nov 2025",
+    read: "4 min read",
+    body: [
+      "During my NYSC year at Valuemax Communication Enterprises, I learned that a beautiful file can still become a disappointing print. The gap between screen and press is measured in bleed settings, colour profiles, and resolution — and it closes long before the machine starts running.",
+      "My checklist today: work in CMYK from the start for anything physical, add at least 3mm bleed (more for large-format vinyl), keep critical text away from trim edges, and export at a resolution matched to viewing distance. A banner read from across the street doesn't need 300dpi — but it does need crisp vectors and honest contrast.",
+      "The most underrated step is the conversation with the vendor. Confirm the machine, the material, the finishing, and request a proof for anything large. On the NDLEA awareness banner, walking the file through production with the press operator is what kept the greens deep and the type sharp at twelve feet wide.",
+      "Designing for print taught me more about digital design than the other way around — constraints make you deliberate. When you know your work has to survive a machine, you stop decorating and start communicating.",
+    ],
+  },
+  {
+    id: "daily-content-systems",
+    tag: "Content Systems",
+    title: "A daily content system that keeps communities engaged",
+    excerpt:
+      "How the Sexual Purity Movement's daily nuggets became a ritual people wait for — templates, themes, and the discipline of showing up.",
+    cover: IMG.nugget,
+    date: "Sep 2025",
+    read: "3 min read",
+    body: [
+      "Daily content fails when every post starts from a blank canvas. For the Sexual Purity Movement, we built the opposite: a small system of templates, a rotating set of themes, and a strict typographic voice. Creativity went into the message; the system handled the speed.",
+      "Each nugget followed three rules. One idea per card. Type large enough to read on a cracked phone screen in bright sunlight. And a consistent footer, so a new follower could tell within a second where the post came from. Familiarity is a feature, not a limitation.",
+      "The result surprised even the team: the daily card became a ritual. People began quoting the nuggets in conversations and sharing them in group chats — the kind of engagement no single 'viral' post ever guarantees, because it compounds instead of spiking.",
+      "If you post for an organization, resist the pressure to reinvent every day. Build two or three strong templates, write a month of ideas in one sitting, and let consistency do what virality never will: build trust.",
+    ],
+  },
+];
+
 /* ---------------- marquee words ------------------------------------- */
 export const MARQUEE = [
   "Social Media Design",
@@ -512,12 +622,9 @@ export const MARQUEE = [
   "Digital Media",
 ];
 
-export const NAV_LINKS = [
-  { id: "about", label: "About" },
-  { id: "services", label: "Focus" },
-  { id: "work", label: "Work" },
-  { id: "projects", label: "Case Studies" },
-  { id: "experience", label: "Experience" },
-  { id: "skills", label: "Skills" },
-  { id: "contact", label: "Contact" },
+export const ORGS = [
+  "Business Women Hub",
+  "Bramble Network",
+  "Shapers of Nation",
+  "Sexual Purity Movement",
 ];

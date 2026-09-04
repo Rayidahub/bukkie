@@ -357,10 +357,17 @@ export function AboutSection() {
               />
               <div className="relative overflow-hidden rounded-[28px] shadow-lift">
                 <img
-                  src={IMG.brand}
-                  alt="Brand identity presentation board designed by Esther"
+                  src={IMG.portrait}
+                  alt="Olowomakan Esther Bukola — Creative Graphics Designer"
                   loading="lazy"
-                  className="w-full object-cover transition-transform duration-700 hover:scale-105"
+                  className="w-full object-cover object-top transition-transform duration-700 hover:scale-105"
+                  onError={(e) => {
+                    const el = e.currentTarget;
+                    if (!el.dataset.fb) {
+                      el.dataset.fb = "1";
+                      el.src = IMG.portraitRemote;
+                    }
+                  }}
                 />
               </div>
               <span className="animate-float absolute -right-4 top-8 z-10 rounded-full bg-forest px-4 py-2 text-[12.5px] font-bold text-white shadow-lift">

@@ -7,6 +7,7 @@ import {
   IcPin,
   IcSpark,
   MaskLines,
+  portraitFallback,
   Reveal,
 } from "../lib";
 
@@ -158,13 +159,7 @@ export function Hero() {
               src={IMG.portrait}
               alt="Portrait of Olowomakan Esther Bukola"
               className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-              onError={(e) => {
-                const el = e.currentTarget;
-                if (!el.dataset.fb) {
-                  el.dataset.fb = "1";
-                  el.src = IMG.portraitRemote;
-                }
-              }}
+              onError={portraitFallback}
             />              </div>
 
               {/* floating skill tags */}

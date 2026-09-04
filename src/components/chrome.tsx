@@ -101,7 +101,7 @@ export function Navbar() {
       <header
         className={`sticky top-0 z-[100] border-b transition-all duration-300 ${
           scrolled
-            ? "border-white/10 bg-pine/95 shadow-[0_12px_32px_-16px_rgb(22_56_38/0.6)] backdrop-blur-sm"
+            ? "border-white/10 bg-pine/95 shadow-[0_12px_32px_-16px_rgb(0_67_154/0.6)] backdrop-blur-sm"
             : "border-white/10 bg-pine"
         }`}
       >

@@ -22,6 +22,7 @@ import {
   IcPrinter,
   IcSpark,
   MaskLines,
+  portraitFallback,
   Reveal,
 } from "../lib";
 
@@ -110,7 +111,7 @@ export function ServicesSection() {
               <article
                 className={`group flex h-full flex-col rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${
                   s.featured
-                    ? "bg-forest text-white shadow-lift hover:shadow-[0_44px_80px_-32px_rgb(22_56_38/0.75)]"
+                    ? "bg-forest text-white shadow-lift hover:shadow-[0_44px_80px_-32px_rgb(0_67_154/0.75)]"
                     : "card shadow-soft hover:shadow-lift"
                 }`}
               >
@@ -361,13 +362,7 @@ export function AboutSection() {
                   alt="Olowomakan Esther Bukola — Creative Graphics Designer"
                   loading="lazy"
                   className="w-full object-cover object-top transition-transform duration-700 hover:scale-105"
-                  onError={(e) => {
-                    const el = e.currentTarget;
-                    if (!el.dataset.fb) {
-                      el.dataset.fb = "1";
-                      el.src = IMG.portraitRemote;
-                    }
-                  }}
+                  onError={portraitFallback}
                 />
               </div>
               <span className="animate-float absolute -right-4 top-8 z-10 rounded-full bg-forest px-4 py-2 text-[12.5px] font-bold text-white shadow-lift">

@@ -4,7 +4,9 @@ import {
   useState,
   type CSSProperties,
   type ReactNode,
+  type SyntheticEvent,
 } from "react";
+import { IMG } from "./data";
 
 /* ------------------------------------------------------------------ */
 /*  Hooks                                                              */
@@ -65,6 +67,23 @@ export function useActiveSection(ids: string[]) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ids.join("|")]);
   return active;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Portrait fallback chain                                            */
+/* ------------------------------------------------------------------ */
+/**
+ * Portrait chain: ./img/buk.jpeg → ./buk.jpeg → hosted fallback.
+ * Covers the two common local placements so the photo always resolves.
+ */
+export function portraitFallback(e: SyntheticEvent<HTMLImageElement>) {
+  const el = e.currentTarget;
+  const stage = Number(el.dataset.fb ?? 0);
+  const chain = ["/img/buk.jpeg", "/buk.jpeg", IMG.portraitRemote];
+  if (stage < chain.length) {
+    el.dataset.fb = String(stage + 1);
+    el.src = chain[stage];
+  }
 }
 
 /* ------------------------------------------------------------------ */

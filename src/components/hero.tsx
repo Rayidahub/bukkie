@@ -83,27 +83,31 @@ export function Hero() {
             <p className="eyebrow">Creative Graphics Designer — Lagos, NG</p>
           </Reveal>
 
-          <MaskLines
-            className="mt-6 font-display text-[26px] font-bold text-slate md:text-[30px]"
-            lines={[<>Hello, I'm Bukola</>]}
-          />
-
-          <h1 className="mt-3 font-display text-[clamp(2.6rem,6vw,4.4rem)] font-black leading-[1.02] tracking-[-0.02em] text-ink">
+          <h1 className="mt-6 font-display text-[clamp(2.6rem,6vw,4.4rem)] font-black leading-[1.02] tracking-[-0.02em] text-ink">
             <MaskLines
               lines={[
-                <>I build brands</>,
+                <>Hello, I'm Bukola </>,
+                <>I build brands through </>,
                 <>
-                  through{" "}
                   <span className="relative inline-block italic text-pine">
-                    visual
-                    <span aria-hidden className="absolute -bottom-1 left-0 h-[0.14em] w-full rounded-full bg-gold" />
+                    visual storytelling.
+                    <svg
+                      viewBox="0 0 220 12"
+                      preserveAspectRatio="none"
+                      className="absolute -bottom-1 left-0 h-[0.18em] w-full"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M3 9c40-6 140-6 214-3"
+                        fill="none"
+                        stroke="var(--color-gold)"
+                        strokeWidth="6"
+                        strokeLinecap="round"
+                      />
+                    </svg>
                   </span>
                 </>,
-                <>
-                  <span className="italic text-pine">storytelling.</span>
-                </>,
               ]}
-              delay={150}
             />
           </h1>
 

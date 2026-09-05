@@ -12,6 +12,7 @@ import {
   yearsOfExperience,
   type GalleryCat,
   type GalleryItem,
+  type HeroContent,
   type Insight,
   type Service,
 } from "./data";
@@ -26,6 +27,7 @@ import {
   IcQuote,
   IcSpark,
   MaskLines,
+  portraitFallback,
   Reveal,
 } from "./lib";
 import { uid, useContent, type Testimonial } from "./store";
@@ -802,8 +804,142 @@ function TestimonialEditor({ initial, onSave, onClose }: { initial: Testimonial;
   );
 }
 
+/* ---------- hero editor ---------- */
+function HeroEditor() {
+  const store = useContent();
+  const [draft, setDraft] = useState<HeroContent>({ ...store.hero });
+  const [toast, setToast] = useState(false);
+  const set = (patch: Partial<HeroContent>) => setDraft((d) => ({ ...d, ...patch }));
+
+  const save = () => {
+    const tags = draft.tags.map((t) => t.trim()).filter(Boolean).slice(0, 3);
+    while (tags.length < 3) tags.push("");
+    store.setHero({
+      ...draft,
+      orgs: draft.orgs.map((o) => o.trim()).filter(Boolean),
+      tags,
+    });
+    setToast(true);
+    setTimeout(() => setToast(false), 1800);
+  };
+
+  const groupTitle = "flex items-center gap-3 text-[12px] font-extrabold uppercase tracking-[0.2em] text-pine";
+  const bar = <span className="h-0.5 w-7 rounded bg-gold" />;
+
+  return (
+    <div className="card animate-pop-in mt-8 p-6 shadow-soft md:p-9">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 className="font-display text-2xl font-black text-ink">Hero section editor</h2>
+          <p className="mt-1 text-[13.5px] text-slate">Every field updates the homepage hero the moment you save.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link to="/" className="btn btn-outline !py-2.5 text-[13.5px]">
+            View Site
+            <IcArrowUpRight className="h-4 w-4" />
+          </Link>
+          <button onClick={save} className="btn btn-gold !py-2.5 text-[13.5px]">
+            <IcCheck className="h-4 w-4" />
+            Save Hero
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-9 grid gap-12 lg:grid-cols-12">
+        {/* left — text content */}
+        <div className="space-y-6 lg:col-span-7">
+          <p className={groupTitle}>{bar} Headline</p>
+          <TextField label="Eyebrow (small line above the headline)" value={draft.eyebrow} onChange={(v) => set({ eyebrow: v })} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <TextField label="Line 1 — greeting" value={draft.greeting} onChange={(v) => set({ greeting: v })} placeholder="Hello, I'm Bukola" />
+            <TextField label="Line 2" value={draft.line2} onChange={(v) => set({ line2: v })} placeholder="I build brands through" />
+          </div>
+          <TextField label="Line 3 — highlighted (gets the gold underline)" value={draft.highlight} onChange={(v) => set({ highlight: v })} placeholder="visual storytelling." />
+          <AreaField label="Introduction paragraph" value={draft.paragraph} onChange={(v) => set({ paragraph: v })} rows={4} />
+
+          <p className={`${groupTitle} pt-4`}>{bar} Buttons</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-4 rounded-2xl bg-mist p-4">
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate">Primary button</p>
+              <TextField label="Label" value={draft.primary.label} onChange={(v) => set({ primary: { ...draft.primary, label: v } })} />
+              <TextField label="Link (route like /projects or a full URL)" value={draft.primary.link} onChange={(v) => set({ primary: { ...draft.primary, link: v } })} />
+            </div>
+            <div className="space-y-4 rounded-2xl bg-mist p-4">
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate">Secondary button</p>
+              <TextField label="Label" value={draft.secondary.label} onChange={(v) => set({ secondary: { ...draft.secondary, label: v } })} />
+              <TextField label="Link" value={draft.secondary.link} onChange={(v) => set({ secondary: { ...draft.secondary, link: v } })} />
+            </div>
+          </div>
+
+          <p className={`${groupTitle} pt-4`}>{bar} Organization chips</p>
+          <TextField label="Label above the chips" value={draft.teamsLabel} onChange={(v) => set({ teamsLabel: v })} />
+          <AreaField
+            label="Organizations (one per line)"
+            value={draft.orgs.join("\n")}
+            onChange={(v) => set({ orgs: v.split("\n") })}
+            rows={4}
+          />
+        </div>
+
+        {/* right — image + details */}
+        <div className="space-y-6 lg:col-span-5">
+          <p className={groupTitle}>{bar} Portrait image</p>
+          <div className="flex items-start gap-5">
+            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full border-4 border-white shadow-lift">
+              <img
+                src={draft.portrait || IMG.portraitRemote}
+                alt="Portrait preview"
+                className="h-full w-full object-cover"
+                onError={portraitFallback}
+              />
+              <span aria-hidden className="absolute -right-1 -top-1 h-6 w-6 rounded-full border-2 border-white bg-gold" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <TextField label="Image path or URL" value={draft.portrait} onChange={(v) => set({ portrait: v })} placeholder="/img/image1.jpeg" />
+              <p className="mt-2 rounded-r-xl border-l-4 border-gold bg-mist p-3 text-[12.5px] font-semibold leading-[1.6] text-slate">
+                For a file on your computer: copy it into <code className="rounded bg-white px-1.5 py-0.5 text-[11.5px] text-pine">public/img/</code> in the project folder, then use{" "}
+                <code className="rounded bg-white px-1.5 py-0.5 text-[11.5px] text-pine">/img/yourfile.jpeg</code>. Any full https:// URL also works.
+              </p>
+            </div>
+          </div>
+
+          <p className={`${groupTitle} pt-4`}>{bar} Floating skill tags</p>
+          <AreaField
+            label="Three tags (one per line)"
+            value={draft.tags.join("\n")}
+            onChange={(v) => set({ tags: v.split("\n").slice(0, 3) })}
+            rows={3}
+          />
+
+          <p className={`${groupTitle} pt-4`}>{bar} Badges</p>
+          <TextField label="Experience badge label (under the years)" value={draft.badgeLabel} onChange={(v) => set({ badgeLabel: v })} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <TextField label="Availability text" value={draft.availability} onChange={(v) => set({ availability: v })} />
+            <TextField label="Coordinates / location line" value={draft.coords} onChange={(v) => set({ coords: v })} />
+          </div>
+
+          <div className="rounded-2xl border border-dashed border-pine/30 bg-pine/5 p-5">
+            <p className="text-[13px] font-semibold leading-[1.65] text-slate">
+              <span className="font-bold text-pine">Preview tip:</span> after saving, the homepage updates instantly — hit{" "}
+              <span className="font-bold text-pine">View Site</span> to see it live. Use <span className="font-bold text-pine">Export JSON</span>{" "}
+              in the toolbar to take your hero changes permanent.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {toast && (
+        <p className="animate-pop-in fixed bottom-8 left-1/2 z-[150] flex -translate-x-1/2 items-center gap-2.5 rounded-full bg-pine px-6 py-3 text-[13.5px] font-bold text-white shadow-lift">
+          <IcCheck className="h-4 w-4 text-gold" /> Hero saved — live on the homepage
+        </p>
+      )}
+    </div>
+  );
+}
+
 /* ---------- admin page ---------- */
 const TABS = [
+  { key: "hero", label: "Hero Section" },
   { key: "services", label: "Services" },
   { key: "projects", label: "Projects" },
   { key: "articles", label: "Blog Posts" },
@@ -819,7 +955,7 @@ export function AdminPage() {
       return false;
     }
   });
-  const [tab, setTab] = useState<TabKey>("services");
+  const [tab, setTab] = useState<TabKey>("hero");
   const [editing, setEditing] = useState<{ kind: TabKey; id: string } | null>(null);
   const store = useContent();
 
@@ -837,7 +973,8 @@ export function AdminPage() {
       />
     );
 
-  const counts: Record<TabKey, number> = {
+  const counts: Record<TabKey, number | string> = {
+    hero: "✎",
     services: store.services.length,
     projects: store.projects.length,
     articles: store.articles.length,
@@ -1007,7 +1144,10 @@ export function AdminPage() {
           ))}
         </div>
 
-        {/* list */}
+        {/* content area */}
+        {tab === "hero" ? (
+          <HeroEditor />
+        ) : (
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {items.map((it) => (
             <div key={it.id} className="card group flex items-center gap-4 p-4 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift">
@@ -1046,6 +1186,7 @@ export function AdminPage() {
             Add {TABS.find((t) => t.key === tab)?.label.replace(/s$/, "") ?? "item"}
           </button>
         </div>
+        )}
 
         <div className="mt-10 rounded-r-2xl border-l-4 border-gold bg-white p-5 shadow-soft">
           <p className="text-[13.5px] font-semibold leading-[1.65] text-slate">

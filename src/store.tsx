@@ -7,10 +7,12 @@ import {
 } from "react";
 import {
   GALLERY,
+  HERO,
   INSIGHTS,
   SERVICES,
   TESTIMONIALS,
   type GalleryItem,
+  type HeroContent,
   type Insight,
   type Service,
 } from "./data";
@@ -20,6 +22,7 @@ const LS_KEY = "eb-portfolio-content-v1";
 export type Testimonial = (typeof TESTIMONIALS)[number];
 
 export type SiteContent = {
+  hero: HeroContent;
   services: Service[];
   projects: GalleryItem[];
   articles: Insight[];
@@ -27,6 +30,7 @@ export type SiteContent = {
 };
 
 const defaults = (): SiteContent => ({
+  hero: HERO,
   services: SERVICES,
   projects: GALLERY,
   articles: INSIGHTS,
@@ -47,6 +51,7 @@ function load(): SiteContent {
 }
 
 type ContentCtx = SiteContent & {
+  setHero: (v: HeroContent) => void;
   setServices: (v: Service[]) => void;
   setProjects: (v: GalleryItem[]) => void;
   setArticles: (v: Insight[]) => void;
@@ -69,6 +74,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   const api: ContentCtx = {
     ...content,
+    setHero: (hero) => setContent((c) => ({ ...c, hero })),
     setServices: (services) => setContent((c) => ({ ...c, services })),
     setProjects: (projects) => setContent((c) => ({ ...c, projects })),
     setArticles: (articles) => setContent((c) => ({ ...c, articles })),

@@ -4,9 +4,7 @@ import {
   CERTS,
   DESIGN_SKILLS,
   EXPERIENCE,
-  IMG,
   SOFT_SKILLS,
-  yearsOfExperience,
 } from "../data";
 import {
   CountUp,
@@ -310,9 +308,8 @@ function Statistic({
 }
 
 export function AboutSection() {
-  const { projects } = useContent();
+  const { about } = useContent();
   const [cvOpen, setCvOpen] = useState(false);
-  const years = yearsOfExperience();
 
   return (
     <section id="about" aria-label="About Esther Bukola" className="relative overflow-hidden bg-pine py-20 text-white md:py-28">
@@ -328,7 +325,7 @@ export function AboutSection() {
               <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rounded-[28px] bg-gold" />
               <div className="relative overflow-hidden rounded-[28px] shadow-lift">
                 <img
-                  src={IMG.portrait}
+                  src={about.image}
                   alt="Olowomakan Esther Bukola — Creative Graphics Designer"
                   loading="lazy"
                   className="w-full object-cover object-top transition-transform duration-700 hover:scale-105"
@@ -336,10 +333,10 @@ export function AboutSection() {
                 />
               </div>
               <span className="animate-float absolute -right-4 top-8 z-10 rounded-full bg-pine-dark px-4 py-2 text-[12.5px] font-bold text-white shadow-lift">
-                ✦ Brand Systems
+                {about.tag1}
               </span>
               <span className="animate-float-late absolute -left-5 bottom-10 z-10 rounded-full bg-white px-4 py-2 text-[12.5px] font-bold text-pine shadow-lift">
-                Print ↔ Digital
+                {about.tag2}
               </span>
             </div>
           </Reveal>
@@ -348,51 +345,42 @@ export function AboutSection() {
         {/* copy + stats */}
         <div className="lg:col-span-7">
           <Reveal>
-            <p className="eyebrow eyebrow-light">02 — About Me</p>
+            <p className="eyebrow eyebrow-light">02 — {about.eyebrow}</p>
           </Reveal>
           <h2 className="mt-4 font-display text-[clamp(2rem,4.2vw,3.25rem)] font-black leading-[1.06] tracking-[-0.015em]">
             <MaskLines
               lines={[
-                <>Who is</>,
+                <>{about.heading1}</>,
                 <>
-                  <span className="italic text-gold">Esther Bukola?</span>
+                  <span className="italic text-gold">{about.heading2}</span>
                 </>,
               ]}
             />
           </h2>
 
           <Reveal delay={200}>
-            <p className="mt-6 max-w-2xl text-[16px] leading-[1.75] text-white/75">
-              I'm a detail-oriented, result-driven creative professional based
-              in Ikorodu, Lagos — working across graphics design, digital
-              media, social media management, communications, customer
-              service, and IT support.
+            <p className="mt-6 max-w-2xl whitespace-pre-line text-[16px] leading-[1.75] text-white/75">
+              {about.intro}
             </p>
           </Reveal>
           <Reveal delay={280}>
-            <p className="mt-4 max-w-2xl text-[16px] leading-[1.75] text-white/75">
-              My approach combines creative visual storytelling, attention to
-              detail, strategic communication, and a strong understanding of
-              audience needs. My mission is simple:{" "}
-              <span className="font-semibold text-gold">
-                creating positive customer and audience experiences through
-                innovative design.
-              </span>
+            <p className="mt-4 max-w-2xl whitespace-pre-line text-[16px] leading-[1.75] text-white/75">
+              {about.approach}{" "}
+              <span className="font-semibold text-gold">{about.mission}</span>
             </p>
           </Reveal>
 
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <Statistic value={years} suffix="+" label="Years Experience" delay={0} />
-            <Statistic value={EXPERIENCE.length} label="Organizations" delay={100} />
-            <Statistic value={CERTS.length} label="Certifications" delay={200} />
-            <Statistic value={projects.length} label="Selected Works" delay={300} />
+            {about.stats.map((s, i) => (
+              <Statistic key={`${s.label}-${i}`} value={s.value} suffix={s.suffix} label={s.label} delay={i * 100} />
+            ))}
           </div>
 
           <Reveal delay={250}>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <button onClick={() => setCvOpen(true)} className="btn btn-gold">
                 <IcDownload className="h-4 w-4" />
-                Download CV
+                {about.cvLabel}
               </button>
               <button
                 onClick={() =>
@@ -402,7 +390,7 @@ export function AboutSection() {
                 }
                 className="btn btn-outline-light"
               >
-                My Experience
+                {about.expLabel}
               </button>
             </div>
           </Reveal>

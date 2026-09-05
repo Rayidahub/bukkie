@@ -649,6 +649,47 @@ export const HERO: HeroContent = {
   badgeLabel: "Years Exp.",
 };
 
+/* ---------------- about page (fully admin-editable) ------------------ */
+export type AboutStat = { value: number; suffix: string; label: string };
+
+export type AboutContent = {
+  image: string;
+  tag1: string;
+  tag2: string;
+  eyebrow: string;
+  heading1: string;
+  heading2: string;
+  intro: string;
+  approach: string;
+  mission: string;
+  cvLabel: string;
+  expLabel: string;
+  stats: AboutStat[];
+};
+
+export const ABOUT: AboutContent = {
+  image: IMG.portrait,
+  tag1: "✦ Brand Systems",
+  tag2: "Print ↔ Digital",
+  eyebrow: "About Me",
+  heading1: "Who is",
+  heading2: "Esther Bukola?",
+  intro:
+    "I'm a detail-oriented, result-driven creative professional based in Ikorodu, Lagos — working across graphics design, digital media, social media management, communications, customer service, and IT support.",
+  approach:
+    "My approach combines creative visual storytelling, attention to detail, strategic communication, and a strong understanding of audience needs. My mission is simple:",
+  mission:
+    "creating positive customer and audience experiences through innovative design.",
+  cvLabel: "Download CV",
+  expLabel: "My Experience",
+  stats: [
+    { value: yearsOfExperience(), suffix: "+", label: "Years Experience" },
+    { value: EXPERIENCE.length, suffix: "", label: "Organizations" },
+    { value: CERTS.length, suffix: "", label: "Certifications" },
+    { value: GALLERY.length, suffix: "", label: "Selected Works" },
+  ],
+};
+
 /* ---------------- marquee words ------------------------------------- */
 export const MARQUEE = [
   "Social Media Design",

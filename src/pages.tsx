@@ -10,6 +10,8 @@ import {
   IMG,
   ORGS,
   yearsOfExperience,
+  type AboutContent,
+  type AboutStat,
   type GalleryCat,
   type GalleryItem,
   type HeroContent,
@@ -805,32 +807,52 @@ function TestimonialEditor({ initial, onSave, onClose }: { initial: Testimonial;
   );
 }
 
-/* ---------- hero editor ---------- */
-function HeroEditor() {
-  const store = useContent();
-  const [draft, setDraft] = useState<HeroContent>({ ...store.hero });
-  const [toast, setToast] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [fileError, setFileError] = useState("");
-  const fileRef = useRef<HTMLInputElement>(null);
-  const set = (patch: Partial<HeroContent>) => setDraft((d) => ({ ...d, ...patch }));
+/* ---------- shared admin pieces ---------- */
+function SavedToast({ show, children }: { show: boolean; children: ReactNode }) {
+  if (!show) return null;
+  return (
+    <p className="animate-pop-in fixed bottom-8 left-1/2 z-[150] flex -translate-x-1/2 items-center gap-2.5 rounded-full bg-pine px-6 py-3 text-[13.5px] font-bold text-white shadow-lift">
+      <IcCheck className="h-4 w-4 text-gold" /> {children}
+    </p>
+  );
+}
 
-  /** Pick a photo from the computer, optimize it, and embed it in the content. */
+/**
+ * Pick a photo from the local computer. The image is downscaled (max 900px),
+ * compressed, and handed back as a data URL so it can be embedded straight
+ * into the content store.
+ */
+function ImageUpload({
+  value,
+  onPick,
+  pathFallback,
+  label = "Upload from computer",
+}: {
+  value: string;
+  onPick: (dataUrl: string) => void;
+  pathFallback?: string;
+  label?: string;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+  const embedded = value.startsWith("data:image/");
+  const sizeKb = embedded ? Math.round((value.length * 3) / 4 / 1024) : 0;
+
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = ""; // allow re-selecting the same file
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      setFileError("That file isn't an image — try a JPG, PNG, or WEBP.");
+      setError("That file isn't an image — try a JPG, PNG, or WEBP.");
       return;
     }
-    setFileError("");
-    setUploading(true);
+    setError("");
+    setBusy(true);
     const reader = new FileReader();
     reader.onload = () => {
       const img = new Image();
       img.onload = () => {
-        // Downscale to max 900px so the embedded image stays light in storage
         const max = 900;
         const scale = Math.min(1, max / Math.max(img.width, img.height));
         const canvas = document.createElement("canvas");
@@ -838,30 +860,86 @@ function HeroEditor() {
         canvas.height = Math.max(1, Math.round(img.height * scale));
         const ctx = canvas.getContext("2d");
         if (!ctx) {
-          setUploading(false);
-          setFileError("Couldn't process that image — try a different file.");
+          setBusy(false);
+          setError("Couldn't process that image — try a different file.");
           return;
         }
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        set({ portrait: canvas.toDataURL("image/jpeg", 0.86) });
-        setUploading(false);
+        onPick(canvas.toDataURL("image/jpeg", 0.86));
+        setBusy(false);
       };
       img.onerror = () => {
-        setUploading(false);
-        setFileError("Couldn't read that image file — it may be corrupted.");
+        setBusy(false);
+        setError("Couldn't read that image file — it may be corrupted.");
       };
       img.src = String(reader.result);
     };
     reader.onerror = () => {
-      setUploading(false);
-      setFileError("Couldn't read that file. Please try again.");
+      setBusy(false);
+      setError("Couldn't read that file. Please try again.");
     };
     reader.readAsDataURL(file);
   };
 
-  const embeddedKb = draft.portrait.startsWith("data:")
-    ? Math.round((draft.portrait.length * 3) / 4 / 1024)
-    : 0;
+  return (
+    <div>
+      <input ref={fileRef} type="file" accept="image/*" className="hidden" aria-label={label} onChange={handleFile} />
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={busy}
+          className={`btn btn-gold !py-2.5 text-[13.5px] ${busy ? "cursor-wait opacity-70" : ""}`}
+        >
+          {busy ? (
+            <>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-pulse-soft absolute h-2 w-2 rounded-full bg-pine" />
+                <span className="h-2 w-2 rounded-full bg-pine" />
+              </span>
+              Processing…
+            </>
+          ) : (
+            <>
+              <IcArrowUp className="h-4 w-4" />
+              {label}
+            </>
+          )}
+        </button>
+        {embedded && pathFallback && (
+          <button
+            type="button"
+            onClick={() => {
+              onPick(pathFallback);
+              setError("");
+            }}
+            className="text-[12.5px] font-bold text-pine underline decoration-gold decoration-2 underline-offset-4 transition-colors hover:text-pine-dark"
+          >
+            Use file path instead
+          </button>
+        )}
+      </div>
+      {error && (
+        <p className="animate-pop-in mt-3 flex items-center gap-2 rounded-full bg-gold/15 px-4 py-2.5 text-[12.5px] font-bold text-pine">
+          <IcClose className="h-3.5 w-3.5" /> {error}
+        </p>
+      )}
+      {sizeKb > 0 && !error && (
+        <p className="mt-3 flex items-center gap-2 rounded-full bg-pine/8 px-4 py-2 text-[12px] font-bold text-pine">
+          <IcCheck className="h-3.5 w-3.5 text-gold" />
+          Photo embedded with your content · {sizeKb} KB — included when you save & export
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* ---------- hero editor ---------- */
+function HeroEditor() {
+  const store = useContent();
+  const [draft, setDraft] = useState<HeroContent>({ ...store.hero });
+  const [toast, setToast] = useState(false);
+  const set = (patch: Partial<HeroContent>) => setDraft((d) => ({ ...d, ...patch }));
 
   const save = () => {
     const tags = draft.tags.map((t) => t.trim()).filter(Boolean).slice(0, 3);
@@ -949,55 +1027,11 @@ function HeroEditor() {
             <div className="min-w-0 flex-1">
               <TextField label="Image path or URL" value={draft.portrait} onChange={(v) => set({ portrait: v })} placeholder="/img/image1.jpeg" />
 
-              <div className="mt-3 flex flex-wrap items-center gap-3">
-                <input ref={fileRef} type="file" accept="image/*" className="hidden" aria-label="Upload portrait image" onChange={handleFile} />
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  disabled={uploading}
-                  className={`btn btn-gold !py-2.5 text-[13.5px] ${uploading ? "cursor-wait opacity-70" : ""}`}
-                >
-                  {uploading ? (
-                    <>
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-pulse-soft absolute h-2 w-2 rounded-full bg-pine" />
-                        <span className="h-2 w-2 rounded-full bg-pine" />
-                      </span>
-                      Processing…
-                    </>
-                  ) : (
-                    <>
-                      <IcArrowUp className="h-4 w-4" />
-                      Upload from computer
-                    </>
-                  )}
-                </button>
-                {draft.portrait.startsWith("data:") && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      set({ portrait: "./img/image1.jpeg" });
-                      setFileError("");
-                    }}
-                    className="text-[12.5px] font-bold text-pine underline decoration-gold decoration-2 underline-offset-4 transition-colors hover:text-pine-dark"
-                  >
-                    Use file path instead
-                  </button>
-                )}
-              </div>
-
-              {fileError && (
-                <p className="animate-pop-in mt-3 flex items-center gap-2 rounded-full bg-gold/15 px-4 py-2.5 text-[12.5px] font-bold text-pine">
-                  <IcClose className="h-3.5 w-3.5" /> {fileError}
-                </p>
-              )}
-
-              {embeddedKb > 0 && !fileError && (
-                <p className="mt-3 flex items-center gap-2 rounded-full bg-pine/8 px-4 py-2 text-[12px] font-bold text-pine">
-                  <IcCheck className="h-3.5 w-3.5 text-gold" />
-                  Photo embedded with your content · {embeddedKb} KB — saved when you hit Save Hero
-                </p>
-              )}
+              <ImageUpload
+                value={draft.portrait}
+                onPick={(url) => set({ portrait: url })}
+                pathFallback="./img/image1.jpeg"
+              />
 
               <p className="mt-3 rounded-r-xl border-l-4 border-gold bg-mist p-3 text-[12.5px] font-semibold leading-[1.6] text-slate">
                 <span className="font-bold text-pine">Easiest:</span> hit <span className="font-bold text-pine">Upload from computer</span> — the photo is
@@ -1033,11 +1067,191 @@ function HeroEditor() {
         </div>
       </div>
 
-      {toast && (
-        <p className="animate-pop-in fixed bottom-8 left-1/2 z-[150] flex -translate-x-1/2 items-center gap-2.5 rounded-full bg-pine px-6 py-3 text-[13.5px] font-bold text-white shadow-lift">
-          <IcCheck className="h-4 w-4 text-gold" /> Hero saved — live on the homepage
-        </p>
-      )}
+      <SavedToast show={toast}>Hero saved — live on the homepage</SavedToast>
+    </div>
+  );
+}
+
+/* ---------- about editor ---------- */
+function AboutEditor() {
+  const store = useContent();
+  const [draft, setDraft] = useState<AboutContent>({
+    ...store.about,
+    stats: store.about.stats.map((s) => ({ ...s })),
+  });
+  const [toast, setToast] = useState(false);
+  const set = (patch: Partial<AboutContent>) => setDraft((d) => ({ ...d, ...patch }));
+
+  const updateStat = (i: number, patch: Partial<AboutStat>) =>
+    setDraft((d) => ({ ...d, stats: d.stats.map((s, j) => (j === i ? { ...s, ...patch } : s)) }));
+  const addStat = () =>
+    setDraft((d) =>
+      d.stats.length >= 6 ? d : { ...d, stats: [...d.stats, { value: 0, suffix: "", label: "" }] }
+    );
+  const removeStat = (i: number) =>
+    setDraft((d) => (d.stats.length <= 1 ? d : { ...d, stats: d.stats.filter((_, j) => j !== i) }));
+
+  const save = () => {
+    store.setAbout({
+      ...draft,
+      tag1: draft.tag1.trim(),
+      tag2: draft.tag2.trim(),
+      stats: draft.stats.map((s) => ({ ...s, label: s.label.trim() })).filter((s) => s.label),
+    });
+    setToast(true);
+    setTimeout(() => setToast(false), 1800);
+  };
+
+  const groupTitle = "flex items-center gap-3 text-[12px] font-extrabold uppercase tracking-[0.2em] text-pine";
+  const bar = <span className="h-0.5 w-7 rounded bg-gold" />;
+  const lbl = "mb-1.5 block text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate";
+
+  return (
+    <div className="card animate-pop-in mt-8 p-6 shadow-soft md:p-9">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 className="font-display text-2xl font-black text-ink">About page editor</h2>
+          <p className="mt-1 text-[13.5px] text-slate">Everything in the dark-blue About block — photo, words, numbers, buttons.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link to="/about" className="btn btn-outline !py-2.5 text-[13.5px]">
+            View Page
+            <IcArrowUpRight className="h-4 w-4" />
+          </Link>
+          <button onClick={save} className="btn btn-gold !py-2.5 text-[13.5px]">
+            <IcCheck className="h-4 w-4" />
+            Save About
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-9 grid gap-12 lg:grid-cols-12">
+        {/* left — copy & stats */}
+        <div className="space-y-6 lg:col-span-7">
+          <p className={groupTitle}>{bar} Heading</p>
+          <TextField label="Eyebrow (after the “02 —”)" value={draft.eyebrow} onChange={(v) => set({ eyebrow: v })} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <TextField label="Heading line 1" value={draft.heading1} onChange={(v) => set({ heading1: v })} placeholder="Who is" />
+            <TextField label="Heading line 2 (gold italic)" value={draft.heading2} onChange={(v) => set({ heading2: v })} placeholder="Esther Bukola?" />
+          </div>
+
+          <p className={`${groupTitle} pt-4`}>{bar} Biography</p>
+          <AreaField label="Introduction paragraph" value={draft.intro} onChange={(v) => set({ intro: v })} rows={4} />
+          <AreaField label="Approach paragraph (leads into the mission)" value={draft.approach} onChange={(v) => set({ approach: v })} rows={3} />
+          <TextField label="Mission line (gold highlight)" value={draft.mission} onChange={(v) => set({ mission: v })} />
+
+          <p className={`${groupTitle} pt-4`}>{bar} Statistics</p>
+          <div className="space-y-3">
+            {draft.stats.map((s, i) => (
+              <div key={i} className="flex items-end gap-2.5 rounded-2xl bg-mist p-3.5">
+                <div className="w-24 shrink-0">
+                  <label className={lbl}>Number</label>
+                  <input
+                    type="number"
+                    value={s.value}
+                    onChange={(e) => updateStat(i, { value: Number(e.target.value) || 0 })}
+                    className="input-base"
+                  />
+                </div>
+                <div className="w-20 shrink-0">
+                  <label className={lbl}>Suffix</label>
+                  <input
+                    value={s.suffix}
+                    onChange={(e) => updateStat(i, { suffix: e.target.value })}
+                    placeholder="+"
+                    className="input-base"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <label className={lbl}>Label</label>
+                  <input
+                    value={s.label}
+                    onChange={(e) => updateStat(i, { label: e.target.value })}
+                    placeholder="e.g. Certifications"
+                    className="input-base"
+                  />
+                </div>
+                <button
+                  onClick={() => removeStat(i)}
+                  disabled={draft.stats.length <= 1}
+                  aria-label={`Remove stat ${i + 1}`}
+                  className="mb-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line text-slate transition-colors enabled:hover:border-gold enabled:hover:bg-gold enabled:hover:text-pine disabled:opacity-40"
+                >
+                  <IcClose className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            {draft.stats.length < 6 && (
+              <button
+                onClick={addStat}
+                className="rounded-full border border-dashed border-pine/40 px-5 py-2.5 text-[13px] font-bold text-pine transition-all duration-300 hover:-translate-y-0.5 hover:border-pine hover:bg-sage"
+              >
+                + Add statistic
+              </button>
+            )}
+            <p className="text-[12px] font-semibold text-slate">Stats count up with animation on the live page.</p>
+          </div>
+
+          <p className={`${groupTitle} pt-4`}>{bar} Buttons</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <TextField label="CV button label" value={draft.cvLabel} onChange={(v) => set({ cvLabel: v })} />
+            <TextField label="Experience button label" value={draft.expLabel} onChange={(v) => set({ expLabel: v })} />
+          </div>
+        </div>
+
+        {/* right — image & tags */}
+        <div className="space-y-6 lg:col-span-5">
+          <p className={groupTitle}>{bar} About image</p>
+          <div className="relative mx-auto max-w-[300px]">
+            <div aria-hidden className="absolute -left-3 -top-3 h-full w-full rounded-[24px] bg-gold" />
+            <div className="relative overflow-hidden rounded-[24px] border border-line shadow-lift">
+              <img
+                src={draft.image || IMG.portraitRemote}
+                alt="About image preview"
+                className="w-full object-cover object-top"
+                onError={portraitFallback}
+              />
+            </div>
+            <span className="absolute -right-3 top-6 z-10 rounded-full bg-pine px-3.5 py-1.5 text-[11px] font-bold text-white shadow-soft">
+              {draft.tag1 || "Tag one"}
+            </span>
+            <span className="absolute -left-3 bottom-8 z-10 rounded-full border border-line bg-white px-3.5 py-1.5 text-[11px] font-bold text-pine shadow-soft">
+              {draft.tag2 || "Tag two"}
+            </span>
+          </div>
+
+          <ImageUpload
+            value={draft.image}
+            onPick={(url) => set({ image: url })}
+            pathFallback="./img/image1.jpeg"
+            label="Upload photo from computer"
+          />
+          <TextField label="…or use an image path / URL" value={draft.image} onChange={(v) => set({ image: v })} placeholder="/img/image1.jpeg" />
+          <p className="rounded-r-xl border-l-4 border-gold bg-mist p-3 text-[12.5px] font-semibold leading-[1.6] text-slate">
+            <span className="font-bold text-pine">Upload</span> embeds the photo straight into your content. Or place a file in{" "}
+            <code className="rounded bg-white px-1.5 py-0.5 text-[11.5px] text-pine">public/img/</code> and use{" "}
+            <code className="rounded bg-white px-1.5 py-0.5 text-[11.5px] text-pine">/img/yourfile.jpeg</code> — any https:// URL works too.
+          </p>
+
+          <p className={`${groupTitle} pt-4`}>{bar} Floating tags</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <TextField label="Tag 1 (pine chip, top right)" value={draft.tag1} onChange={(v) => set({ tag1: v })} />
+            <TextField label="Tag 2 (white chip, bottom left)" value={draft.tag2} onChange={(v) => set({ tag2: v })} />
+          </div>
+
+          <div className="rounded-2xl border border-dashed border-pine/30 bg-pine/5 p-5">
+            <p className="text-[13px] font-semibold leading-[1.65] text-slate">
+              <span className="font-bold text-pine">Preview tip:</span> saving updates the About page instantly — hit{" "}
+              <span className="font-bold text-pine">View Page</span> to see it live. Use{" "}
+              <span className="font-bold text-pine">Export JSON</span> in the toolbar to make it permanent.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <SavedToast show={toast}>About page saved — live on the site</SavedToast>
     </div>
   );
 }
@@ -1045,6 +1259,7 @@ function HeroEditor() {
 /* ---------- admin page ---------- */
 const TABS = [
   { key: "hero", label: "Hero Section" },
+  { key: "about", label: "About Page" },
   { key: "services", label: "Services" },
   { key: "projects", label: "Projects" },
   { key: "articles", label: "Blog Posts" },
@@ -1080,6 +1295,7 @@ export function AdminPage() {
 
   const counts: Record<TabKey, number | string> = {
     hero: "✎",
+    about: "✎",
     services: store.services.length,
     projects: store.projects.length,
     articles: store.articles.length,
@@ -1252,6 +1468,8 @@ export function AdminPage() {
         {/* content area */}
         {tab === "hero" ? (
           <HeroEditor />
+        ) : tab === "about" ? (
+          <AboutEditor />
         ) : (
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {items.map((it) => (

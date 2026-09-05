@@ -78,7 +78,7 @@ export function useActiveSection(ids: string[]): string {
 export function portraitFallback(e: SyntheticEvent<HTMLImageElement>) {
   const el = e.currentTarget;
   const stage = Number(el.dataset.fb ?? 0);
-  const chain = ["/img/buk.jpeg", "/buk.jpeg", IMG.portraitRemote];
+  const chain = ["/img/image1.jpeg", "/img/buk.jpeg", "/buk.jpeg", IMG.portraitRemote];
   if (stage < chain.length) {
     el.dataset.fb = String(stage + 1);
     el.src = chain[stage];

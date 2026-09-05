@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { CONTACT, IMG, MARQUEE, ORGS, yearsOfExperience } from "../data";
+import { MARQUEE, yearsOfExperience } from "../data";
+import { useContent } from "../store";
 import {
   IcArrowDown,
   IcArrowUpRight,
@@ -68,8 +69,45 @@ export function FloatingTag({
 /* ------------------------------------------------------------------ */
 /*  Hero                                                               */
 /* ------------------------------------------------------------------ */
+function HeroButton({
+  label,
+  link,
+  primary,
+}: {
+  label: string;
+  link: string;
+  primary?: boolean;
+}) {
+  const cls = `btn ${primary ? "btn-pine" : "btn-outline"}`;
+  const icon = primary ? (
+    <IcArrowDown className="h-4 w-4" />
+  ) : (
+    <IcArrowUpRight className="h-4 w-4" />
+  );
+  if (link.startsWith("/") && !link.startsWith("//")) {
+    return (
+      <Link to={link} className={cls}>
+        {label}
+        {icon}
+      </Link>
+    );
+  }
+  const external = /^https?:/i.test(link);
+  return (
+    <a
+      href={link}
+      className={cls}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      {label}
+      {icon}
+    </a>
+  );
+}
+
 export function Hero() {
   const years = yearsOfExperience();
+  const { hero } = useContent();
   return (
     <section id="home" className="relative overflow-hidden bg-white">
       <div aria-hidden className="dots-bg pointer-events-none absolute left-0 top-24 h-64 w-64 opacity-60" />
@@ -80,17 +118,17 @@ export function Hero() {
         {/* copy */}
         <div className="lg:col-span-7">
           <Reveal>
-            <p className="eyebrow">Creative Graphics Designer — Lagos, NG</p>
+            <p className="eyebrow">{hero.eyebrow}</p>
           </Reveal>
 
           <h1 className="mt-6 font-display text-[clamp(2.6rem,6vw,4.4rem)] font-black leading-[1.02] tracking-[-0.02em] text-ink">
             <MaskLines
               lines={[
-                <>Hello, I'm Bukola </>,
-                <>I build brands through </>,
+                <>{hero.greeting}</>,
+                <>{hero.line2}</>,
                 <>
                   <span className="relative inline-block italic text-pine">
-                    visual storytelling.
+                    {hero.highlight}
                     <svg
                       viewBox="0 0 220 12"
                       preserveAspectRatio="none"
@@ -112,33 +150,25 @@ export function Hero() {
           </h1>
 
           <Reveal delay={300}>
-            <p className="mt-7 max-w-xl text-[16.5px] leading-[1.75] text-slate">
-              I help organizations communicate clearly, campaign boldly, and
-              print beautifully — from social media graphics and newsletters
-              to large-format banners and brand identities.
+            <p className="mt-7 max-w-xl whitespace-pre-line text-[16.5px] leading-[1.75] text-slate">
+              {hero.paragraph}
             </p>
           </Reveal>
 
           <Reveal delay={400}>
             <div className="mt-9 flex flex-wrap items-center gap-4">
-              <Link to="/projects" className="btn btn-pine">
-                View My Work
-                <IcArrowDown className="h-4 w-4" />
-              </Link>
-              <Link to="/contact" className="btn btn-outline">
-                Let's Talk
-                <IcArrowUpRight className="h-4 w-4" />
-              </Link>
+              <HeroButton label={hero.primary.label} link={hero.primary.link} primary />
+              <HeroButton label={hero.secondary.label} link={hero.secondary.link} />
             </div>
           </Reveal>
 
           <Reveal delay={500}>
             <div className="mt-11 border-t border-line pt-6">
               <p className="text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-slate/70">
-                Designing for teams at
+                {hero.teamsLabel}
               </p>
               <ul className="mt-3.5 flex flex-wrap gap-2.5">
-                {ORGS.map((o) => (
+                {hero.orgs.map((o) => (
                   <li key={o} className="chip cursor-default">
                     {o}
                   </li>
@@ -162,18 +192,18 @@ export function Hero() {
               {/* portrait */}
               <div className="relative aspect-square overflow-hidden rounded-full border-8 border-white shadow-lift">
                 <img
-                  src={IMG.portrait}
+                  src={hero.portrait}
                   alt="Portrait of Olowomakan Esther Bukola"
                   className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                   onError={portraitFallback}
                 />
               </div>
 
-              <FloatingTag className="-left-8 top-10">Graphic Design</FloatingTag>
+              <FloatingTag className="-left-8 top-10">{hero.tags[0]}</FloatingTag>
               <FloatingTag late className="-right-6 top-1/2">
-                Digital Media
+                {hero.tags[1]}
               </FloatingTag>
-              <FloatingTag className="-left-4 bottom-24">Print Production</FloatingTag>
+              <FloatingTag className="-left-4 bottom-24">{hero.tags[2]}</FloatingTag>
 
               {/* experience badge */}
               <span className="absolute -top-3 right-[8%] z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-pine text-center text-white shadow-lift">
@@ -181,7 +211,7 @@ export function Hero() {
                   {years}+
                 </span>
                 <span className="mt-0.5 text-[9px] font-extrabold uppercase tracking-[0.14em]">
-                  Years Exp.
+                  {hero.badgeLabel}
                 </span>
               </span>
 
@@ -192,11 +222,11 @@ export function Hero() {
                     <span className="animate-pulse-soft absolute h-2.5 w-2.5 rounded-full bg-gold" />
                     <span className="h-2.5 w-2.5 rounded-full bg-gold" />
                   </span>
-                  Available for projects
+                  {hero.availability}
                 </p>
                 <p className="mt-1 flex items-center gap-1.5 text-[11.5px] font-semibold text-slate">
                   <IcPin className="h-3.5 w-3.5 text-pine" />
-                  {CONTACT.coords}
+                  {hero.coords}
                 </p>
               </div>
             </div>

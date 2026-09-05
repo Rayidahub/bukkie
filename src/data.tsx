@@ -3,7 +3,7 @@
 /* ------------------------------------------------------------------ */
 
 export const IMG = {
-  portrait: "./img/buk.jpeg",
+  portrait: "./img/image1.jpeg",
   portraitRemote:
     "https://image.qwenlm.ai/generated-images/9b7f2d14-5301-45b7-8310-df0b3938b59c/_result.png",
   bramble:
@@ -607,6 +607,47 @@ export const INSIGHTS: Insight[] = [
     ],
   },
 ];
+
+/* ---------------- hero (fully admin-editable) ------------------------ */
+export type HeroContent = {
+  eyebrow: string;
+  greeting: string;
+  line2: string;
+  highlight: string;
+  paragraph: string;
+  portrait: string;
+  primary: { label: string; link: string };
+  secondary: { label: string; link: string };
+  teamsLabel: string;
+  orgs: string[];
+  tags: string[];
+  availability: string;
+  coords: string;
+  badgeLabel: string;
+};
+
+export const HERO: HeroContent = {
+  eyebrow: "Creative Graphics Designer — Lagos, NG",
+  greeting: "Hello, I'm Bukola ",
+  line2: "I build brands through ",
+  highlight: "visual storytelling.",
+  paragraph:
+    "I help organizations communicate clearly, campaign boldly, and print beautifully — from social media graphics and newsletters to large-format banners and brand identities.",
+  portrait: IMG.portrait,
+  primary: { label: "View My Work", link: "/projects" },
+  secondary: { label: "Let's Talk", link: "/contact" },
+  teamsLabel: "Designing for teams at",
+  orgs: [
+    "Business Women Hub",
+    "Bramble Network",
+    "Shapers of Nation",
+    "Sexual Purity Movement",
+  ],
+  tags: ["Graphic Design", "Digital Media", "Print Production"],
+  availability: "Available for projects",
+  coords: CONTACT.coords,
+  badgeLabel: "Years Exp.",
+};
 
 /* ---------------- marquee words ------------------------------------- */
 export const MARQUEE = [

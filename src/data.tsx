@@ -3,7 +3,7 @@
 /* ------------------------------------------------------------------ */
 
 export const IMG = {
-  portrait: "./img/buk.jpeg",
+  portrait: "./img/image1.jpeg",
   portraitRemote:
     "https://image.qwenlm.ai/generated-images/9b7f2d14-5301-45b7-8310-df0b3938b59c/_result.png",
   bramble:

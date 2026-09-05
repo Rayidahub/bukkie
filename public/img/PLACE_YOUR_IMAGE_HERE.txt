@@ -1,6 +1,12 @@
-Drop your portrait here as:  buk.jpeg
+Drop your portrait here as:  image1.jpeg
 
-The site loads it from  /img/buk.jpeg  (hero circle + About section).
+The site loads it from  /img/image1.jpeg  (hero circle + About section).
 
-Command:
-  cp "/home/l2euser/Desktop/Projects/Bukkie Files/buk.jpeg" public/img/
+If your photo currently sits in  src/public/img/image1.jpeg , run this
+from the project root:
+
+  mkdir -p public/img
+  cp src/public/img/image1.jpeg public/img/image1.jpeg
+
+(Vite only serves files from the root "public/" folder — files inside
+"src/" are treated as source code and never reach the browser.)

@@ -1,16 +1,13 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import {
   CERTS,
   DESIGN_SKILLS,
   EXPERIENCE,
-  GALLERY,
   IMG,
-  SERVICES,
   SOFT_SKILLS,
   yearsOfExperience,
 } from "../data";
-import { Link } from "react-router-dom";
-import { useContent } from "../store";
 import {
   CountUp,
   IcChat,
@@ -27,6 +24,7 @@ import {
   portraitFallback,
   Reveal,
 } from "../lib";
+import { useContent } from "../store";
 
 /* ------------------------------------------------------------------ */
 /*  Shared section heading                                             */
@@ -62,11 +60,7 @@ export function SectionHead({
       </div>
       {right && (
         <Reveal delay={150} className="lg:col-span-5">
-          <p
-            className={`max-w-md text-[15.5px] leading-[1.7] lg:ml-auto ${
-              dark ? "text-white/65" : "text-slate"
-            }`}
-          >
+          <p className={`max-w-md text-[15.5px] leading-[1.7] lg:ml-auto ${dark ? "text-white/65" : "text-slate"}`}>
             {right}
           </p>
         </Reveal>
@@ -112,7 +106,7 @@ export function ServicesSection({ showHead = true }: { showHead?: boolean }) {
 
         <div className="grid gap-6 md:grid-cols-3">
           {services.map((s, i) => (
-            <Reveal key={s.no} delay={i * 120}>
+            <Reveal key={`${s.no}-${s.title}`} delay={i * 120}>
               <article
                 className={`group flex h-full flex-col rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${
                   s.featured
@@ -128,34 +122,18 @@ export function ServicesSection({ showHead = true }: { showHead?: boolean }) {
                   >
                     <ServiceIcon icon={s.icon} />
                   </span>
-                  <span
-                    className={`font-display text-4xl font-black ${
-                      s.featured ? "text-white/15" : "text-ink/8"
-                    }`}
-                  >
+                  <span className={`font-display text-4xl font-black ${s.featured ? "text-white/15" : "text-ink/10"}`}>
                     {s.no}
                   </span>
                 </div>
 
-                <p
-                  className={`mt-6 text-[11px] font-bold uppercase tracking-[0.18em] ${
-                    s.featured ? "text-gold" : "text-pine"
-                  }`}
-                >
+                <p className={`mt-6 text-[11px] font-bold uppercase tracking-[0.18em] ${s.featured ? "text-gold" : "text-pine"}`}>
                   {s.kicker}
                 </p>
-                <h3
-                  className={`mt-2 font-display text-[22px] font-bold leading-snug ${
-                    s.featured ? "text-white" : "text-ink"
-                  }`}
-                >
+                <h3 className={`mt-2 font-display text-[22px] font-bold leading-snug ${s.featured ? "text-white" : "text-ink"}`}>
                   {s.title}
                 </h3>
-                <p
-                  className={`mt-3 text-[14.5px] leading-[1.65] ${
-                    s.featured ? "text-white/70" : "text-slate"
-                  }`}
-                >
+                <p className={`mt-3 text-[14.5px] leading-[1.65] ${s.featured ? "text-white/70" : "text-slate"}`}>
                   {s.desc}
                 </p>
 
@@ -164,9 +142,7 @@ export function ServicesSection({ showHead = true }: { showHead?: boolean }) {
                     <li
                       key={t}
                       className={`rounded-full px-3 py-1 text-[11.5px] font-semibold ${
-                        s.featured
-                          ? "border border-white/20 text-white/80"
-                          : "bg-mist text-slate"
+                        s.featured ? "border border-white/20 text-white/80" : "bg-mist text-slate"
                       }`}
                     >
                       {t}
@@ -228,10 +204,7 @@ function CvModal({ onClose }: { onClose: () => void }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="cv-no-print flex justify-end gap-2">
-          <button
-            onClick={() => window.print()}
-            className="btn btn-pine !px-5 !py-2.5 text-[13.5px]"
-          >
+          <button onClick={() => window.print()} className="btn btn-pine !px-5 !py-2.5 text-[13.5px]">
             <IcPrinter className="h-4 w-4" /> Print / Save PDF
           </button>
           <button
@@ -243,13 +216,10 @@ function CvModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* CV content */}
         <div className="mt-2">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-pine pb-5">
             <div>
-              <h3 className="font-display text-3xl font-black text-ink">
-                Olowomakan Esther Bukola
-              </h3>
+              <h3 className="font-display text-3xl font-black text-ink">Olowomakan Esther Bukola</h3>
               <p className="mt-1 text-[15px] font-bold text-pine">
                 Creative Graphics Designer & Digital Media Specialist
               </p>
@@ -314,7 +284,7 @@ function CvModal({ onClose }: { onClose: () => void }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  About (brand blue) + stats + CV                                    */
+/*  About (dark pine) + stats + CV                                     */
 /* ------------------------------------------------------------------ */
 function Statistic({
   value,
@@ -333,9 +303,7 @@ function Statistic({
         <p className="font-display text-4xl font-black text-gold md:text-[44px]">
           <CountUp to={value} suffix={suffix} />
         </p>
-        <p className="mt-1.5 text-[12.5px] font-bold uppercase tracking-[0.14em] text-white/70">
-          {label}
-        </p>
+        <p className="mt-1.5 text-[12.5px] font-bold uppercase tracking-[0.14em] text-white/70">{label}</p>
       </div>
     </Reveal>
   );
@@ -348,7 +316,6 @@ export function AboutSection() {
 
   return (
     <section id="about" aria-label="About Esther Bukola" className="relative overflow-hidden bg-pine py-20 text-white md:py-28">
-      {/* ambient decor */}
       <div aria-hidden className="dots-light pointer-events-none absolute right-8 top-16 h-44 w-44 opacity-70" />
       <div aria-hidden className="pointer-events-none absolute -left-28 bottom-0 h-80 w-80 rounded-full border border-white/10" />
       <div aria-hidden className="pointer-events-none absolute -left-16 bottom-12 h-80 w-80 rounded-full border border-gold/15" />
@@ -358,10 +325,7 @@ export function AboutSection() {
         <div className="lg:col-span-5">
           <Reveal y={36}>
             <div className="relative mx-auto max-w-[440px]">
-              <div
-                aria-hidden
-                className="absolute -left-4 -top-4 h-full w-full rounded-[28px] bg-gold"
-              />
+              <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rounded-[28px] bg-gold" />
               <div className="relative overflow-hidden rounded-[28px] shadow-lift">
                 <img
                   src={IMG.portrait}
@@ -417,7 +381,6 @@ export function AboutSection() {
             </p>
           </Reveal>
 
-          {/* stats — all derived from real project data */}
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <Statistic value={years} suffix="+" label="Years Experience" delay={0} />
             <Statistic value={EXPERIENCE.length} label="Organizations" delay={100} />

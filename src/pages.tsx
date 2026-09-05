@@ -1,18 +1,20 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AboutSection, SectionHead, ServicesSection } from "./components/about";
 import { ExperienceSection } from "./components/career";
-import {
-  CtaBanner,
-  Contact,
-  Insights,
-  Philosophy,
-  Testimonials,
-} from "./components/closing";
+import { CtaBanner, Contact, Insights, Philosophy, Testimonials } from "./components/closing";
 import { Hero, Ticker } from "./components/hero";
 import { FeaturedProjects, Gallery, ToolsSection } from "./components/work";
-import { CATEGORIES, IMG, ORGS, yearsOfExperience, type GalleryCat, type GalleryItem, type Insight, type Service } from "./data";
-import { uid, useContent, type Testimonial } from "./store";
+import {
+  CATEGORIES,
+  IMG,
+  ORGS,
+  yearsOfExperience,
+  type GalleryCat,
+  type GalleryItem,
+  type Insight,
+  type Service,
+} from "./data";
 import {
   IcArrowRight,
   IcArrowUpRight,
@@ -26,6 +28,7 @@ import {
   MaskLines,
   Reveal,
 } from "./lib";
+import { uid, useContent, type Testimonial } from "./store";
 
 const SERVICE_ICONS = { pen: IcPen, chat: IcChat, chip: IcChip } as const;
 
@@ -35,45 +38,43 @@ const SERVICE_ICONS = { pen: IcPen, chat: IcChat, chip: IcChip } as const;
 function PageHeader({
   crumb,
   title,
-  desc,
+  blurb,
 }: {
   crumb: string;
   title: ReactNode[];
-  desc?: string;
+  blurb?: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-pine text-white">
+    <section className="relative overflow-hidden bg-pine py-16 text-white md:py-24">
       <div aria-hidden className="dots-light pointer-events-none absolute right-10 top-10 h-40 w-40 opacity-60" />
-      <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full border border-white/10" />
-      <div aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-80 w-80 rounded-full border border-gold/20" />
-      <div aria-hidden className="pointer-events-none absolute -bottom-28 left-1/4 h-56 w-56 rounded-full border border-white/8" />
-
-      <div className="container-x grid gap-8 py-16 md:py-24 lg:grid-cols-12 lg:items-end">
-        <div className="lg:col-span-8">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2.5 text-[12px] font-bold uppercase tracking-[0.2em] text-white/50">
+      <div aria-hidden className="pointer-events-none absolute -bottom-28 -left-16 h-80 w-80 rounded-full border border-white/10" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-16 -left-8 h-80 w-80 rounded-full border border-gold/20" />
+      <div className="container-x relative">
+        <Reveal>
+          <p className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.22em] text-white/55">
             <Link to="/" className="transition-colors hover:text-gold">
               Home
             </Link>
-            <span aria-hidden className="text-gold">/</span>
+            <span className="text-gold">/</span>
             <span className="text-gold">{crumb}</span>
-          </nav>
-          <h1 className="mt-5 font-display text-[clamp(2.4rem,5.6vw,4.3rem)] font-black leading-[1.02] tracking-[-0.015em]">
-            <MaskLines lines={title} />
-          </h1>
-        </div>
-        {desc && (
-          <Reveal delay={200} className="lg:col-span-4">
-            <p className="max-w-sm text-[15px] leading-[1.7] text-white/65 lg:ml-auto">{desc}</p>
+          </p>
+        </Reveal>
+        <h1 className="mt-5 font-display text-[clamp(2.4rem,5.4vw,4.2rem)] font-black leading-[1.04] tracking-[-0.015em]">
+          <MaskLines lines={title} />
+        </h1>
+        {blurb && (
+          <Reveal delay={200}>
+            <p className="mt-6 max-w-2xl text-[16px] leading-[1.75] text-white/70">{blurb}</p>
           </Reveal>
         )}
       </div>
-      <div className="h-1.5 bg-gold" />
+      <div aria-hidden className="absolute inset-x-0 bottom-0 h-1.5 bg-gold" />
     </section>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  HOME                                                               */
+/*  Home page                                                          */
 /* ------------------------------------------------------------------ */
 function ServicesIndex() {
   const { services } = useContent();
@@ -83,9 +84,9 @@ function ServicesIndex() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHead
             no="01"
-            eyebrow="Services"
+            eyebrow="What I Do"
             title={[
-              <>What I can</>,
+              <>The services I</>,
               <>
                 <span className="italic text-pine">do for you.</span>
               </>,
@@ -103,14 +104,12 @@ function ServicesIndex() {
           {services.map((s, i) => {
             const Icon = SERVICE_ICONS[s.icon];
             return (
-              <Reveal key={s.no} delay={i * 90}>
+              <Reveal key={`${s.no}-${s.title}`} delay={i * 90}>
                 <Link
                   to="/services"
                   className="group grid items-center gap-4 border-t border-line px-2 py-7 transition-all duration-300 hover:bg-mist md:grid-cols-12 md:gap-6 md:py-8"
                 >
-                  <span className="font-display text-3xl font-black text-gold md:col-span-1">
-                    0{i + 1}
-                  </span>
+                  <span className="font-display text-3xl font-black text-gold md:col-span-1">0{i + 1}</span>
                   <span className="hidden h-14 w-14 items-center justify-center rounded-2xl bg-sage text-pine transition-transform duration-300 group-hover:rotate-6 group-hover:bg-pine group-hover:text-gold md:col-span-1 md:flex">
                     <Icon className="h-6 w-6" />
                   </span>
@@ -118,13 +117,9 @@ function ServicesIndex() {
                     <h3 className="font-display text-[22px] font-bold leading-snug text-ink transition-colors group-hover:text-pine">
                       {s.title}
                     </h3>
-                    <p className="mt-1 text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate">
-                      {s.kicker}
-                    </p>
+                    <p className="mt-1 text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate">{s.kicker}</p>
                   </div>
-                  <p className="line-clamp-2 text-[14px] leading-[1.6] text-slate md:col-span-5">
-                    {s.desc}
-                  </p>
+                  <p className="line-clamp-2 text-[14px] leading-[1.6] text-slate md:col-span-5">{s.desc}</p>
                   <span className="flex h-12 w-12 items-center justify-center justify-self-start rounded-full border border-line text-pine transition-all duration-300 group-hover:border-pine group-hover:bg-pine group-hover:text-gold md:col-span-1 md:justify-self-end">
                     <IcArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-0.5" />
                   </span>
@@ -182,19 +177,13 @@ function WorkPreview() {
                     {g.cat}
                   </span>
                   <span className="absolute bottom-4 right-4 flex h-11 w-11 translate-y-3 items-center justify-center rounded-full bg-pine text-gold opacity-0 shadow-lift transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                    <IcArrowUpRight className="h-4.5 w-4.5" />
+                    <IcArrowUpRight className="h-4 w-4" />
                   </span>
                 </div>
                 <div className="p-6">
-                  <p className="text-[11.5px] font-extrabold uppercase tracking-[0.16em] text-pine">
-                    {g.org}
-                  </p>
-                  <h3 className="mt-1.5 font-display text-[21px] font-bold leading-snug text-ink">
-                    {g.title}
-                  </h3>
-                  <p className="mt-2 line-clamp-2 text-[14px] leading-[1.6] text-slate">
-                    {g.study.objective}
-                  </p>
+                  <p className="text-[11.5px] font-extrabold uppercase tracking-[0.16em] text-pine">{g.org}</p>
+                  <h3 className="mt-1.5 font-display text-[21px] font-bold leading-snug text-ink">{g.title}</h3>
+                  <p className="mt-2 line-clamp-2 text-[14px] leading-[1.6] text-slate">{g.study.objective}</p>
                   <p className="mt-4 flex items-center gap-2 text-[13px] font-bold text-pine">
                     Open case study
                     <IcArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -226,8 +215,13 @@ function TestimonialTeaser() {
             “{t.quote}”
           </blockquote>
           <figcaption className="mt-7 flex items-center gap-4">
-            <span className="flex h-13 w-13 items-center justify-center rounded-full bg-gold p-3.5 font-display text-[15px] font-black text-pine">
-              {t.role.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold font-display text-[15px] font-black text-pine">
+              {t.role
+                .split(" ")
+                .map((w) => w[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase()}
             </span>
             <div>
               <p className="text-[14.5px] font-bold">{t.name}</p>
@@ -238,21 +232,53 @@ function TestimonialTeaser() {
           </figcaption>
         </Reveal>
 
-        <Reveal delay={180} className="lg:col-span-4">
+        <Reveal delay={200} className="lg:col-span-4">
           <div className="rounded-2xl border border-white/15 bg-white/5 p-7">
             <p className="font-display text-5xl font-black text-gold">{years}+</p>
-            <p className="mt-1 text-[12.5px] font-bold uppercase tracking-[0.14em] text-white/70">
-              Years of creative work
+            <p className="mt-1 text-[13px] font-bold uppercase tracking-[0.14em] text-white/70">Years of practice</p>
+            <p className="mt-5 text-[14px] leading-[1.65] text-white/65">
+              From ministry IT desks to print floors to digital media teams — design that has been tested in the real world.
             </p>
-            <p className="mt-4 border-t border-white/12 pt-4 text-[14px] leading-[1.65] text-white/65">
-              From volunteer campaigns to award-recognized communications —
-              the teams behind the work say it best.
-            </p>
-            <Link to="/testimonials" className="btn btn-gold mt-6 w-full !py-3 text-[13.5px]">
-              Read All Testimonials
+            <Link
+              to="/testimonials"
+              className="mt-6 inline-flex items-center gap-2 text-[13.5px] font-bold text-gold transition-colors hover:text-honey"
+            >
+              More kind words <IcArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function OrgSection() {
+  return (
+    <section aria-label="Organizations" className="relative bg-white py-20 md:py-28">
+      <div className="container-x">
+        <SectionHead
+          no="03"
+          eyebrow="Trusted By"
+          title={[
+            <>Organizations I've</>,
+            <>
+              <span className="italic text-pine">designed for.</span>
+            </>,
+          ]}
+          right="Campaigns, newsletters, outreach materials, and brand systems for teams across faith, business, and civic life."
+        />
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {ORGS.map((o, i) => (
+            <Reveal key={o} delay={i * 100}>
+              <div className="group flex h-32 flex-col items-center justify-center rounded-2xl border border-line bg-mist text-center transition-all duration-300 hover:-translate-y-1.5 hover:border-pine hover:bg-pine hover:shadow-lift">
+                <IcSpark className="h-5 w-5 text-gold transition-transform duration-300 group-hover:rotate-90" />
+                <p className="mt-3 px-4 font-display text-[18px] font-bold leading-snug text-ink transition-colors group-hover:text-white">
+                  {o}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -262,43 +288,29 @@ export function Home() {
   return (
     <>
       <Hero />
-      <Ticker />
       <ServicesIndex />
-      <Ticker words={ORGS} className="border-y border-pine-dark bg-pine-dark text-white" />
       <WorkPreview />
+      <OrgSection />
       <TestimonialTeaser />
-      <CtaBanner />
+      <section className="relative bg-mist py-20 md:py-24">
+        <div className="container-x">
+          <CtaBanner />
+        </div>
+      </section>
     </>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  SERVICES                                                           */
+/*  Services page                                                      */
 /* ------------------------------------------------------------------ */
-const PROCESS = [
-  {
-    step: "01",
-    title: "Brief & goals",
-    body: "We pin down the objective, audience and message — what the design must achieve, not just how it should look.",
-  },
-  {
-    step: "02",
-    title: "Concept & direction",
-    body: "Palette, type and layout routes explored against your brand — one clear direction chosen together.",
-  },
-  {
-    step: "03",
-    title: "Design & iterate",
-    body: "Drafts, structured feedback and polish — every detail checked against the brief before sign-off.",
-  },
-  {
-    step: "04",
-    title: "Deliver & produce",
-    body: "Screen-ready files plus print production support — vendor liaison, proofs and press checks included.",
-  },
-];
-
 function ProcessSection() {
+  const steps = [
+    { n: "01", t: "Listen & Brief", d: "Understand the goal, the audience, and the message before any pixel moves." },
+    { n: "02", t: "Design & Iterate", d: "Concept, refine, and align every piece to one consistent visual voice." },
+    { n: "03", t: "Produce & Ship", d: "Files prepared for screen and press — vendor coordination included." },
+    { n: "04", t: "Support & Grow", d: "Measure what lands, then sharpen the system for the next campaign." },
+  ];
   return (
     <section aria-label="Working process" className="relative bg-white py-20 md:py-28">
       <div className="container-x">
@@ -311,19 +323,20 @@ function ProcessSection() {
               <span className="italic text-pine">together.</span>
             </>,
           ]}
-          right="A simple, transparent process refined across campaigns, newsletters and print production — so you always know what happens next."
         />
-        <div className="grid gap-6 md:grid-cols-2">
-          {PROCESS.map((p, i) => (
-            <Reveal key={p.step} delay={i * 110}>
-              <div className="group flex h-full gap-6 rounded-2xl border border-line bg-mist p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-pine hover:bg-white hover:shadow-lift md:p-8">
-                <span className="font-display text-5xl font-black leading-none text-pine/15 transition-colors duration-300 group-hover:text-gold md:text-6xl">
-                  {p.step}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {steps.map((s, i) => (
+            <Reveal key={s.n} delay={i * 110}>
+              <div className="group relative h-full overflow-hidden rounded-2xl border border-line bg-mist p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-pine hover:bg-pine hover:shadow-lift">
+                <span className="font-display text-5xl font-black text-pine/15 transition-colors duration-300 group-hover:text-gold/40">
+                  {s.n}
                 </span>
-                <div>
-                  <h3 className="font-display text-[21px] font-bold text-ink">{p.title}</h3>
-                  <p className="mt-2 text-[14.5px] leading-[1.65] text-slate">{p.body}</p>
-                </div>
+                <h3 className="mt-4 font-display text-[20px] font-bold text-ink transition-colors duration-300 group-hover:text-white">
+                  {s.t}
+                </h3>
+                <p className="mt-2 text-[14px] leading-[1.65] text-slate transition-colors duration-300 group-hover:text-white/70">
+                  {s.d}
+                </p>
               </div>
             </Reveal>
           ))}
@@ -339,23 +352,26 @@ export function ServicesPage() {
       <PageHeader
         crumb="Services"
         title={[
-          <>Services built to make</>,
+          <>Services I</>,
           <>
-            <span className="italic text-gold">brands impossible</span>
+            <span className="italic text-gold">provide.</span>
           </>,
-          <>to ignore.</>,
         ]}
-        desc="Three disciplines under one roof — visual design, strategic communication, and the technical production that gets work into the world."
+        blurb="Graphic design, digital media, communications, and print production — one consistent partner from idea to finished piece."
       />
       <ServicesSection showHead={false} />
       <ProcessSection />
-      <CtaBanner />
+      <section className="relative bg-white py-20 md:py-24">
+        <div className="container-x">
+          <CtaBanner />
+        </div>
+      </section>
     </>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  ABOUT                                                              */
+/*  About page                                                         */
 /* ------------------------------------------------------------------ */
 export function AboutPage() {
   return (
@@ -363,12 +379,12 @@ export function AboutPage() {
       <PageHeader
         crumb="About"
         title={[
-          <>The designer behind</>,
+          <>Building brands through</>,
           <>
-            <span className="italic text-gold">the work.</span>
+            <span className="italic text-gold">visual storytelling.</span>
           </>,
         ]}
-        desc="Detail-oriented, result-driven, and relentlessly curious about how audiences read, feel, and respond."
+        blurb="Detail-oriented, result-driven, and based in Ikorodu, Lagos — meet the designer behind the campaigns."
       />
       <AboutSection />
       <ExperienceSection />
@@ -378,7 +394,7 @@ export function AboutPage() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  PROJECTS                                                           */
+/*  Projects page                                                      */
 /* ------------------------------------------------------------------ */
 export function ProjectsPage() {
   return (
@@ -386,12 +402,12 @@ export function ProjectsPage() {
       <PageHeader
         crumb="Projects"
         title={[
-          <>Selected work,</>,
+          <>Selected work &</>,
           <>
-            <span className="italic text-gold">told properly.</span>
+            <span className="italic text-gold">case studies.</span>
           </>,
         ]}
-        desc="Campaigns, publications, brand systems and video content — each with the objective, deliverables and impact behind it."
+        blurb="Campaigns, publications, brand systems, and print production — each with the story of why it was designed."
       />
       <Gallery showHead={false} />
       <FeaturedProjects />
@@ -401,7 +417,7 @@ export function ProjectsPage() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  BLOG                                                               */
+/*  Blog page                                                          */
 /* ------------------------------------------------------------------ */
 export function BlogPage() {
   return (
@@ -414,67 +430,21 @@ export function BlogPage() {
             <span className="italic text-gold">studio desk.</span>
           </>,
         ]}
-        desc="Short, practical lessons from real campaigns, print floors and content systems — the thinking behind the portfolio."
+        blurb="Practical lessons from campaigns, print floors, and content systems — written for teams who communicate."
       />
       <Insights showHead={false} />
-      <CtaBanner />
+      <section className="relative bg-white py-20 md:py-24">
+        <div className="container-x">
+          <CtaBanner />
+        </div>
+      </section>
     </>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  TESTIMONIALS                                                       */
+/*  Testimonials page                                                  */
 /* ------------------------------------------------------------------ */
-const ORG_CARDS = [
-  { name: "Business Women Hub", role: "Graphics & Digital Media Associate", period: "2025 — Present" },
-  { name: "Bramble Network", role: "Communications Officer", period: "2024 — 2025" },
-  { name: "Shapers of Nation", role: "Event outreach design", period: "2024" },
-  { name: "Sexual Purity Movement", role: "Daily content series", period: "2024" },
-  { name: "Valuemax Communication", role: "Design & print — NYSC", period: "2024" },
-  { name: "Ministry of Petroleum", role: "IT support intern", period: "2021 — 2022" },
-];
-
-function OrgSection() {
-  return (
-    <section aria-label="Organizations" className="relative bg-white py-20 md:py-28">
-      <div className="container-x">
-        <SectionHead
-          no="02"
-          eyebrow="Organizations"
-          title={[
-            <>Teams I've worked</>,
-            <>
-              <span className="italic text-pine">with.</span>
-            </>,
-          ]}
-          right="Every testimonial is rooted in real collaboration — here are the organizations behind the words."
-        />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {ORG_CARDS.map((o, i) => (
-            <Reveal key={o.name} delay={i * 90}>
-              <div className="group flex h-full items-start gap-5 rounded-2xl border border-line bg-mist p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-pine hover:bg-white hover:shadow-lift">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-pine font-display text-lg font-black text-gold transition-transform duration-300 group-hover:rotate-6">
-                  {o.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-                </span>
-                <div>
-                  <h3 className="font-display text-[19px] font-bold leading-snug text-ink">
-                    {o.name}
-                  </h3>
-                  <p className="mt-1 text-[13.5px] font-semibold text-slate">{o.role}</p>
-                  <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-sage px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-pine">
-                    <IcSpark className="h-3 w-3 text-gold" />
-                    {o.period}
-                  </p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export function TestimonialsPage() {
   return (
     <>
@@ -486,17 +456,21 @@ export function TestimonialsPage() {
             <span className="italic text-gold">the teams.</span>
           </>,
         ]}
-        desc="Feedback from the organizations behind the campaigns, newsletters and outreach materials in this portfolio."
+        blurb="Feedback from the organizations behind the campaigns, newsletters, and outreach materials in this portfolio."
       />
       <Testimonials showHead={false} />
       <OrgSection />
-      <CtaBanner />
+      <section className="relative bg-mist py-20 md:py-24">
+        <div className="container-x">
+          <CtaBanner />
+        </div>
+      </section>
     </>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  CONTACT                                                            */
+/*  Contact page                                                       */
 /* ------------------------------------------------------------------ */
 export function ContactPage() {
   return (
@@ -509,7 +483,7 @@ export function ContactPage() {
             <span className="italic text-gold">meaningful together.</span>
           </>,
         ]}
-        desc="Currently accepting graphic design, digital media, branding and communications projects. Response within 24 hours on weekdays."
+        blurb="Have a project in mind? Send a brief, start a conversation, or grab a contact detail — replies within 24 hours."
       />
       <Contact />
     </>
@@ -521,34 +495,22 @@ export function ContactPage() {
 /* ------------------------------------------------------------------ */
 export function NotFound() {
   return (
-    <section className="relative flex min-h-[70vh] items-center overflow-hidden bg-pine text-white">
-      <div aria-hidden className="dots-light pointer-events-none absolute right-10 top-10 h-40 w-40 opacity-60" />
-      <div aria-hidden className="pointer-events-none absolute -left-24 -bottom-24 h-80 w-80 rounded-full border border-white/10" />
-      <div className="container-x grid items-center gap-10 py-24 lg:grid-cols-2">
-        <div>
-          <p className="font-display text-[clamp(6rem,18vw,12rem)] font-black leading-none text-gold">
-            404
-          </p>
-        </div>
-        <div>
-          <h1 className="font-display text-4xl font-black leading-tight md:text-5xl">
-            This page took a
-            <br />
-            <span className="italic text-gold">creative detour.</span>
-          </h1>
-          <p className="mt-5 max-w-md text-[15.5px] leading-[1.7] text-white/65">
-            The page you're looking for doesn't exist — but the portfolio,
-            services and case studies are all one click away.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link to="/" className="btn btn-gold">
-              Back to Home
-              <IcArrowRight className="h-4 w-4" />
-            </Link>
-            <Link to="/projects" className="btn btn-outline">
-              See the Work
-            </Link>
-          </div>
+    <section className="relative flex min-h-[70vh] items-center overflow-hidden bg-pine py-24 text-white">
+      <div aria-hidden className="dots-light pointer-events-none absolute right-10 top-16 h-44 w-44 opacity-60" />
+      <div className="container-x text-center">
+        <p className="font-display text-[clamp(5rem,16vw,11rem)] font-black leading-none text-gold">404</p>
+        <h1 className="mt-4 font-display text-3xl font-black md:text-4xl">This page went to the print shop… and never came back.</h1>
+        <p className="mx-auto mt-4 max-w-md text-[15px] leading-[1.7] text-white/65">
+          The address doesn't exist — but the portfolio does. Let's get you back to the good stuff.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <Link to="/" className="btn btn-gold">
+            Back to Home
+            <IcArrowRight className="h-4 w-4" />
+          </Link>
+          <Link to="/projects" className="btn btn-outline-light">
+            See the Work
+          </Link>
         </div>
       </div>
     </section>
@@ -556,347 +518,187 @@ export function NotFound() {
 }
 
 /* ================================================================== */
-/*  ADMIN STUDIO — local content manager                               */
-/*  Passcode lives here; change ADMIN_PASS to your own.                */
+/*  ADMIN STUDIO                                                       */
 /* ================================================================== */
 const ADMIN_PASS = "bukkie2026";
-const UNLOCK_KEY = "eb-admin-unlocked";
+const GATE_KEY = "eb-admin-unlocked";
 
-type AdminTab = "services" | "projects" | "articles" | "testimonials";
-
-const ADMIN_TABS: { id: AdminTab; label: string }[] = [
-  { id: "services", label: "Services" },
-  { id: "projects", label: "Projects" },
-  { id: "articles", label: "Blog" },
-  { id: "testimonials", label: "Testimonials" },
-];
-
-const fld = "mb-1.5 block text-[10.5px] font-extrabold uppercase tracking-[0.18em] text-slate";
-
-type EditorState =
-  | { tab: "services"; item?: Service }
-  | { tab: "projects"; item?: GalleryItem }
-  | { tab: "articles"; item?: Insight }
-  | { tab: "testimonials"; item?: Testimonial };
-
-/* ---------------- editors ------------------------------------------ */
-function ServiceEditor({
-  initial,
-  nextNo,
-  onSave,
-  onClose,
-}: {
-  initial?: Service;
-  nextNo: string;
-  onSave: (s: Service) => void;
-  onClose: () => void;
-}) {
-  const [no] = useState(initial?.no ?? nextNo);
-  const [title, setTitle] = useState(initial?.title ?? "");
-  const [kicker, setKicker] = useState(initial?.kicker ?? "");
-  const [icon, setIcon] = useState<Service["icon"]>(initial?.icon ?? "pen");
-  const [featured, setFeatured] = useState(initial?.featured ?? false);
-  const [desc, setDesc] = useState(initial?.desc ?? "");
-  const [tags, setTags] = useState(initial?.tags.join(", ") ?? "");
-
+function AdminGate({ onUnlock }: { onUnlock: () => void }) {
+  const [pass, setPass] = useState("");
+  const [error, setError] = useState(false);
   const submit = () => {
-    if (!title.trim()) return;
-    onSave({
-      no,
-      title: title.trim(),
-      kicker: kicker.trim() || "Service",
-      icon,
-      featured,
-      desc: desc.trim(),
-      tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
-    });
-    onClose();
+    if (pass === ADMIN_PASS) onUnlock();
+    else {
+      setError(true);
+      setTimeout(() => setError(false), 1600);
+    }
   };
-
   return (
-    <EditorShell title={initial ? "Edit Service" : "New Service"} onClose={onClose} onSubmit={submit}>
-      <div className="grid gap-4 md:grid-cols-2">
-        <div>
-          <label className={fld}>Service name *</label>
-          <input className="input-base" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Motion & Reels Production" />
-        </div>
-        <div>
-          <label className={fld}>Kicker (small label)</label>
-          <input className="input-base" value={kicker} onChange={(e) => setKicker(e.target.value)} placeholder="e.g. New capability" />
-        </div>
-        <div>
-          <label className={fld}>Icon</label>
-          <select className="input-base cursor-pointer" value={icon} onChange={(e) => setIcon(e.target.value as Service["icon"])}>
-            <option value="pen">Pen — design</option>
-            <option value="chat">Chat — communication</option>
-            <option value="chip">Chip — technical</option>
-          </select>
-        </div>
-        <div>
-          <label className={fld}>Highlight card</label>
-          <button
-            type="button"
-            onClick={() => setFeatured((v) => !v)}
-            className={`input-base cursor-pointer text-left font-bold transition-colors ${featured ? "!bg-pine !text-white" : ""}`}
-          >
-            {featured ? "★ Featured (dark card)" : "Standard card — click to feature"}
+    <section className="flex min-h-[65vh] items-center bg-mist py-20">
+      <div className="container-x">
+        <div className="card animate-pop-in mx-auto max-w-md p-8 shadow-lift md:p-10">
+          <p className="eyebrow">Admin Studio</p>
+          <h1 className="mt-3 font-display text-3xl font-black text-ink">Welcome back, Esther.</h1>
+          <p className="mt-2 text-[14px] leading-[1.65] text-slate">
+            Enter your passcode to manage services, projects, blog posts, and testimonials.
+          </p>
+          <input
+            type="password"
+            value={pass}
+            onChange={(e) => setPass(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && submit()}
+            placeholder="Passcode"
+            aria-label="Admin passcode"
+            className={`input-base mt-6 ${error ? "!border-gold !bg-gold/10" : ""}`}
+          />
+          {error && <p className="mt-3 text-[13px] font-bold text-pine">Not quite — try again.</p>}
+          <button onClick={submit} className="btn btn-pine mt-5 w-full">
+            Unlock Studio
+            <IcArrowRight className="h-4 w-4" />
           </button>
-        </div>
-        <div className="md:col-span-2">
-          <label className={fld}>Description</label>
-          <textarea rows={3} className="input-base resize-none" value={desc} onChange={(e) => setDesc(e.target.value)} />
-        </div>
-        <div className="md:col-span-2">
-          <label className={fld}>Tags (comma separated)</label>
-          <input className="input-base" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="Flyers, Banners, Campaigns" />
+          <p className="mt-4 text-center text-[12px] text-slate">
+            Hint for this demo: <span className="font-bold">bukkie2026</span>
+          </p>
         </div>
       </div>
-    </EditorShell>
+    </section>
   );
 }
 
-function ProjectEditor({
-  initial,
-  onSave,
-  onClose,
+/* ---------- shared editor pieces ---------- */
+const lbl = "mb-1.5 block text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate";
+
+function TextField({
+  label,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
 }: {
-  initial?: GalleryItem;
-  onSave: (p: GalleryItem) => void;
-  onClose: () => void;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  type?: string;
 }) {
-  const [id] = useState(initial?.id ?? uid("proj"));
-  const [title, setTitle] = useState(initial?.title ?? "");
-  const [org, setOrg] = useState(initial?.org ?? "");
-  const [cat, setCat] = useState<GalleryCat>(initial?.cat ?? "Social Media");
-  const [year, setYear] = useState(initial?.year ?? String(new Date().getFullYear()));
-  const [img, setImg] = useState(initial?.img ?? "");
-  const [ratio, setRatio] = useState(initial?.ratio ?? "aspect-[4/3]");
-  const [objective, setObjective] = useState(initial?.study.objective ?? "");
-  const [deliverables, setDeliverables] = useState(initial?.study.deliverables.join("\n") ?? "");
-  const [tools, setTools] = useState(initial?.study.tools.join(", ") ?? "");
-  const [impact, setImpact] = useState(initial?.study.impact ?? "");
-
-  const submit = () => {
-    if (!title.trim()) return;
-    onSave({
-      id,
-      title: title.trim(),
-      org: org.trim() || "Independent",
-      cat,
-      year: year.trim(),
-      img: img.trim() || IMG.brand,
-      ratio,
-      study: {
-        type: cat,
-        objective: objective.trim(),
-        deliverables: deliverables.split("\n").map((d) => d.trim()).filter(Boolean),
-        tools: tools.split(",").map((t) => t.trim()).filter(Boolean),
-        impact: impact.trim(),
-      },
-    });
-    onClose();
-  };
-
   return (
-    <EditorShell title={initial ? "Edit Project" : "New Project"} onClose={onClose} onSubmit={submit}>
-      <div className="grid gap-4 md:grid-cols-2">
-        <div>
-          <label className={fld}>Project title *</label>
-          <input className="input-base" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Independence Campaign" />
-        </div>
-        <div>
-          <label className={fld}>Client / Organization</label>
-          <input className="input-base" value={org} onChange={(e) => setOrg(e.target.value)} />
-        </div>
-        <div>
-          <label className={fld}>Category</label>
-          <select className="input-base cursor-pointer" value={cat} onChange={(e) => setCat(e.target.value as GalleryCat)}>
-            {CATEGORIES.filter((c) => c !== "All").map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className={fld}>Year</label>
-          <input className="input-base" value={year} onChange={(e) => setYear(e.target.value)} />
-        </div>
-        <div>
-          <label className={fld}>Image URL</label>
-          <input className="input-base" value={img} onChange={(e) => setImg(e.target.value)} placeholder="https://… or /img/your-file.jpg" />
-        </div>
-        <div>
-          <label className={fld}>Image ratio</label>
-          <select className="input-base cursor-pointer" value={ratio} onChange={(e) => setRatio(e.target.value)}>
-            <option value="aspect-[4/3]">Landscape 4:3 (recommended)</option>
-            <option value="aspect-square">Square</option>
-            <option value="aspect-video">Wide 16:9</option>
-          </select>
-        </div>
-        <div className="md:col-span-2">
-          <label className={fld}>Objective / short description</label>
-          <textarea rows={2} className="input-base resize-none" value={objective} onChange={(e) => setObjective(e.target.value)} />
-        </div>
-        <div className="md:col-span-2">
-          <label className={fld}>Deliverables (one per line)</label>
-          <textarea rows={3} className="input-base resize-none" value={deliverables} onChange={(e) => setDeliverables(e.target.value)} />
-        </div>
-        <div>
-          <label className={fld}>Tools (comma separated)</label>
-          <input className="input-base" value={tools} onChange={(e) => setTools(e.target.value)} placeholder="Photoshop, Canva" />
-        </div>
-        <div>
-          <label className={fld}>Impact</label>
-          <input className="input-base" value={impact} onChange={(e) => setImpact(e.target.value)} />
-        </div>
-      </div>
-    </EditorShell>
+    <div>
+      <label className={lbl}>{label}</label>
+      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="input-base" />
+    </div>
   );
 }
 
-function ArticleEditor({
-  initial,
-  onSave,
-  onClose,
+function AreaField({
+  label,
+  value,
+  onChange,
+  rows = 3,
+  hint,
 }: {
-  initial?: Insight;
-  onSave: (a: Insight) => void;
-  onClose: () => void;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  rows?: number;
+  hint?: string;
 }) {
-  const [id] = useState(initial?.id ?? uid("post"));
-  const [tag, setTag] = useState(initial?.tag ?? "Insight");
-  const [title, setTitle] = useState(initial?.title ?? "");
-  const [excerpt, setExcerpt] = useState(initial?.excerpt ?? "");
-  const [date, setDate] = useState(initial?.date ?? new Date().toLocaleDateString("en-GB", { month: "short", year: "numeric" }));
-  const [read, setRead] = useState(initial?.read ?? "3 min read");
-  const [cover, setCover] = useState(initial?.cover ?? "");
-  const [body, setBody] = useState(initial?.body.join("\n\n") ?? "");
-
-  const submit = () => {
-    if (!title.trim()) return;
-    onSave({
-      id,
-      tag: tag.trim(),
-      title: title.trim(),
-      excerpt: excerpt.trim(),
-      cover: cover.trim() || IMG.flyer,
-      date: date.trim(),
-      read: read.trim(),
-      body: body.split(/\n\s*\n|\n/).map((p) => p.trim()).filter(Boolean),
-    });
-    onClose();
-  };
-
   return (
-    <EditorShell title={initial ? "Edit Article" : "New Article"} onClose={onClose} onSubmit={submit}>
-      <div className="grid gap-4 md:grid-cols-2">
-        <div>
-          <label className={fld}>Title *</label>
-          <input className="input-base" value={title} onChange={(e) => setTitle(e.target.value)} />
-        </div>
-        <div>
-          <label className={fld}>Category tag</label>
-          <input className="input-base" value={tag} onChange={(e) => setTag(e.target.value)} placeholder="e.g. Branding" />
-        </div>
-        <div>
-          <label className={fld}>Date</label>
-          <input className="input-base" value={date} onChange={(e) => setDate(e.target.value)} />
-        </div>
-        <div>
-          <label className={fld}>Read time</label>
-          <input className="input-base" value={read} onChange={(e) => setRead(e.target.value)} />
-        </div>
-        <div className="md:col-span-2">
-          <label className={fld}>Cover image URL</label>
-          <input className="input-base" value={cover} onChange={(e) => setCover(e.target.value)} placeholder="https://… or /img/your-file.jpg" />
-        </div>
-        <div className="md:col-span-2">
-          <label className={fld}>Excerpt</label>
-          <textarea rows={2} className="input-base resize-none" value={excerpt} onChange={(e) => setExcerpt(e.target.value)} />
-        </div>
-        <div className="md:col-span-2">
-          <label className={fld}>Article body (blank line = new paragraph)</label>
-          <textarea rows={7} className="input-base resize-y" value={body} onChange={(e) => setBody(e.target.value)} />
-        </div>
-      </div>
-    </EditorShell>
+    <div>
+      <label className={lbl}>{label}</label>
+      <textarea rows={rows} value={value} onChange={(e) => onChange(e.target.value)} className="input-base resize-y" />
+      {hint && <p className="mt-1 text-[11.5px] text-slate/70">{hint}</p>}
+    </div>
   );
 }
 
-function TestimonialEditor({
-  initial,
-  onSave,
-  onClose,
+function SelectField({
+  label,
+  value,
+  onChange,
+  options,
 }: {
-  initial?: Testimonial;
-  onSave: (t: Testimonial) => void;
-  onClose: () => void;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
 }) {
-  const [quote, setQuote] = useState(initial?.quote ?? "");
-  const [name, setName] = useState(initial?.name ?? "");
-  const [role, setRole] = useState(initial?.role ?? "");
-  const [org, setOrg] = useState(initial?.org ?? "");
-
-  const submit = () => {
-    if (!quote.trim() || !org.trim()) return;
-    onSave({
-      quote: quote.trim(),
-      name: name.trim() || "Client",
-      role: role.trim() || "Partner",
-      org: org.trim(),
-    });
-    onClose();
-  };
-
   return (
-    <EditorShell title={initial ? "Edit Testimonial" : "New Testimonial"} onClose={onClose} onSubmit={submit}>
-      <div className="grid gap-4">
-        <div>
-          <label className={fld}>Quote *</label>
-          <textarea rows={4} className="input-base resize-none" value={quote} onChange={(e) => setQuote(e.target.value)} />
-        </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          <div>
-            <label className={fld}>Person / title</label>
-            <input className="input-base" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Founder" />
-          </div>
-          <div>
-            <label className={fld}>Role</label>
-            <input className="input-base" value={role} onChange={(e) => setRole(e.target.value)} placeholder="e.g. Programs Lead" />
-          </div>
-          <div>
-            <label className={fld}>Organization *</label>
-            <input className="input-base" value={org} onChange={(e) => setOrg(e.target.value)} />
-          </div>
-        </div>
+    <div>
+      <label className={lbl}>{label}</label>
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="input-base cursor-pointer">
+        {options.map((o) => (
+          <option key={o}>{o}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+function ImageField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-[1fr_96px] sm:items-end">
+      <TextField label={label} value={value} onChange={onChange} placeholder="https://… or /img/file.jpeg" />
+      <div className="h-[52px] overflow-hidden rounded-xl border border-line bg-mist">
+        {value ? (
+          <img src={value} alt="" className="h-full w-full object-cover" onError={(e) => (e.currentTarget.style.opacity = "0.25")} />
+        ) : (
+          <span className="flex h-full items-center justify-center text-[10px] font-bold uppercase text-slate/50">No image</span>
+        )}
       </div>
-    </EditorShell>
+    </div>
   );
 }
 
 function EditorShell({
   title,
+  subtitle,
   onClose,
-  onSubmit,
+  onSave,
   children,
 }: {
   title: string;
+  subtitle: string;
   onClose: () => void;
-  onSubmit: () => void;
+  onSave: () => void;
   children: ReactNode;
 }) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
   return (
-    <div className="animate-fade-in fixed inset-0 z-[140] flex items-start justify-center overflow-y-auto bg-pine/70 p-4 backdrop-blur-sm md:py-10" role="dialog" aria-modal="true" aria-label={title} onClick={onClose}>
-      <div className="animate-pop-in relative w-full max-w-2xl rounded-3xl bg-white p-7 shadow-lift md:p-9" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between">
-          <h3 className="font-display text-2xl font-black text-ink">{title}</h3>
-          <button onClick={onClose} aria-label="Close editor" className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-slate transition-colors hover:border-pine hover:text-pine">
+    <div
+      className="animate-fade-in fixed inset-0 z-[130] flex items-start justify-center overflow-y-auto bg-pine/70 p-4 backdrop-blur-sm md:py-10"
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+      onClick={onClose}
+    >
+      <div className="animate-pop-in w-full max-w-2xl rounded-3xl bg-white p-7 shadow-lift md:p-9" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="font-display text-2xl font-black text-ink">{title}</h3>
+            <p className="mt-1 text-[13px] text-slate">{subtitle}</p>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close editor"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line text-slate transition-colors hover:border-pine hover:text-pine"
+          >
             <IcClose className="h-4 w-4" />
           </button>
         </div>
-        <div className="mt-6">{children}</div>
-        <div className="mt-7 flex items-center justify-end gap-3 border-t border-line pt-5">
-          <button onClick={onClose} className="btn btn-outline !py-2.5 text-[14px]">Cancel</button>
-          <button onClick={onSubmit} className="btn btn-pine !py-2.5 text-[14px]">
+        <div className="mt-6 space-y-4">{children}</div>
+        <div className="mt-7 flex justify-end gap-3">
+          <button onClick={onClose} className="btn btn-outline !py-2.5 text-[13.5px]">
+            Cancel
+          </button>
+          <button onClick={onSave} className="btn btn-pine !py-2.5 text-[13.5px]">
             <IcCheck className="h-4 w-4" /> Save
           </button>
         </div>
@@ -905,28 +707,151 @@ function EditorShell({
   );
 }
 
-/* ---------------- admin page ---------------------------------------- */
-export function AdminPage() {
-  const cms = useContent();
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem(UNLOCK_KEY) === "1");
-  const [pass, setPass] = useState("");
-  const [err, setErr] = useState(false);
-  const [tab, setTab] = useState<AdminTab>("services");
-  const [editor, setEditor] = useState<EditorState | null>(null);
-  const [copied, setCopied] = useState(false);
+/* ---------- editors ---------- */
+function ServiceEditor({ initial, onSave, onClose }: { initial: Service; onSave: (s: Service) => void; onClose: () => void }) {
+  const [d, setD] = useState(initial);
+  const set = (patch: Partial<Service>) => setD((v) => ({ ...v, ...patch }));
+  return (
+    <EditorShell title={initial.title ? "Edit Service" : "New Service"} subtitle="Changes go live on the site immediately." onClose={onClose} onSave={() => onSave(d)}>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField label="Title" value={d.title} onChange={(v) => set({ title: v })} />
+        <TextField label="Kicker (small label)" value={d.kicker} onChange={(v) => set({ kicker: v })} />
+      </div>
+      <AreaField label="Description" value={d.desc} onChange={(v) => set({ desc: v })} />
+      <AreaField
+        label="Tags"
+        value={d.tags.join(", ")}
+        onChange={(v) => set({ tags: v.split(",").map((t) => t.trim()).filter(Boolean) })}
+        hint="Separate with commas."
+      />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <SelectField label="Icon" value={d.icon} onChange={(v) => set({ icon: v as Service["icon"] })} options={["pen", "chat", "chip"]} />
+        <label className="flex cursor-pointer items-center gap-3 self-end rounded-xl border border-line bg-mist px-4 py-3">
+          <input type="checkbox" checked={!!d.featured} onChange={(e) => set({ featured: e.target.checked })} className="h-4 w-4 accent-[#00439a]" />
+          <span className="text-[13.5px] font-bold text-ink">Featured (dark card)</span>
+        </label>
+      </div>
+    </EditorShell>
+  );
+}
 
-  const unlock = () => {
-    if (pass === ADMIN_PASS) {
-      sessionStorage.setItem(UNLOCK_KEY, "1");
-      setAuthed(true);
-      setErr(false);
-    } else {
-      setErr(true);
+function ProjectEditor({ initial, onSave, onClose }: { initial: GalleryItem; onSave: (p: GalleryItem) => void; onClose: () => void }) {
+  const [d, setD] = useState(initial);
+  const set = (patch: Partial<GalleryItem>) => setD((v) => ({ ...v, ...patch }));
+  const setStudy = (patch: Partial<GalleryItem["study"]>) => setD((v) => ({ ...v, study: { ...v.study, ...patch } }));
+  return (
+    <EditorShell title={initial.title ? "Edit Project" : "New Project"} subtitle="Fill in the case-study fields shown in the lightbox." onClose={onClose} onSave={() => onSave(d)}>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField label="Project title" value={d.title} onChange={(v) => set({ title: v })} />
+        <TextField label="Client / organization" value={d.org} onChange={(v) => set({ org: v })} />
+        <SelectField label="Category" value={d.cat} onChange={(v) => set({ cat: v as GalleryCat })} options={CATEGORIES.filter((c) => c !== "All")} />
+        <TextField label="Year" value={d.year} onChange={(v) => set({ year: v })} />
+      </div>
+      <ImageField label="Cover image URL" value={d.img} onChange={(v) => set({ img: v })} />
+      <TextField label="Project type" value={d.study.type} onChange={(v) => setStudy({ type: v })} placeholder="e.g. Social media campaign" />
+      <AreaField label="Objective" value={d.study.objective} onChange={(v) => setStudy({ objective: v })} />
+      <AreaField
+        label="Deliverables"
+        value={d.study.deliverables.join("\n")}
+        onChange={(v) => setStudy({ deliverables: v.split("\n").map((t) => t.trim()).filter(Boolean) })}
+        hint="One per line."
+      />
+      <AreaField
+        label="Tools"
+        value={d.study.tools.join(", ")}
+        onChange={(v) => setStudy({ tools: v.split(",").map((t) => t.trim()).filter(Boolean) })}
+        hint="Separate with commas."
+      />
+      <AreaField label="Impact / results" value={d.study.impact} onChange={(v) => setStudy({ impact: v })} />
+    </EditorShell>
+  );
+}
+
+function ArticleEditor({ initial, onSave, onClose }: { initial: Insight; onSave: (a: Insight) => void; onClose: () => void }) {
+  const [d, setD] = useState(initial);
+  const set = (patch: Partial<Insight>) => setD((v) => ({ ...v, ...patch }));
+  return (
+    <EditorShell title={initial.title ? "Edit Article" : "New Article"} subtitle="Blank lines in the body create new paragraphs." onClose={onClose} onSave={() => onSave(d)}>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField label="Tag / category" value={d.tag} onChange={(v) => set({ tag: v })} />
+        <TextField label="Date" value={d.date} onChange={(v) => set({ date: v })} placeholder="e.g. Feb 2026" />
+      </div>
+      <TextField label="Title" value={d.title} onChange={(v) => set({ title: v })} />
+      <AreaField label="Excerpt" value={d.excerpt} onChange={(v) => set({ excerpt: v })} rows={2} />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField label="Read time" value={d.read} onChange={(v) => set({ read: v })} placeholder="4 min read" />
+        <ImageField label="Cover image URL" value={d.cover} onChange={(v) => set({ cover: v })} />
+      </div>
+      <AreaField label="Body" value={d.body.join("\n\n")} onChange={(v) => set({ body: v.split(/\n{2,}/).map((t) => t.trim()).filter(Boolean) })} rows={8} />
+    </EditorShell>
+  );
+}
+
+function TestimonialEditor({ initial, onSave, onClose }: { initial: Testimonial; onSave: (t: Testimonial) => void; onClose: () => void }) {
+  const [d, setD] = useState(initial);
+  const set = (patch: Partial<Testimonial>) => setD((v) => ({ ...v, ...patch }));
+  return (
+    <EditorShell title={initial.name ? "Edit Testimonial" : "New Testimonial"} subtitle="Quotes appear on the testimonials page and home page." onClose={onClose} onSave={() => onSave(d)}>
+      <AreaField label="Quote" value={d.quote} onChange={(v) => set({ quote: v })} rows={4} />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField label="Person" value={d.name} onChange={(v) => set({ name: v })} placeholder="e.g. Programs Director" />
+        <TextField label="Role" value={d.role} onChange={(v) => set({ role: v })} />
+      </div>
+      <TextField label="Organization" value={d.org} onChange={(v) => set({ org: v })} />
+    </EditorShell>
+  );
+}
+
+/* ---------- admin page ---------- */
+const TABS = [
+  { key: "services", label: "Services" },
+  { key: "projects", label: "Projects" },
+  { key: "articles", label: "Blog Posts" },
+  { key: "testimonials", label: "Testimonials" },
+] as const;
+type TabKey = (typeof TABS)[number]["key"];
+
+export function AdminPage() {
+  const [authed, setAuthed] = useState(() => {
+    try {
+      return sessionStorage.getItem(GATE_KEY) === "1";
+    } catch {
+      return false;
     }
+  });
+  const [tab, setTab] = useState<TabKey>("services");
+  const [editing, setEditing] = useState<{ kind: TabKey; id: string } | null>(null);
+  const store = useContent();
+
+  if (!authed)
+    return (
+      <AdminGate
+        onUnlock={() => {
+          try {
+            sessionStorage.setItem(GATE_KEY, "1");
+          } catch {
+            /* fine */
+          }
+          setAuthed(true);
+        }}
+      />
+    );
+
+  const counts: Record<TabKey, number> = {
+    services: store.services.length,
+    projects: store.projects.length,
+    articles: store.articles.length,
+    testimonials: store.testimonials.length,
   };
 
   const exportJson = () => {
-    const blob = new Blob([cms.exportJson()], { type: "application/json" });
+    const data = {
+      services: store.services,
+      projects: store.projects,
+      articles: store.articles,
+      testimonials: store.testimonials,
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -935,246 +860,214 @@ export function AdminPage() {
     URL.revokeObjectURL(url);
   };
 
-  const copyJson = async () => {
-    try {
-      await navigator.clipboard.writeText(cms.exportJson());
-    } catch { /* noop */ }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+  const confirmReset = () => {
+    if (window.confirm("Reset all content back to the original portfolio data? Your saved changes will be lost.")) {
+      store.reset();
+      setEditing(null);
+    }
   };
 
-  const counts: Record<AdminTab, number> = {
-    services: cms.services.length,
-    projects: cms.projects.length,
-    articles: cms.articles.length,
-    testimonials: cms.testimonials.length,
+  const blankService = (): Service => ({
+    no: String(store.services.length + 1).padStart(2, "0"),
+    title: "",
+    kicker: "",
+    desc: "",
+    tags: [],
+    icon: "pen",
+  });
+  const blankProject = (): GalleryItem => ({
+    id: uid(),
+    title: "",
+    org: "",
+    cat: "Social Media",
+    year: String(new Date().getFullYear()),
+    img: IMG.bramble,
+    ratio: "aspect-[4/3]",
+    study: { type: "", objective: "", deliverables: [], tools: [], impact: "" },
+  });
+  const blankArticle = (): Insight => ({
+    id: uid(),
+    tag: "",
+    title: "",
+    excerpt: "",
+    cover: IMG.flyer,
+    date: new Date().toLocaleString("en-GB", { month: "short", year: "numeric" }),
+    read: "3 min read",
+    body: [],
+  });
+  const blankTestimonial = (): Testimonial => ({ quote: "", name: "", role: "", org: "" });
+
+  const startAdd = () => {
+    const id = uid();
+    if (tab === "services") store.setServices([...store.services, { ...blankService(), no: String(store.services.length + 1).padStart(2, "0") }]);
+    if (tab === "projects") store.setProjects([...store.projects, blankProject()]);
+    if (tab === "articles") store.setArticles([...store.articles, blankArticle()]);
+    if (tab === "testimonials") store.setTestimonials([...store.testimonials, blankTestimonial()]);
+    setEditing({ kind: tab, id: tab === "services" ? String(store.services.length) : id });
   };
 
-  /* -------- gate -------- */
-  if (!authed) {
-    return (
-      <section className="relative flex min-h-[calc(100vh-72px)] items-center justify-center overflow-hidden bg-pine py-20 text-white">
-        <div aria-hidden className="dots-light pointer-events-none absolute left-10 top-16 h-44 w-44 opacity-60" />
-        <div aria-hidden className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full border border-gold/25" />
-        <div className="container-x flex justify-center">
-          <div className="w-full max-w-md rounded-3xl border border-white/15 bg-white/5 p-8 backdrop-blur-sm md:p-10">
-            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gold font-display text-xl font-black text-pine">EB</span>
-            <h1 className="mt-6 font-display text-3xl font-black leading-tight">Admin Studio</h1>
-            <p className="mt-2 text-[14.5px] leading-[1.65] text-white/65">
-              Manage services, projects, blog posts and testimonials. Enter the
-              studio passcode to continue.
-            </p>
-            <label className="mt-7 mb-1.5 block text-[10.5px] font-extrabold uppercase tracking-[0.18em] text-white/50">
-              Passcode
-            </label>
-            <input
-              type="password"
-              value={pass}
-              onChange={(e) => { setPass(e.target.value); setErr(false); }}
-              onKeyDown={(e) => e.key === "Enter" && unlock()}
-              placeholder="••••••••••"
-              className="w-full rounded-xl border border-white/20 bg-pine-dark/60 px-4 py-3.5 text-[15px] text-white placeholder:text-white/30 transition-colors focus:border-gold focus:outline-none"
-              autoFocus
-            />
-            {err && <p className="mt-3 text-[13px] font-bold text-gold">Incorrect passcode — try again.</p>}
-            <button onClick={unlock} className="btn btn-gold mt-5 w-full">Unlock Studio</button>
-            <p className="mt-5 text-center text-[12px] leading-relaxed text-white/40">
-              Default passcode: <span className="font-mono text-gold/80">bukkie2026</span>
-              <br />Change it in <span className="font-mono">src/pages.tsx</span> (ADMIN_PASS)
-            </p>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  const items: { id: string; title: string; sub: string; img?: string }[] =
+    tab === "services"
+      ? store.services.map((s, i) => ({ id: String(i), title: s.title || "Untitled service", sub: s.kicker }))
+      : tab === "projects"
+        ? store.projects.map((p) => ({ id: p.id, title: p.title || "Untitled project", sub: `${p.org} · ${p.cat}`, img: p.img }))
+        : tab === "articles"
+          ? store.articles.map((a) => ({ id: a.id, title: a.title || "Untitled article", sub: `${a.tag} · ${a.date}`, img: a.cover }))
+          : store.testimonials.map((t, i) => ({ id: String(i), title: t.name || "Untitled testimonial", sub: t.org }));
 
-  /* -------- dashboard -------- */
-  const rowBtn = "flex h-9 w-9 items-center justify-center rounded-full border border-line text-slate transition-colors hover:border-pine hover:text-pine";
-  const delBtn = "flex h-9 items-center justify-center gap-1.5 rounded-full border border-line px-3.5 text-[12px] font-bold text-slate transition-colors hover:border-[#c2382f] hover:text-[#c2382f]";
+  const removeItem = (id: string) => {
+    if (!window.confirm("Delete this item?")) return;
+    if (tab === "services") store.setServices(store.services.filter((_, i) => String(i) !== id));
+    if (tab === "projects") store.setProjects(store.projects.filter((p) => p.id !== id));
+    if (tab === "articles") store.setArticles(store.articles.filter((a) => a.id !== id));
+    if (tab === "testimonials") store.setTestimonials(store.testimonials.filter((_, i) => String(i) !== id));
+  };
+
+  const saveItem = (updated: Service | GalleryItem | Insight | Testimonial) => {
+    if (!editing) return;
+    if (tab === "services") {
+      const next = [...store.services];
+      next[Number(editing.id)] = updated as Service;
+      store.setServices(next);
+    } else if (tab === "projects") {
+      store.setProjects(store.projects.map((p) => (p.id === editing.id ? (updated as GalleryItem) : p)));
+    } else if (tab === "articles") {
+      store.setArticles(store.articles.map((a) => (a.id === editing.id ? (updated as Insight) : a)));
+    } else {
+      const next = [...store.testimonials];
+      next[Number(editing.id)] = updated as Testimonial;
+      store.setTestimonials(next);
+    }
+    setEditing(null);
+  };
+
+  const editingItem =
+    editing &&
+    (tab === "services"
+      ? store.services[Number(editing.id)]
+      : tab === "projects"
+        ? store.projects.find((p) => p.id === editing.id)
+        : tab === "articles"
+          ? store.articles.find((a) => a.id === editing.id)
+          : store.testimonials[Number(editing.id)]);
 
   return (
-    <section className="relative min-h-[calc(100vh-72px)] bg-mist py-12 md:py-16">
+    <section className="min-h-screen bg-mist py-14 md:py-20">
       <div className="container-x">
-        {/* toolbar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-white p-5 shadow-soft md:p-6">
-          <div className="flex items-center gap-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-pine font-display text-lg font-black text-gold">EB</span>
-            <div>
-              <h1 className="font-display text-2xl font-black text-ink">Admin Studio</h1>
-              <p className="flex items-center gap-2 text-[12.5px] font-semibold text-slate">
-                <span className={`h-2 w-2 rounded-full ${cms.isCustomized ? "bg-gold" : "bg-sage"}`} />
-                {cms.isCustomized ? "Draft mode — changes saved in this browser" : "Showing default content"}
-              </p>
-            </div>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="eyebrow">Admin Studio</p>
+            <h1 className="mt-3 font-display text-[clamp(2rem,4vw,3rem)] font-black tracking-tight text-ink">
+              Content <span className="italic text-pine">control room.</span>
+            </h1>
+            <p className="mt-2 max-w-xl text-[14.5px] leading-[1.7] text-slate">
+              Everything you save here updates the live site instantly in this browser. Export the JSON to publish it permanently.
+            </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2.5">
-            <button onClick={copyJson} className="btn btn-outline !px-5 !py-2.5 text-[13px]">
-              {copied ? "Copied ✓" : "Copy JSON"}
+          <div className="flex flex-wrap gap-3">
+            <button onClick={exportJson} className="btn btn-pine !py-2.5 text-[13.5px]">
+              Export JSON
             </button>
-            <button onClick={exportJson} className="btn btn-outline !px-5 !py-2.5 text-[13px]">Export JSON</button>
             <button
-              onClick={() => { if (window.confirm("Reset all content back to the original defaults? Your local edits will be removed.")) cms.resetAll(); }}
-              className="btn btn-outline !px-5 !py-2.5 text-[13px] !text-[#c2382f] hover:!border-[#c2382f]"
+              onClick={() => {
+                const data = JSON.stringify(
+                  { services: store.services, projects: store.projects, articles: store.articles, testimonials: store.testimonials },
+                  null,
+                  2
+                );
+                navigator.clipboard?.writeText(data).catch(() => {});
+              }}
+              className="btn btn-outline !py-2.5 text-[13.5px]"
             >
+              Copy JSON
+            </button>
+            <button onClick={confirmReset} className="btn btn-outline !py-2.5 text-[13.5px]">
               Reset
             </button>
-            <button
-              onClick={() => { sessionStorage.removeItem(UNLOCK_KEY); setAuthed(false); }}
-              className="btn btn-pine !px-5 !py-2.5 text-[13px]"
-            >
-              Lock
-            </button>
           </div>
-        </div>
-
-        {/* notice */}
-        <div className="mt-5 flex items-start gap-3 rounded-r-2xl border-l-4 border-gold bg-gold/10 p-4">
-          <IcSpark className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-          <p className="text-[13.5px] leading-[1.6] text-ink/80">
-            <strong>How publishing works:</strong> edits save instantly to this
-            browser so you can preview them on the live site. To publish
-            changes for every visitor, click <strong>Export JSON</strong> and
-            send the file to your developer (or replace the matching arrays in{" "}
-            <span className="font-mono text-[12.5px]">src/data.tsx</span>).
-          </p>
         </div>
 
         {/* tabs */}
-        <div className="mt-8 flex flex-wrap gap-2.5">
-          {ADMIN_TABS.map((t) => (
+        <div className="mt-10 flex flex-wrap gap-2.5">
+          {TABS.map((t) => (
             <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-[13.5px] font-bold transition-all duration-300 ${
-                tab === t.id ? "bg-pine text-white shadow-soft" : "border border-line bg-white text-slate hover:-translate-y-0.5 hover:border-pine hover:text-pine"
+              key={t.key}
+              onClick={() => {
+                setTab(t.key);
+                setEditing(null);
+              }}
+              aria-pressed={tab === t.key}
+              className={`rounded-full px-5 py-2.5 text-[13px] font-bold transition-all duration-300 ${
+                tab === t.key ? "bg-pine text-white shadow-soft" : "border border-line bg-white text-slate hover:border-pine hover:text-pine"
               }`}
             >
               {t.label}
-              <span className={`rounded-full px-2 py-0.5 text-[11px] font-extrabold ${tab === t.id ? "bg-gold text-pine" : "bg-mist text-slate"}`}>
-                {counts[t.id]}
-              </span>
+              <sup className={`ml-1.5 text-[10px] ${tab === t.key ? "text-gold" : "text-pine"}`}>{counts[t.key]}</sup>
             </button>
           ))}
         </div>
 
         {/* list */}
-        <div className="mt-6 space-y-3.5">
-          {tab === "services" && (
-            <>
-              <AddButton label="Add Service" onClick={() => setEditor({ tab: "services" })} />
-              {cms.services.map((s) => {
-                const Icon = SERVICE_ICONS[s.icon];
-                return (
-                  <div key={s.no} className="card group flex items-center gap-4 p-4 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift md:p-5">
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sage text-pine"><Icon className="h-5 w-5" /></span>
-                    <div className="min-w-0 flex-1">
-                      <p className="flex flex-wrap items-center gap-2 font-display text-[17px] font-bold text-ink">
-                        {s.title}
-                        {s.featured && <span className="rounded-full bg-gold px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-pine">Featured</span>}
-                      </p>
-                      <p className="truncate text-[13px] text-slate">{s.kicker} · {s.tags.length} tags</p>
-                    </div>
-                    <div className="flex shrink-0 gap-2">
-                      <button className={rowBtn} aria-label={`Edit ${s.title}`} onClick={() => setEditor({ tab: "services", item: s })}><IcPen className="h-4 w-4" /></button>
-                      <button className={delBtn} onClick={() => { if (window.confirm(`Delete service "${s.title}"?`)) cms.deleteService(s.no); }}>Delete</button>
-                    </div>
-                  </div>
-                );
-              })}
-            </>
-          )}
-
-          {tab === "projects" && (
-            <>
-              <AddButton label="Add Project" onClick={() => setEditor({ tab: "projects" })} />
-              {cms.projects.map((p) => (
-                <div key={p.id} className="card group flex items-center gap-4 p-4 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift md:p-5">
-                  <img src={p.img} alt="" className="h-14 w-20 shrink-0 rounded-xl object-cover" />
-                  <div className="min-w-0 flex-1">
-                    <p className="font-display text-[17px] font-bold text-ink">{p.title}</p>
-                    <p className="truncate text-[13px] text-slate">{p.org} · <span className="font-bold text-pine">{p.cat}</span> · {p.year}</p>
-                  </div>
-                  <div className="flex shrink-0 gap-2">
-                    <button className={rowBtn} aria-label={`Edit ${p.title}`} onClick={() => setEditor({ tab: "projects", item: p })}><IcPen className="h-4 w-4" /></button>
-                    <button className={delBtn} onClick={() => { if (window.confirm(`Delete project "${p.title}"?`)) cms.deleteProject(p.id); }}>Delete</button>
-                  </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          {items.map((it) => (
+            <div key={it.id} className="card group flex items-center gap-4 p-4 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift">
+              {it.img && (
+                <div className="h-16 w-20 shrink-0 overflow-hidden rounded-xl">
+                  <img src={it.img} alt="" className="h-full w-full object-cover" />
                 </div>
-              ))}
-            </>
-          )}
+              )}
+              <div className="min-w-0 flex-1">
+                <h3 className="truncate font-display text-[17px] font-bold text-ink">{it.title}</h3>
+                <p className="truncate text-[12.5px] font-semibold text-slate">{it.sub}</p>
+              </div>
+              <div className="flex shrink-0 gap-2">
+                <button
+                  onClick={() => setEditing({ kind: tab, id: it.id })}
+                  className="rounded-full border border-line px-4 py-2 text-[12px] font-bold text-pine transition-colors hover:border-pine hover:bg-pine hover:text-white"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => removeItem(it.id)}
+                  aria-label={`Delete ${it.title}`}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-slate transition-colors hover:border-gold hover:bg-gold hover:text-pine"
+                >
+                  <IcClose className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
 
-          {tab === "articles" && (
-            <>
-              <AddButton label="Add Article" onClick={() => setEditor({ tab: "articles" })} />
-              {cms.articles.map((a) => (
-                <div key={a.id} className="card group flex items-center gap-4 p-4 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift md:p-5">
-                  <img src={a.cover} alt="" className="h-14 w-20 shrink-0 rounded-xl object-cover" />
-                  <div className="min-w-0 flex-1">
-                    <p className="font-display text-[17px] font-bold text-ink">{a.title}</p>
-                    <p className="truncate text-[13px] text-slate"><span className="font-bold text-pine">{a.tag}</span> · {a.date} · {a.read}</p>
-                  </div>
-                  <div className="flex shrink-0 gap-2">
-                    <button className={rowBtn} aria-label={`Edit ${a.title}`} onClick={() => setEditor({ tab: "articles", item: a })}><IcPen className="h-4 w-4" /></button>
-                    <button className={delBtn} onClick={() => { if (window.confirm(`Delete article "${a.title}"?`)) cms.deleteArticle(a.id); }}>Delete</button>
-                  </div>
-                </div>
-              ))}
-            </>
-          )}
+          <button
+            onClick={startAdd}
+            className="flex min-h-[92px] items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-line text-[14px] font-bold text-slate transition-all duration-300 hover:-translate-y-0.5 hover:border-pine hover:text-pine md:col-span-2"
+          >
+            <IcSpark className="h-4 w-4 text-gold" />
+            Add {TABS.find((t) => t.key === tab)?.label.replace(/s$/, "") ?? "item"}
+          </button>
+        </div>
 
-          {tab === "testimonials" && (
-            <>
-              <AddButton label="Add Testimonial" onClick={() => setEditor({ tab: "testimonials" })} />
-              {cms.testimonials.map((t) => (
-                <div key={t.org} className="card group flex items-center gap-4 p-4 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift md:p-5">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-pine font-display text-[14px] font-black text-gold">
-                    {t.role.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="line-clamp-1 text-[14.5px] font-semibold italic text-ink">“{t.quote}”</p>
-                    <p className="truncate text-[13px] text-slate">{t.name} · {t.role} · <span className="font-bold text-pine">{t.org}</span></p>
-                  </div>
-                  <div className="flex shrink-0 gap-2">
-                    <button className={rowBtn} aria-label={`Edit ${t.org} testimonial`} onClick={() => setEditor({ tab: "testimonials", item: t })}><IcPen className="h-4 w-4" /></button>
-                    <button className={delBtn} onClick={() => { if (window.confirm(`Delete testimonial from ${t.org}?`)) cms.deleteTestimonial(t.org); }}>Delete</button>
-                  </div>
-                </div>
-              ))}
-            </>
-          )}
+        <div className="mt-10 rounded-r-2xl border-l-4 border-gold bg-white p-5 shadow-soft">
+          <p className="text-[13.5px] font-semibold leading-[1.65] text-slate">
+            <span className="font-bold text-ink">Publishing:</span> edits are saved to this browser and preview live on the site.
+            Click <span className="font-bold text-pine">Export JSON</span> and paste the content into <code className="rounded bg-mist px-1.5 py-0.5 text-[12px]">src/data.tsx</code> (or send it to your developer) to make changes permanent for every visitor.
+          </p>
         </div>
       </div>
 
-      {/* editors */}
-      {editor?.tab === "services" && (
-        <ServiceEditor
-          initial={editor.item}
-          nextNo={String(Math.max(0, ...cms.services.map((s) => parseInt(s.no, 10) || 0)) + 1).padStart(2, "0")}
-          onSave={cms.saveService}
-          onClose={() => setEditor(null)}
-        />
+      {/* active editor */}
+      {editing && editingItem && tab === "services" && (
+        <ServiceEditor initial={editingItem as Service} onSave={saveItem} onClose={() => setEditing(null)} />
       )}
-      {editor?.tab === "projects" && (
-        <ProjectEditor initial={editor.item} onSave={cms.saveProject} onClose={() => setEditor(null)} />
+      {editing && editingItem && tab === "projects" && (
+        <ProjectEditor initial={editingItem as GalleryItem} onSave={saveItem} onClose={() => setEditing(null)} />
       )}
-      {editor?.tab === "articles" && (
-        <ArticleEditor initial={editor.item} onSave={cms.saveArticle} onClose={() => setEditor(null)} />
+      {editing && editingItem && tab === "articles" && (
+        <ArticleEditor initial={editingItem as Insight} onSave={saveItem} onClose={() => setEditing(null)} />
       )}
-      {editor?.tab === "testimonials" && (
-        <TestimonialEditor initial={editor.item} onSave={cms.saveTestimonial} onClose={() => setEditor(null)} />
+      {editing && editingItem && tab === "testimonials" && (
+        <TestimonialEditor initial={editingItem as Testimonial} onSave={saveItem} onClose={() => setEditing(null)} />
       )}
     </section>
-  );
-}
-
-function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className="group flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-pine/30 bg-white/60 py-5 text-[14.5px] font-bold text-pine transition-all duration-300 hover:border-pine hover:bg-white hover:shadow-soft"
-    >
-      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pine text-gold transition-transform duration-300 group-hover:rotate-90">+</span>
-      {label}
-    </button>
   );
 }

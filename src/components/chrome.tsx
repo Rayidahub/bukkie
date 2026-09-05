@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { CONTACT, FOOTER_LINKS, NAV_LINKS, SERVICES } from "../data";
 import {
   IcArrowUp,
@@ -23,18 +23,10 @@ export function Logo({ light = false }: { light?: boolean }) {
         <IcSpark className="absolute -right-0.5 -top-0.5 h-3.5 w-3.5 text-pine" />
       </span>
       <span className="leading-tight">
-        <span
-          className={`block font-display text-[17px] font-bold tracking-tight ${
-            light ? "text-white" : "text-ink"
-          }`}
-        >
+        <span className={`block font-display text-[17px] font-bold tracking-tight ${light ? "text-white" : "text-ink"}`}>
           Esther Bukola
         </span>
-        <span
-          className={`block text-[10.5px] font-bold uppercase tracking-[0.18em] ${
-            light ? "text-white/55" : "text-slate"
-          }`}
-        >
+        <span className={`block text-[10.5px] font-bold uppercase tracking-[0.18em] ${light ? "text-white/55" : "text-slate"}`}>
           Design & Media
         </span>
       </span>
@@ -58,6 +50,8 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => setOpen(false), [pathname]);
+
   useEffect(() => {
     if (!open) return;
     document.body.style.overflow = "hidden";
@@ -70,13 +64,6 @@ export function Navbar() {
     };
   }, [open]);
 
-  /* close the menu whenever the route changes */
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  const mobileLinks = [...NAV_LINKS, { path: "/contact", label: "Contact" }];
-
   return (
     <>
       <a
@@ -84,7 +71,7 @@ export function Navbar() {
         onClick={(e) => {
           e.preventDefault();
           document.getElementById("main")?.focus();
-          window.scrollTo({ top: 0 });
+          window.scrollTo(0, 0);
         }}
         className="fixed left-4 top-4 z-[120] -translate-y-24 rounded-full bg-gold px-5 py-2.5 text-sm font-bold text-pine transition-transform focus:translate-y-0"
       >
@@ -102,36 +89,37 @@ export function Navbar() {
           <Logo light />
 
           <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
-            {NAV_LINKS.map((link) => {
-              const on = pathname === link.path;
-              return (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  aria-current={on ? "page" : undefined}
-                  className={`group relative rounded-full px-4 py-2 text-[14px] font-semibold transition-colors duration-300 ${
-                    on ? "text-gold" : "text-white/80 hover:text-white"
-                  }`}
-                >
-                  {link.label}
-                  <span
-                    className={`absolute -bottom-0.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-gold transition-all duration-300 ${
-                      on
-                        ? "scale-100 opacity-100"
-                        : "scale-0 opacity-0 group-hover:scale-75 group-hover:opacity-60"
-                    }`}
-                  />
-                </Link>
-              );
-            })}
+            {NAV_LINKS.map((link) => (
+              <NavLink
+                key={link.path}
+                to={link.path}
+                end={link.path === "/"}
+                className={({ isActive }) =>
+                  `group relative rounded-full px-4 py-2 text-[14px] font-semibold transition-colors duration-300 ${
+                    isActive ? "text-gold" : "text-white/80 hover:text-white"
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    {link.label}
+                    <span
+                      className={`absolute -bottom-0.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-gold transition-all duration-300 ${
+                        isActive ? "scale-100 opacity-100" : "scale-0 opacity-0 group-hover:scale-75 group-hover:opacity-60"
+                      }`}
+                    />
+                  </>
+                )}
+              </NavLink>
+            ))}
           </nav>
 
           <div className="flex items-center gap-3">
             <Link
               to="/contact"
-              className={`btn !px-6 !py-2.5 text-[14px] ${
+              className={`hidden !px-6 !py-2.5 text-[14px] lg:inline-flex btn ${
                 pathname === "/contact" ? "btn-outline-light" : "btn-gold"
-              } hidden lg:inline-flex`}
+              }`}
             >
               Contact Me
               <IcArrowUpRight className="h-4 w-4" />
@@ -149,7 +137,6 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* mobile menu */}
       {open && (
         <div
           id="mobile-menu"
@@ -170,26 +157,24 @@ export function Navbar() {
             </button>
           </div>
 
-          <nav aria-label="Mobile" className="container-x mt-6 flex flex-col overflow-y-auto pb-6">
-            {mobileLinks.map((link, i) => {
-              const on = pathname === link.path;
-              return (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setOpen(false)}
-                  aria-current={on ? "page" : undefined}
-                  className={`flex items-center justify-between border-b border-white/10 py-4 font-display text-3xl font-bold transition-colors hover:text-gold ${
-                    on ? "text-gold" : "text-white"
-                  }`}
-                >
-                  {link.label}
-                  <span className="font-body text-xs font-bold uppercase tracking-[0.2em] text-white/35">
-                    0{i + 1}
-                  </span>
-                </Link>
-              );
-            })}
+          <nav aria-label="Mobile" className="container-x mt-6 flex flex-col">
+            {[...NAV_LINKS, { path: "/contact", label: "Contact" }].map((link, i) => (
+              <NavLink
+                key={link.path}
+                to={link.path}
+                end={link.path === "/"}
+                className={({ isActive }) =>
+                  `flex items-center justify-between border-b border-white/10 py-4 font-display text-3xl font-bold transition-colors hover:text-gold ${
+                    isActive ? "text-gold" : "text-white"
+                  }`
+                }
+              >
+                {link.label}
+                <span className="font-body text-xs font-bold uppercase tracking-[0.2em] text-white/35">
+                  0{i + 1}
+                </span>
+              </NavLink>
+            ))}
           </nav>
 
           <div className="container-x mt-auto pb-10">
@@ -251,7 +236,7 @@ export function Footer() {
 
         <nav aria-label="Footer" className="md:col-span-3">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-gold">Sitemap</p>
-          <ul className="mt-5 space-y-3">
+          <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-3">
             {FOOTER_LINKS.map((l) => (
               <li key={l.path}>
                 <Link
@@ -299,18 +284,14 @@ export function Footer() {
             </li>
           </ul>
 
-          <p className="mt-7 text-xs font-bold uppercase tracking-[0.22em] text-gold">
-            Specialties
-          </p>
+          <p className="mt-7 text-xs font-bold uppercase tracking-[0.22em] text-gold">Specialties</p>
           <ul className="mt-4 flex flex-wrap gap-2">
             {SERVICES.map((s) => (
-              <li key={s.no}>
-                <Link
-                  to="/services"
-                  className="block rounded-full border border-white/15 px-3.5 py-1.5 text-[12px] font-semibold text-white/70 transition-colors hover:border-gold hover:text-gold"
-                >
-                  {s.title.split(" & ")[0]}
-                </Link>
+              <li
+                key={s.no}
+                className="rounded-full border border-white/15 px-3.5 py-1.5 text-[12px] font-semibold text-white/70"
+              >
+                {s.title.split(" & ")[0]}
               </li>
             ))}
           </ul>
@@ -322,15 +303,14 @@ export function Footer() {
           <p>
             © {new Date().getFullYear()} {CONTACT.name}. All rights reserved.
           </p>
-          <p className="flex items-center gap-2">
-            Designed with <IcSpark className="h-3 w-3 text-gold" /> in Lagos, Nigeria
-          </p>
-          <Link
-            to="/admin"
-            className="flex items-center gap-1.5 text-[12.5px] font-bold text-white/50 transition-colors hover:text-gold"
-          >
-            <IcSpark className="h-3 w-3" /> Admin Studio
-          </Link>
+          <div className="flex items-center gap-5">
+            <p className="flex items-center gap-2">
+              Designed with <IcSpark className="h-3 w-3 text-gold" /> in Lagos, Nigeria
+            </p>
+            <Link to="/admin" className="rounded-full border border-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white/45 transition-colors hover:border-gold hover:text-gold">
+              Admin Studio
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -1,0 +1,6 @@
+Drop your portrait here as:  buk.jpeg
+
+The site loads it from  /img/buk.jpeg  (hero circle + About section).
+
+Command:
+  cp "/home/l2euser/Desktop/Projects/Bukkie Files/buk.jpeg" public/img/

@@ -1,7 +1,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { CONTACT, PRINCIPLES, SERVICES, type Insight } from "../data";
-import { useContent } from "../store";
 import {
   IcArrowUpRight,
   IcCheck,
@@ -15,6 +14,7 @@ import {
   MaskLines,
   Reveal,
 } from "../lib";
+import { useContent } from "../store";
 import { SectionHead } from "./about";
 
 /* ------------------------------------------------------------------ */
@@ -44,9 +44,7 @@ export function Philosophy() {
                   i === PRINCIPLES.length - 1 ? "border-b" : ""
                 }`}
               >
-                <span className="font-display text-sm font-black text-gold md:col-span-1">
-                  P.0{i + 1}
-                </span>
+                <span className="font-display text-sm font-black text-gold md:col-span-1">P.0{i + 1}</span>
                 <h3 className="font-display text-4xl font-black tracking-tight text-ink transition-all duration-500 group-hover:translate-x-3 group-hover:text-white md:col-span-5 md:text-6xl">
                   {p.word}
                   <span className="text-gold">.</span>
@@ -70,8 +68,7 @@ export function Philosophy() {
                   <>“Good design is not only about</>,
                   <>making things look beautiful —</>,
                   <>
-                    it's about making{" "}
-                    <span className="italic text-gold">communication</span>
+                    it's about making <span className="italic text-gold">communication</span>
                   </>,
                   <>
                     <span className="italic text-gold">more effective.</span>”
@@ -105,7 +102,7 @@ export function Testimonials({ showHead = true }: { showHead?: boolean }) {
   const { testimonials } = useContent();
   return (
     <section id="testimonials" aria-label="Testimonials" className="relative overflow-hidden bg-pine py-20 text-white md:py-28">
-      <div aria-hidden className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full border border-white/8" />
+      <div aria-hidden className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full border border-white/10" />
       <div aria-hidden className="dots-light pointer-events-none absolute bottom-10 right-10 h-40 w-40 opacity-60" />
 
       <div className="container-x">
@@ -126,13 +123,11 @@ export function Testimonials({ showHead = true }: { showHead?: boolean }) {
 
         <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((t, i) => (
-            <Reveal key={t.org} delay={i * 130} className={i === 1 ? "md:translate-y-8" : ""}>
-              <figure className="flex h-full flex-col rounded-2xl border border-white/12 bg-white/5 p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/60 hover:bg-white/8 md:p-8">
+            <Reveal key={`${t.org}-${i}`} delay={i * 130} className={i === 1 ? "md:translate-y-8" : ""}>
+              <figure className="flex h-full flex-col rounded-2xl border border-white/15 bg-white/5 p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/60 hover:bg-white/10 md:p-8">
                 <IcQuote className="h-8 w-8 text-gold" />
-                <blockquote className="mt-5 flex-1 text-[15px] font-medium leading-[1.75] text-white/85">
-                  “{t.quote}”
-                </blockquote>
-                <figcaption className="mt-6 flex items-center gap-3.5 border-t border-white/12 pt-5">
+                <blockquote className="mt-5 flex-1 text-[15px] font-medium leading-[1.75] text-white/85">“{t.quote}”</blockquote>
+                <figcaption className="mt-6 flex items-center gap-3.5 border-t border-white/15 pt-5">
                   <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold font-display text-[15px] font-black text-pine">
                     {initials(t.role)}
                   </span>
@@ -174,10 +169,7 @@ function ArticleModal({ article, onClose }: { article: Insight; onClose: () => v
       aria-label={article.title}
       onClick={onClose}
     >
-      <div
-        className="animate-pop-in relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-lift"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="animate-pop-in relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-lift" onClick={(e) => e.stopPropagation()}>
         <div className="relative h-56 md:h-64">
           <img src={article.cover} alt="" className="h-full w-full object-cover" />
           <span className="absolute left-5 top-5 rounded-full bg-gold px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-wide text-pine">
@@ -195,9 +187,7 @@ function ArticleModal({ article, onClose }: { article: Insight; onClose: () => v
           <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-slate">
             {article.date} · {article.read} · by Esther Bukola
           </p>
-          <h3 className="mt-3 font-display text-3xl font-black leading-tight text-ink md:text-4xl">
-            {article.title}
-          </h3>
+          <h3 className="mt-3 font-display text-3xl font-black leading-tight text-ink md:text-4xl">{article.title}</h3>
           <div className="mt-6 space-y-5">
             {article.body.map((p, i) => (
               <p key={i} className="text-[15.5px] leading-[1.8] text-slate">
@@ -208,7 +198,11 @@ function ArticleModal({ article, onClose }: { article: Insight; onClose: () => v
           <div className="mt-8 rounded-r-2xl border-l-4 border-gold bg-mist p-5">
             <p className="text-[13.5px] font-semibold leading-[1.65] text-ink">
               Need something like this for your organization?{" "}
-              <Link to="/contact" onClick={onClose} className="font-bold text-pine underline decoration-gold decoration-2 underline-offset-4 hover:text-pine-dark">
+              <Link
+                to="/contact"
+                onClick={onClose}
+                className="font-bold text-pine underline decoration-gold decoration-2 underline-offset-4 hover:text-pine-dark"
+              >
                 Let's talk →
               </Link>
             </p>
@@ -260,16 +254,14 @@ export function Insights({ showHead = true }: { showHead?: boolean }) {
                   <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-slate">
                     {a.date} · {a.read}
                   </p>
-                  <h3 className="mt-2 font-display text-[20px] font-bold leading-snug text-ink">
-                    {a.title}
-                  </h3>
+                  <h3 className="mt-2 font-display text-[20px] font-bold leading-snug text-ink">{a.title}</h3>
                   <p className="mt-2.5 text-[14px] leading-[1.65] text-slate">{a.excerpt}</p>
                   <button
                     onClick={() => setOpenId(a.id)}
                     className="mt-auto inline-flex items-center gap-2 pt-5 text-left text-[14px] font-bold text-pine transition-colors hover:text-pine-dark"
                   >
                     Read Article
-                    <IcArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <IcArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </button>
                 </div>
               </article>
@@ -280,6 +272,40 @@ export function Insights({ showHead = true }: { showHead?: boolean }) {
 
       {article && <ArticleModal article={article} onClose={() => setOpenId(null)} />}
     </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  CTA banner (reused across pages)                                   */
+/* ------------------------------------------------------------------ */
+export function CtaBanner() {
+  return (
+    <Reveal>
+      <div className="relative overflow-hidden rounded-3xl bg-pine p-9 text-center text-white shadow-lift md:p-16">
+        <div aria-hidden className="dots-light absolute left-8 top-8 h-32 w-32 opacity-60" />
+        <div aria-hidden className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gold/15" />
+        <div aria-hidden className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full border border-gold/25" />
+        <p className="eyebrow eyebrow-light justify-center">Let's Work Together</p>
+        <h2 className="mx-auto mt-5 max-w-3xl font-display text-[clamp(2rem,4.6vw,3.6rem)] font-black leading-[1.06] tracking-[-0.015em]">
+          Have a project in mind? Let's build something{" "}
+          <span className="italic text-gold">meaningful together.</span>
+        </h2>
+        <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-[1.7] text-white/70">
+          From a single flyer to a full campaign system — tell me what you're
+          building and I'll tell you how design can carry it.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <Link to="/contact" className="btn btn-gold">
+            Start a Project
+            <IcArrowUpRight className="h-4 w-4" />
+          </Link>
+          <a href={`mailto:${CONTACT.email}`} className="btn btn-outline-light">
+            <IcMail className="h-4 w-4" />
+            {CONTACT.email}
+          </a>
+        </div>
+      </div>
+    </Reveal>
   );
 }
 
@@ -321,13 +347,9 @@ function CopyRow({
   return (
     <div className="flex items-center justify-between gap-3 border-b border-line py-4 last:border-0">
       <div className="flex min-w-0 items-center gap-3.5">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sage text-pine">
-          {icon}
-        </span>
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sage text-pine">{icon}</span>
         <div className="min-w-0">
-          <p className="text-[10.5px] font-extrabold uppercase tracking-[0.2em] text-slate/70">
-            {label}
-          </p>
+          <p className="text-[10.5px] font-extrabold uppercase tracking-[0.2em] text-slate/70">{label}</p>
           {href ? (
             <a href={href} className="block truncate text-[14.5px] font-bold text-ink transition-colors hover:text-pine">
               {value}
@@ -350,44 +372,6 @@ function CopyRow({
         {copied ? "Copied" : "Copy"}
       </button>
     </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Reusable CTA banner (Home, Services, etc.)                         */
-/* ------------------------------------------------------------------ */
-export function CtaBanner() {
-  return (
-    <section aria-label="Start a project" className="relative bg-mist px-0 pb-20 md:pb-28">
-      <div className="container-x">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl bg-pine p-9 text-center text-white shadow-lift md:p-16">
-            <div aria-hidden className="dots-light absolute left-8 top-8 h-32 w-32 opacity-60" />
-            <div aria-hidden className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gold/15" />
-            <div aria-hidden className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full border border-gold/25" />
-            <p className="eyebrow eyebrow-light justify-center">Let's work together</p>
-            <h2 className="mx-auto mt-5 max-w-3xl font-display text-[clamp(2rem,4.6vw,3.6rem)] font-black leading-[1.06] tracking-[-0.015em]">
-              Have a project in mind? Let's build something{" "}
-              <span className="italic text-gold">meaningful together.</span>
-            </h2>
-            <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-[1.7] text-white/70">
-              From a single flyer to a full campaign system — tell me what
-              you're building and I'll tell you how design can carry it.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Link to="/contact" className="btn btn-gold">
-                Start a Project
-                <IcArrowUpRight className="h-4 w-4" />
-              </Link>
-              <a href={`mailto:${CONTACT.email}`} className="btn btn-outline-light">
-                <IcMail className="h-4 w-4" />
-                {CONTACT.email}
-              </a>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
   );
 }
 
@@ -422,9 +406,7 @@ export function Contact() {
     ]
       .filter((l) => l !== "")
       .join("\n");
-    window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSent(true);
   };
 
@@ -433,7 +415,6 @@ export function Contact() {
   return (
     <section id="contact" aria-label="Contact" className="relative overflow-hidden bg-mist py-20 md:py-28">
       <div className="container-x">
-        {/* details + form */}
         <div id="brief" className="grid gap-8 lg:grid-cols-12">
           <Reveal className="lg:col-span-5">
             <div className="card h-full p-7 shadow-soft md:p-8">
@@ -444,17 +425,10 @@ export function Contact() {
                 </span>
                 Currently accepting projects
               </p>
-              <h3 className="mt-3 font-display text-2xl font-black text-ink">
-                Direct line to the studio
-              </h3>
+              <h3 className="mt-3 font-display text-2xl font-black text-ink">Direct line to the studio</h3>
 
               <div className="mt-5">
-                <CopyRow
-                  icon={<IcMail className="h-5 w-5" />}
-                  label="Email"
-                  value={CONTACT.email}
-                  href={`mailto:${CONTACT.email}`}
-                />
+                <CopyRow icon={<IcMail className="h-5 w-5" />} label="Email" value={CONTACT.email} href={`mailto:${CONTACT.email}`} />
                 <CopyRow
                   icon={<IcPhone className="h-5 w-5" />}
                   label="Phone — primary"
@@ -467,16 +441,10 @@ export function Contact() {
                   value={CONTACT.phone2}
                   href={`tel:${CONTACT.phone2.replace(/\s/g, "")}`}
                 />
-                <CopyRow
-                  icon={<IcPin className="h-5 w-5" />}
-                  label="Studio"
-                  value={CONTACT.location}
-                />
+                <CopyRow icon={<IcPin className="h-5 w-5" />} label="Studio" value={CONTACT.location} />
               </div>
 
-              <p className="mt-7 text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate">
-                Available for
-              </p>
+              <p className="mt-7 text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate">Available for</p>
               <ul className="mt-3.5 flex flex-wrap gap-2">
                 {SERVICES_OFFERED.map((s) => (
                   <li key={s} className="chip cursor-default">
@@ -487,8 +455,7 @@ export function Contact() {
 
               <p className="mt-7 flex items-start gap-2.5 rounded-r-2xl border-l-4 border-gold bg-mist p-4 text-[13px] font-semibold leading-[1.6] text-slate">
                 <IcSpark className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                Response within 24 hours on weekdays — faster if it involves a
-                printing deadline.
+                Response within 24 hours on weekdays — faster if it involves a printing deadline.
               </p>
             </div>
           </Reveal>
@@ -504,49 +471,25 @@ export function Contact() {
                   <label htmlFor="cf-name" className={label}>
                     Your name *
                   </label>
-                  <input
-                    id="cf-name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Adaeze Okoye"
-                    className="input-base"
-                  />
+                  <input id="cf-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Adaeze Okoye" className="input-base" />
                 </div>
                 <div>
                   <label htmlFor="cf-email" className={label}>
                     Email
                   </label>
-                  <input
-                    id="cf-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@organization.org"
-                    className="input-base"
-                  />
+                  <input id="cf-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@organization.org" className="input-base" />
                 </div>
                 <div>
                   <label htmlFor="cf-org" className={label}>
                     Organization
                   </label>
-                  <input
-                    id="cf-org"
-                    value={org}
-                    onChange={(e) => setOrg(e.target.value)}
-                    placeholder="Company, church, NGO…"
-                    className="input-base"
-                  />
+                  <input id="cf-org" value={org} onChange={(e) => setOrg(e.target.value)} placeholder="Company, church, NGO…" className="input-base" />
                 </div>
                 <div>
                   <label htmlFor="cf-service" className={label}>
                     What do you need?
                   </label>
-                  <select
-                    id="cf-service"
-                    value={service}
-                    onChange={(e) => setService(e.target.value)}
-                    className="input-base cursor-pointer"
-                  >
+                  <select id="cf-service" value={service} onChange={(e) => setService(e.target.value)} className="input-base cursor-pointer">
                     {SERVICES_OFFERED.map((s) => (
                       <option key={s}>{s}</option>
                     ))}
@@ -589,7 +532,6 @@ export function Contact() {
           </Reveal>
         </div>
 
-        {/* services summary strip */}
         <Reveal delay={200}>
           <p className="mt-12 text-center text-[12px] font-bold uppercase tracking-[0.2em] text-slate/70">
             {SERVICES.map((s) => s.kicker).join("  ·  ")} — all under one roof

@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   CASE_STUDIES,
   CATEGORIES,
   COMM_SKILLS,
   DESIGN_SKILLS,
-  GALLERY,
   SOFT_SKILLS,
   TECH_SKILLS,
   TOOLS,
@@ -12,7 +11,6 @@ import {
   type GalleryItem,
   type Tool,
 } from "../data";
-import { useContent } from "../store";
 import {
   IcArrowRight,
   IcCanva,
@@ -29,6 +27,7 @@ import {
   useInView,
   useReducedMotion,
 } from "../lib";
+import { useContent } from "../store";
 import { SectionHead } from "./about";
 
 /* ------------------------------------------------------------------ */
@@ -54,9 +53,7 @@ function ToolCard({ tool, delay }: { tool: Tool; delay: number }) {
         <span className="flex h-24 w-24 items-center justify-center rounded-full border border-line bg-mist text-pine transition-all duration-300 group-hover:-translate-y-1.5 group-hover:border-gold group-hover:bg-pine group-hover:text-gold group-hover:shadow-lift md:h-28 md:w-28">
           <ToolIcon icon={tool.icon} />
         </span>
-        <p className="mt-3.5 max-w-[120px] text-[13px] font-bold leading-tight text-ink">
-          {tool.name}
-        </p>
+        <p className="mt-3.5 max-w-[120px] text-[13px] font-bold leading-tight text-ink">{tool.name}</p>
       </div>
     </Reveal>
   );
@@ -94,7 +91,7 @@ function ProficiencyBar({
 }
 
 export function ToolsSection() {
-  const chipGroup = (label: string, items: string[], icon: React.ReactNode) => (
+  const chipGroup = (label: string, items: string[], icon: ReactNode) => (
     <div className="mt-8">
       <p className="flex items-center gap-2.5 text-[12px] font-bold uppercase tracking-[0.18em] text-pine">
         {icon}
@@ -126,7 +123,6 @@ export function ToolsSection() {
         />
 
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-12">
-          {/* tools circles */}
           <div className="lg:col-span-5">
             <div className="grid grid-cols-3 gap-x-4 gap-y-9">
               {TOOLS.map((t, i) => (
@@ -148,12 +144,9 @@ export function ToolsSection() {
             </Reveal>
           </div>
 
-          {/* proficiency + chips */}
           <div className="lg:col-span-7">
             <Reveal>
-              <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-pine">
-                Design proficiency
-              </p>
+              <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-pine">Design proficiency</p>
             </Reveal>
             <div className="mt-4">
               {DESIGN_SKILLS.map((s, i) => (
@@ -197,10 +190,8 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setLightbox(null);
-      if (e.key === "ArrowRight")
-        setLightbox((v) => (v === null ? v : (v + 1) % items.length));
-      if (e.key === "ArrowLeft")
-        setLightbox((v) => (v === null ? v : (v - 1 + items.length) % items.length));
+      if (e.key === "ArrowRight") setLightbox((v) => (v === null ? v : (v + 1) % items.length));
+      if (e.key === "ArrowLeft") setLightbox((v) => (v === null ? v : (v - 1 + items.length) % items.length));
     };
     window.addEventListener("keydown", onKey);
     return () => {
@@ -209,8 +200,7 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
     };
   }, [lightbox, items.length]);
 
-  const active: GalleryItem | null =
-    lightbox !== null && items[lightbox] ? items[lightbox] : null;
+  const active: GalleryItem | null = lightbox !== null && items[lightbox] ? items[lightbox] : null;
 
   return (
     <section id="projects" aria-label="Selected projects" className="relative bg-mist py-20 md:py-28">
@@ -228,10 +218,7 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
               ]}
             />
             <Reveal delay={200} className="-mt-6 mb-12 md:-mt-8 lg:mb-16">
-              <button
-                onClick={() => setShowAll((v) => !v)}
-                className="btn btn-outline !py-3 text-[14px]"
-              >
+              <button onClick={() => setShowAll((v) => !v)} className="btn btn-outline !py-3 text-[14px]">
                 {showAll ? "Show Less" : "View All Projects"}
                 <IcArrowRight className="h-4 w-4" />
               </button>
@@ -239,11 +226,9 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
           </div>
         )}
 
-        {/* filters */}
         <Reveal className="mb-10 flex flex-wrap gap-2.5">
           {CATEGORIES.map((c) => {
-            const count =
-              c === "All" ? projects.length : projects.filter((g) => g.cat === c).length;
+            const count = c === "All" ? projects.length : projects.filter((g) => g.cat === c).length;
             const isActive = cat === c;
             return (
               <button
@@ -261,15 +246,12 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
                 }`}
               >
                 {c}
-                <sup className={`ml-1 text-[10px] ${isActive ? "text-gold" : "text-pine"}`}>
-                  {count}
-                </sup>
+                <sup className={`ml-1 text-[10px] ${isActive ? "text-gold" : "text-pine"}`}>{count}</sup>
               </button>
             );
           })}
         </Reveal>
 
-        {/* cards */}
         <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((g, i) => (
             <Reveal key={g.id} delay={(i % 3) * 110}>
@@ -302,15 +284,9 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
                 </div>
 
                 <div className="p-6">
-                  <p className="text-[11.5px] font-extrabold uppercase tracking-[0.16em] text-pine">
-                    {g.org}
-                  </p>
-                  <h3 className="mt-1.5 font-display text-[21px] font-bold leading-snug text-ink">
-                    {g.title}
-                  </h3>
-                  <p className="mt-2 line-clamp-2 text-[14px] leading-[1.6] text-slate">
-                    {g.study.objective}
-                  </p>
+                  <p className="text-[11.5px] font-extrabold uppercase tracking-[0.16em] text-pine">{g.org}</p>
+                  <h3 className="mt-1.5 font-display text-[21px] font-bold leading-snug text-ink">{g.title}</h3>
+                  <p className="mt-2 line-clamp-2 text-[14px] leading-[1.6] text-slate">{g.study.objective}</p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {g.study.tools.slice(0, 3).map((t) => (
                       <span key={t} className="rounded-full bg-mist px-3 py-1 text-[11.5px] font-semibold text-slate">
@@ -340,11 +316,7 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
           />
           <div className="animate-pop-in relative grid max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-3xl bg-white shadow-lift lg:grid-cols-2">
             <div className="relative overflow-hidden bg-sage lg:rounded-l-3xl">
-              <img
-                src={active.img}
-                alt={active.title}
-                className="h-full max-h-[34vh] w-full object-cover lg:max-h-none"
-              />
+              <img src={active.img} alt={active.title} className="h-full max-h-[34vh] w-full object-cover lg:max-h-none" />
               <span className="absolute left-5 top-5 rounded-full bg-gold px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-wide text-pine">
                 {active.cat} · {active.year}
               </span>
@@ -354,18 +326,14 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
               <p className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.22em] text-pine">
                 <IcSpark className="h-3.5 w-3.5 text-gold" /> Case Study
               </p>
-              <h3 className="mt-3 font-display text-3xl font-black leading-tight text-ink md:text-4xl">
-                {active.title}
-              </h3>
+              <h3 className="mt-3 font-display text-3xl font-black leading-tight text-ink md:text-4xl">{active.title}</h3>
               <p className="mt-2 text-[13px] font-bold uppercase tracking-[0.14em] text-slate">
                 {active.org} — {active.study.type}
               </p>
 
               <p className="mt-5 text-[15px] leading-[1.7] text-slate">{active.study.objective}</p>
 
-              <p className="mt-6 text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-pine">
-                Deliverables
-              </p>
+              <p className="mt-6 text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-pine">Deliverables</p>
               <ul className="mt-3 space-y-2.5">
                 {active.study.deliverables.map((d) => (
                   <li key={d} className="flex items-start gap-2.5 text-[14px] leading-snug text-ink/85">
@@ -377,9 +345,7 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
                 ))}
               </ul>
 
-              <p className="mt-6 text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-pine">
-                Tools
-              </p>
+              <p className="mt-6 text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-pine">Tools</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {active.study.tools.map((t) => (
                   <span key={t} className="rounded-full border border-line bg-mist px-3.5 py-1.5 text-[12px] font-semibold text-slate">
@@ -389,12 +355,8 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
               </div>
 
               <div className="mt-7 rounded-r-2xl border-l-4 border-gold bg-mist p-5">
-                <p className="text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-pine">
-                  Impact
-                </p>
-                <p className="mt-2 text-[14px] font-semibold leading-[1.65] text-ink">
-                  {active.study.impact}
-                </p>
+                <p className="text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-pine">Impact</p>
+                <p className="mt-2 text-[14px] font-semibold leading-[1.65] text-ink">{active.study.impact}</p>
               </div>
             </div>
 
@@ -403,26 +365,22 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
               aria-label="Close"
               className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-pine shadow-lift transition-colors hover:bg-gold hover:text-pine"
             >
-              <IcClose className="h-4.5 w-4.5" />
+              <IcClose className="h-4 w-4" />
             </button>
             <div className="absolute bottom-5 right-5 z-10 flex gap-2.5">
               <button
                 aria-label="Previous project"
-                onClick={() =>
-                  setLightbox((v) => (v === null ? v : (v - 1 + items.length) % items.length))
-                }
+                onClick={() => setLightbox((v) => (v === null ? v : (v - 1 + items.length) % items.length))}
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-pine shadow-lift transition-colors hover:bg-pine hover:text-white"
               >
-                <IcArrowRight className="h-4.5 w-4.5 rotate-180" />
+                <IcArrowRight className="h-4 w-4 rotate-180" />
               </button>
               <button
                 aria-label="Next project"
-                onClick={() =>
-                  setLightbox((v) => (v === null ? v : (v + 1) % items.length))
-                }
+                onClick={() => setLightbox((v) => (v === null ? v : (v + 1) % items.length))}
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-pine shadow-lift transition-colors hover:bg-pine hover:text-white"
               >
-                <IcArrowRight className="h-4.5 w-4.5" />
+                <IcArrowRight className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -437,28 +395,21 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
 /* ------------------------------------------------------------------ */
 const THEME: Record<
   CaseStudy["theme"],
-  {
-    wrap: string;
-    sub: string;
-    chip: string;
-    num: string;
-    impact: string;
-    kicker: string;
-  }
+  { wrap: string; sub: string; chip: string; num: string; impact: string; kicker: string }
 > = {
   pine: {
     wrap: "bg-pine text-white",
     sub: "text-white/70",
     chip: "border-white/25 text-white/85",
-    num: "text-white/8",
-    impact: "bg-white/8 border-gold",
+    num: "text-white/10",
+    impact: "bg-white/10 border-gold",
     kicker: "text-gold",
   },
   paper: {
     wrap: "bg-white text-ink",
     sub: "text-slate",
     chip: "border-line text-slate",
-    num: "text-ink/6",
+    num: "text-ink/5",
     impact: "bg-mist border-gold",
     kicker: "text-pine",
   },
@@ -467,7 +418,7 @@ const THEME: Record<
     sub: "text-pine/75",
     chip: "border-pine/25 text-pine/85",
     num: "text-pine/10",
-    impact: "bg-pine/8 border-pine",
+    impact: "bg-pine/10 border-pine",
     kicker: "text-pine",
   },
 };
@@ -512,12 +463,8 @@ export function FeaturedProjects() {
                     <h3 className="mt-4 max-w-[16ch] font-display text-3xl font-black leading-[1.02] tracking-tight md:text-[2.6rem]">
                       {cs.client}
                     </h3>
-                    <p className={`mt-5 inline-block rounded-full border px-4 py-2 text-[12px] font-bold ${t.chip}`}>
-                      {cs.role}
-                    </p>
-                    <p className={`mt-6 text-[11.5px] font-extrabold uppercase tracking-[0.2em] ${t.kicker}`}>
-                      Tools
-                    </p>
+                    <p className={`mt-5 inline-block rounded-full border px-4 py-2 text-[12px] font-bold ${t.chip}`}>{cs.role}</p>
+                    <p className={`mt-6 text-[11.5px] font-extrabold uppercase tracking-[0.2em] ${t.kicker}`}>Tools</p>
                     <div className="mt-2.5 flex flex-wrap gap-2">
                       {cs.tools.map((tool) => (
                         <span key={tool} className={`rounded-full border px-3.5 py-1.5 text-[12px] font-semibold ${t.chip}`}>
@@ -528,16 +475,10 @@ export function FeaturedProjects() {
                   </div>
 
                   <div className="lg:col-span-7">
-                    <p className={`text-[11.5px] font-extrabold uppercase tracking-[0.2em] ${t.kicker}`}>
-                      Objective
-                    </p>
-                    <p className={`mt-2.5 text-[15.5px] leading-[1.7] md:text-[16.5px] ${t.sub}`}>
-                      {cs.objective}
-                    </p>
+                    <p className={`text-[11.5px] font-extrabold uppercase tracking-[0.2em] ${t.kicker}`}>Objective</p>
+                    <p className={`mt-2.5 text-[15.5px] leading-[1.7] md:text-[16.5px] ${t.sub}`}>{cs.objective}</p>
 
-                    <p className={`mt-7 text-[11.5px] font-extrabold uppercase tracking-[0.2em] ${t.kicker}`}>
-                      Responsibilities
-                    </p>
+                    <p className={`mt-7 text-[11.5px] font-extrabold uppercase tracking-[0.2em] ${t.kicker}`}>Responsibilities</p>
                     <ul className="mt-3.5 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
                       {cs.responsibilities.map((r) => (
                         <li key={r} className="flex items-start gap-2.5 text-[13.5px] font-medium leading-snug">
@@ -550,12 +491,8 @@ export function FeaturedProjects() {
                     </ul>
 
                     <div className={`mt-8 rounded-r-2xl border-l-4 p-5 md:p-6 ${t.impact}`}>
-                      <p className={`text-[11.5px] font-extrabold uppercase tracking-[0.2em] ${t.kicker}`}>
-                        Results / Impact
-                      </p>
-                      <p className="mt-2 font-display text-[17px] font-bold leading-snug md:text-[19px]">
-                        {cs.impact}
-                      </p>
+                      <p className={`text-[11.5px] font-extrabold uppercase tracking-[0.2em] ${t.kicker}`}>Results / Impact</p>
+                      <p className="mt-2 font-display text-[17px] font-bold leading-snug md:text-[19px]">{cs.impact}</p>
                     </div>
                   </div>
                 </div>

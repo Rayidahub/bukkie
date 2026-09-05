@@ -3,9 +3,7 @@
 /* ------------------------------------------------------------------ */
 
 export const IMG = {
-  /** Local photo — lives in public/img/buk.jpeg */
   portrait: "./img/buk.jpeg",
-  /** Fallback used automatically if buk.jpeg is not found. */
   portraitRemote:
     "https://image.qwenlm.ai/generated-images/9b7f2d14-5301-45b7-8310-df0b3938b59c/_result.png",
   bramble:
@@ -60,7 +58,7 @@ export const FOOTER_LINKS = [
   { path: "/contact", label: "Contact" },
 ];
 
-/* ---------------- services / professional focus ------------------- */
+/* ---------------- services ----------------------------------------- */
 export type Service = {
   no: string;
   title: string;
@@ -588,7 +586,7 @@ export const INSIGHTS: Insight[] = [
     body: [
       "During my NYSC year at Valuemax Communication Enterprises, I learned that a beautiful file can still become a disappointing print. The gap between screen and press is measured in bleed settings, colour profiles, and resolution — and it closes long before the machine starts running.",
       "My checklist today: work in CMYK from the start for anything physical, add at least 3mm bleed (more for large-format vinyl), keep critical text away from trim edges, and export at a resolution matched to viewing distance. A banner read from across the street doesn't need 300dpi — but it does need crisp vectors and honest contrast.",
-      "The most underrated step is the conversation with the vendor. Confirm the machine, the material, the finishing, and request a proof for anything large. On the NDLEA awareness banner, walking the file through production with the press operator is what kept the greens deep and the type sharp at twelve feet wide.",
+      "The most underrated step is the conversation with the vendor. Confirm the machine, the material, the finishing, and request a proof for anything large. On the NDLEA awareness banner, walking the file through production with the press operator is what kept the blues deep and the type sharp at twelve feet wide.",
       "Designing for print taught me more about digital design than the other way around — constraints make you deliberate. When you know your work has to survive a machine, you stop decorating and start communicating.",
     ],
   },

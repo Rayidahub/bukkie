@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { CONTACT, IMG, MARQUEE, ORGS, yearsOfExperience } from "../data";
 import {
-  GoldUnderline,
   IcArrowDown,
   IcArrowUpRight,
   IcPin,
@@ -13,7 +12,7 @@ import {
 } from "../lib";
 
 /* ------------------------------------------------------------------ */
-/*  Category ticker (gold band)                                        */
+/*  Category ticker (gold band by default)                             */
 /* ------------------------------------------------------------------ */
 export function Ticker({
   words = MARQUEE,
@@ -45,9 +44,9 @@ export function Ticker({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Floating tag                                                       */
+/*  Floating skill tag                                                 */
 /* ------------------------------------------------------------------ */
-function FloatingTag({
+export function FloatingTag({
   children,
   className = "",
   late = false,
@@ -71,54 +70,60 @@ function FloatingTag({
 /* ------------------------------------------------------------------ */
 export function Hero() {
   const years = yearsOfExperience();
-
   return (
-    <section id="home" aria-label="Introduction" className="relative overflow-hidden bg-white">
-      {/* ambient background shapes */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-32 right-[-10%] h-[480px] w-[480px] rounded-full bg-sage/60 blur-2xl"
-      />
-      <div aria-hidden className="dots-bg pointer-events-none absolute left-0 top-24 h-48 w-48 opacity-70" />
+    <section id="home" className="relative overflow-hidden bg-white">
+      <div aria-hidden className="dots-bg pointer-events-none absolute left-0 top-24 h-64 w-64 opacity-60" />
+      <div aria-hidden className="pointer-events-none absolute -right-28 -top-28 h-[420px] w-[420px] rounded-full border border-line" />
+      <div aria-hidden className="pointer-events-none absolute -right-14 -top-14 h-[420px] w-[420px] rounded-full border border-gold/30" />
 
-      <div className="container-x grid items-center gap-14 py-14 md:py-20 lg:grid-cols-12 lg:gap-8">
-        {/* -------- left : copy -------- */}
-        <div className="lg:col-span-6">
+      <div className="container-x relative grid items-center gap-14 pb-20 pt-16 md:pt-20 lg:grid-cols-12 lg:gap-8">
+        {/* copy */}
+        <div className="lg:col-span-7">
           <Reveal>
-            <p className="eyebrow">Graphics Designer & Digital Media Specialist</p>
+            <p className="eyebrow">Creative Graphics Designer — Lagos, NG</p>
           </Reveal>
 
-          <h1 className="mt-6 font-display text-[clamp(2.5rem,5.6vw,4.1rem)] font-black leading-[1.04] tracking-[-0.015em] text-ink">
+          <h1 className="mt-6 font-display text-[clamp(2.6rem,6vw,4.4rem)] font-black leading-[1.02] tracking-[-0.02em] text-ink">
             <MaskLines
               lines={[
-                <>Hello, I'm Esther —</>,
-                <>
-                  I build brands through{" "}
-                </>,
+                <>Hello, I'm Bukola </>,
+                <>I build brands through </>,
                 <>
                   <span className="relative inline-block italic text-pine">
                     visual storytelling.
-                    <GoldUnderline />
+                    <svg
+                      viewBox="0 0 220 12"
+                      preserveAspectRatio="none"
+                      className="absolute -bottom-1 left-0 h-[0.18em] w-full"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M3 9c40-6 140-6 214-3"
+                        fill="none"
+                        stroke="var(--color-gold)"
+                        strokeWidth="6"
+                        strokeLinecap="round"
+                      />
+                    </svg>
                   </span>
                 </>,
               ]}
             />
           </h1>
 
-          <Reveal delay={250}>
-            <p className="mt-6 max-w-lg text-[16.5px] leading-[1.7] text-slate">
-              I help organizations in Lagos and beyond communicate their ideas,
-              promote their activities, and connect with their audiences —
-              through campaigns, publications, branding, and print that
-              actually ships.
+          <Reveal delay={300}>
+            <p className="mt-7 max-w-xl text-[16.5px] leading-[1.75] text-slate">
+              I help organizations communicate clearly, campaign boldly, and
+              print beautifully — from social media graphics and newsletters
+              to large-format banners and brand identities.
             </p>
           </Reveal>
 
-          <Reveal delay={350}>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+          <Reveal delay={400}>
+            <div className="mt-9 flex flex-wrap items-center gap-4">
               <Link to="/projects" className="btn btn-pine">
                 View My Work
-                <IcArrowDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+                <IcArrowDown className="h-4 w-4" />
               </Link>
               <Link to="/contact" className="btn btn-outline">
                 Let's Talk
@@ -127,9 +132,9 @@ export function Hero() {
             </div>
           </Reveal>
 
-          <Reveal delay={450}>
-            <div className="mt-10 border-t border-line pt-6">
-              <p className="text-[11.5px] font-bold uppercase tracking-[0.2em] text-slate/80">
+          <Reveal delay={500}>
+            <div className="mt-11 border-t border-line pt-6">
+              <p className="text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-slate/70">
                 Designing for teams at
               </p>
               <ul className="mt-3.5 flex flex-wrap gap-2.5">
@@ -143,52 +148,45 @@ export function Hero() {
           </Reveal>
         </div>
 
-        {/* -------- right : portrait composition -------- */}
-        <div className="lg:col-span-6">
-          <Reveal delay={200} y={40}>
-            <div className="relative mx-auto w-[min(88%,430px)]">
-              {/* gold circle backdrop */}
-              <div
-                aria-hidden
-                className="absolute -right-5 -top-5 h-full w-full rounded-full bg-gold md:-right-8 md:-top-8"
-              />
-              {/* rotating dashed ring */}
+        {/* portrait composition */}
+        <div className="lg:col-span-5">
+          <Reveal y={40} delay={200}>
+            <div className="relative mx-auto w-[min(80vw,400px)]">
+              {/* gold backdrop + dashed orbit */}
+              <div aria-hidden className="absolute -right-5 -top-5 h-full w-full rounded-full bg-gold" />
               <div
                 aria-hidden
                 className="animate-spin-slower absolute -inset-5 rounded-full border-2 border-dashed border-pine/30"
               />
-              {/* dot grid */}
-              <div aria-hidden className="dots-bg absolute -bottom-10 -left-12 h-36 w-36" />
 
               {/* portrait */}
-              <div className="relative aspect-square overflow-hidden rounded-full shadow-lift ring-8 ring-white">
-            <img
-              src={IMG.portrait}
-              alt="Portrait of Olowomakan Esther Bukola"
-              className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-              onError={portraitFallback}
-            />              </div>
+              <div className="relative aspect-square overflow-hidden rounded-full border-8 border-white shadow-lift">
+                <img
+                  src={IMG.portrait}
+                  alt="Portrait of Olowomakan Esther Bukola"
+                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                  onError={portraitFallback}
+                />
+              </div>
 
-              {/* floating skill tags */}
-              <FloatingTag className="-left-6 top-[12%] md:-left-14">
-                Social Media Design
+              <FloatingTag className="-left-8 top-10">Graphic Design</FloatingTag>
+              <FloatingTag late className="-right-6 top-1/2">
+                Digital Media
               </FloatingTag>
-              <FloatingTag late className="-right-2 top-[46%] md:-right-10">
-                Brand & Print
-              </FloatingTag>
+              <FloatingTag className="-left-4 bottom-24">Print Production</FloatingTag>
 
               {/* experience badge */}
-              <span className="absolute -top-2 right-[6%] z-10 flex h-20 w-20 flex-col items-center justify-center rounded-full bg-pine text-center shadow-lift">
-                <span className="font-display text-2xl font-black leading-none text-gold">
+              <span className="absolute -top-3 right-[8%] z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full bg-pine text-center text-white shadow-lift">
+                <span className="font-display text-[26px] font-black leading-none text-gold">
                   {years}+
                 </span>
-                <span className="mt-0.5 px-1 text-[8.5px] font-bold uppercase tracking-[0.12em] text-white/80">
+                <span className="mt-0.5 text-[9px] font-extrabold uppercase tracking-[0.14em]">
                   Years Exp.
                 </span>
               </span>
 
               {/* availability card */}
-              <div className="absolute -bottom-6 left-1/2 z-10 w-[240px] -translate-x-1/2 rounded-2xl border border-line bg-white p-4 shadow-lift">
+              <div className="absolute -bottom-7 right-0 z-10 rounded-2xl border border-line bg-white px-5 py-4 shadow-lift">
                 <p className="flex items-center gap-2 text-[13px] font-bold text-pine">
                   <span className="relative flex h-2.5 w-2.5">
                     <span className="animate-pulse-soft absolute h-2.5 w-2.5 rounded-full bg-gold" />
@@ -196,9 +194,9 @@ export function Hero() {
                   </span>
                   Available for projects
                 </p>
-                <p className="mt-1.5 flex items-center gap-1.5 text-[12px] font-medium text-slate">
+                <p className="mt-1 flex items-center gap-1.5 text-[11.5px] font-semibold text-slate">
                   <IcPin className="h-3.5 w-3.5 text-pine" />
-                  {CONTACT.location}
+                  {CONTACT.coords}
                 </p>
               </div>
             </div>

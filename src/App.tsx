@@ -3,6 +3,7 @@ import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Footer, Navbar } from "./components/chrome";
 import {
   AboutPage,
+  AdminPage,
   BlogPage,
   ContactPage,
   Home,
@@ -11,6 +12,7 @@ import {
   ServicesPage,
   TestimonialsPage,
 } from "./pages";
+import { ContentProvider } from "./store";
 
 const TITLES: Record<string, string> = {
   "/": "Olowomakan Esther Bukola — Creative Graphics Designer",
@@ -20,6 +22,7 @@ const TITLES: Record<string, string> = {
   "/blog": "Blog & Insights — Esther Bukola",
   "/testimonials": "Testimonials — Esther Bukola",
   "/contact": "Contact — Esther Bukola",
+  "/admin": "Admin Studio — Esther Bukola",
 };
 
 function ScrollAndTitle() {
@@ -46,6 +49,7 @@ function Shell() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/testimonials" element={<TestimonialsPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
@@ -56,9 +60,11 @@ function Shell() {
 
 export default function App() {
   return (
-    <HashRouter>
-      <ScrollAndTitle />
-      <Shell />
-    </HashRouter>
+    <ContentProvider>
+      <HashRouter>
+        <ScrollAndTitle />
+        <Shell />
+      </HashRouter>
+    </ContentProvider>
   );
 }

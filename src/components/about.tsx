@@ -10,6 +10,7 @@ import {
   yearsOfExperience,
 } from "../data";
 import { Link } from "react-router-dom";
+import { useContent } from "../store";
 import {
   CountUp,
   IcChat,
@@ -84,6 +85,7 @@ function ServiceIcon({ icon, className = "h-7 w-7" }: { icon: string; className?
 }
 
 export function ServicesSection({ showHead = true }: { showHead?: boolean }) {
+  const { services } = useContent();
   return (
     <section id="services" aria-label="Services" className="relative bg-mist py-20 md:py-28">
       <div className="container-x">
@@ -109,7 +111,7 @@ export function ServicesSection({ showHead = true }: { showHead?: boolean }) {
         )}
 
         <div className="grid gap-6 md:grid-cols-3">
-          {SERVICES.map((s, i) => (
+          {services.map((s, i) => (
             <Reveal key={s.no} delay={i * 120}>
               <article
                 className={`group flex h-full flex-col rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${
@@ -340,6 +342,7 @@ function Statistic({
 }
 
 export function AboutSection() {
+  const { projects } = useContent();
   const [cvOpen, setCvOpen] = useState(false);
   const years = yearsOfExperience();
 
@@ -419,7 +422,7 @@ export function AboutSection() {
             <Statistic value={years} suffix="+" label="Years Experience" delay={0} />
             <Statistic value={EXPERIENCE.length} label="Organizations" delay={100} />
             <Statistic value={CERTS.length} label="Certifications" delay={200} />
-            <Statistic value={GALLERY.length} label="Selected Works" delay={300} />
+            <Statistic value={projects.length} label="Selected Works" delay={300} />
           </div>
 
           <Reveal delay={250}>

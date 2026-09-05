@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { CONTACT, INSIGHTS, PRINCIPLES, SERVICES, TESTIMONIALS, type Insight } from "../data";
+import { CONTACT, PRINCIPLES, SERVICES, type Insight } from "../data";
+import { useContent } from "../store";
 import {
   IcArrowUpRight,
   IcCheck,
@@ -101,6 +102,7 @@ function initials(name: string) {
 }
 
 export function Testimonials({ showHead = true }: { showHead?: boolean }) {
+  const { testimonials } = useContent();
   return (
     <section id="testimonials" aria-label="Testimonials" className="relative overflow-hidden bg-pine py-20 text-white md:py-28">
       <div aria-hidden className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full border border-white/8" />
@@ -123,7 +125,7 @@ export function Testimonials({ showHead = true }: { showHead?: boolean }) {
         )}
 
         <div className="grid gap-6 md:grid-cols-3">
-          {TESTIMONIALS.map((t, i) => (
+          {testimonials.map((t, i) => (
             <Reveal key={t.org} delay={i * 130} className={i === 1 ? "md:translate-y-8" : ""}>
               <figure className="flex h-full flex-col rounded-2xl border border-white/12 bg-white/5 p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/60 hover:bg-white/8 md:p-8">
                 <IcQuote className="h-8 w-8 text-gold" />
@@ -218,8 +220,9 @@ function ArticleModal({ article, onClose }: { article: Insight; onClose: () => v
 }
 
 export function Insights({ showHead = true }: { showHead?: boolean }) {
+  const { articles } = useContent();
   const [openId, setOpenId] = useState<string | null>(null);
-  const article = INSIGHTS.find((a) => a.id === openId) ?? null;
+  const article = articles.find((a) => a.id === openId) ?? null;
 
   return (
     <section id="insights" aria-label="Blog and insights" className="relative bg-mist py-20 md:py-28">
@@ -239,7 +242,7 @@ export function Insights({ showHead = true }: { showHead?: boolean }) {
         )}
 
         <div className="grid gap-7 md:grid-cols-3">
-          {INSIGHTS.map((a, i) => (
+          {articles.map((a, i) => (
             <Reveal key={a.id} delay={i * 120}>
               <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-soft transition-all duration-300 hover:-translate-y-2 hover:shadow-lift">
                 <div className="relative h-48 overflow-hidden">

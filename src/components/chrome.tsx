@@ -325,6 +325,12 @@ export function Footer() {
           <p className="flex items-center gap-2">
             Designed with <IcSpark className="h-3 w-3 text-gold" /> in Lagos, Nigeria
           </p>
+          <Link
+            to="/admin"
+            className="flex items-center gap-1.5 text-[12.5px] font-bold text-white/50 transition-colors hover:text-gold"
+          >
+            <IcSpark className="h-3 w-3" /> Admin Studio
+          </Link>
         </div>
       </div>
 

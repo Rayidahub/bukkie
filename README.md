@@ -36,6 +36,21 @@ npm run dev     # start local dev server
 npm run build   # production build (outputs to /dist)
 ```
 
+## ✦ Admin Studio (content manager)
+
+Visit **`/#/admin`** (or the "Admin Studio" link in the footer) to manage
+**Services, Projects, Blog posts, and Testimonials** without touching code.
+
+- **Passcode:** `bukkie2026` — change it in `src/pages.tsx` (`ADMIN_PASS`).
+- Edits save instantly to the browser (localStorage) and appear live on the
+  site for preview.
+- **Publishing:** click **Export JSON** and replace the matching arrays in
+  `src/data.tsx` (or send the file to your developer) so changes go live for
+  every visitor. **Reset** restores the original content.
+
+> Because this is a static site (no database), the dashboard is a draft &
+> preview tool; the exported JSON is the source of truth for the public build.
+
 ## ✦ Deployment
 
 A GitHub Actions workflow (`.github/workflows/deploy.yml`) automatically builds

@@ -12,6 +12,7 @@ import {
   type GalleryItem,
   type Tool,
 } from "../data";
+import { useContent } from "../store";
 import {
   IcArrowRight,
   IcCanva,
@@ -180,13 +181,14 @@ export function ToolsSection() {
 /*  Projects gallery + case-study lightbox                             */
 /* ------------------------------------------------------------------ */
 export function Gallery({ showHead = true }: { showHead?: boolean }) {
+  const { projects } = useContent();
   const [cat, setCat] = useState<(typeof CATEGORIES)[number]>("All");
   const [showAll, setShowAll] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   const filtered = useMemo(
-    () => (cat === "All" ? GALLERY : GALLERY.filter((g) => g.cat === cat)),
-    [cat]
+    () => (cat === "All" ? projects : projects.filter((g) => g.cat === cat)),
+    [cat, projects]
   );
   const items = cat === "All" && !showAll ? filtered.slice(0, 6) : filtered;
 
@@ -241,7 +243,7 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
         <Reveal className="mb-10 flex flex-wrap gap-2.5">
           {CATEGORIES.map((c) => {
             const count =
-              c === "All" ? GALLERY.length : GALLERY.filter((g) => g.cat === c).length;
+              c === "All" ? projects.length : projects.filter((g) => g.cat === c).length;
             const isActive = cat === c;
             return (
               <button

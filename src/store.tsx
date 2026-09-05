@@ -6,11 +6,13 @@ import {
   type ReactNode,
 } from "react";
 import {
+  ABOUT,
   GALLERY,
   HERO,
   INSIGHTS,
   SERVICES,
   TESTIMONIALS,
+  type AboutContent,
   type GalleryItem,
   type HeroContent,
   type Insight,
@@ -23,6 +25,7 @@ export type Testimonial = (typeof TESTIMONIALS)[number];
 
 export type SiteContent = {
   hero: HeroContent;
+  about: AboutContent;
   services: Service[];
   projects: GalleryItem[];
   articles: Insight[];
@@ -31,6 +34,7 @@ export type SiteContent = {
 
 const defaults = (): SiteContent => ({
   hero: HERO,
+  about: ABOUT,
   services: SERVICES,
   projects: GALLERY,
   articles: INSIGHTS,
@@ -52,6 +56,7 @@ function load(): SiteContent {
 
 type ContentCtx = SiteContent & {
   setHero: (v: HeroContent) => void;
+  setAbout: (v: AboutContent) => void;
   setServices: (v: Service[]) => void;
   setProjects: (v: GalleryItem[]) => void;
   setArticles: (v: Insight[]) => void;
@@ -75,6 +80,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const api: ContentCtx = {
     ...content,
     setHero: (hero) => setContent((c) => ({ ...c, hero })),
+    setAbout: (about) => setContent((c) => ({ ...c, about })),
     setServices: (services) => setContent((c) => ({ ...c, services })),
     setProjects: (projects) => setContent((c) => ({ ...c, projects })),
     setArticles: (articles) => setContent((c) => ({ ...c, articles })),

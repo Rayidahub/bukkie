@@ -1,28 +1,64 @@
+import { useEffect } from "react";
+import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Footer, Navbar } from "./components/chrome";
-import { Hero } from "./components/hero";
-import { AboutSection, ServicesSection } from "./components/about";
-import { FeaturedProjects, Gallery, ToolsSection } from "./components/work";
-import { ExperienceSection } from "./components/career";
-import { Contact, Insights, Philosophy, Testimonials } from "./components/closing";
+import {
+  AboutPage,
+  BlogPage,
+  ContactPage,
+  Home,
+  NotFound,
+  ProjectsPage,
+  ServicesPage,
+  TestimonialsPage,
+} from "./pages";
 
-export default function App() {
+const TITLES: Record<string, string> = {
+  "/": "Olowomakan Esther Bukola — Creative Graphics Designer",
+  "/services": "Services — Esther Bukola",
+  "/about": "About — Esther Bukola",
+  "/projects": "Projects — Esther Bukola",
+  "/blog": "Blog & Insights — Esther Bukola",
+  "/testimonials": "Testimonials — Esther Bukola",
+  "/contact": "Contact — Esther Bukola",
+};
+
+function ScrollAndTitle() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.title = TITLES[pathname] ?? TITLES["/"];
+  }, [pathname]);
+  return null;
+}
+
+function Shell() {
+  const { pathname } = useLocation();
   return (
     <div className="min-h-screen bg-white font-body text-ink antialiased">
       <Navbar />
-      <main>
-        <Hero />
-        <ServicesSection />
-        <AboutSection />
-        <ToolsSection />
-        <Gallery />
-        <FeaturedProjects />
-        <ExperienceSection />
-        <Philosophy />
-        <Testimonials />
-        <Insights />
-        <Contact />
+      {/* key remounts per route → subtle page-transition fade */}
+      <main id="main" tabIndex={-1} key={pathname} className="animate-fade-in outline-none">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/testimonials" element={<TestimonialsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
       <Footer />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <HashRouter>
+      <ScrollAndTitle />
+      <Shell />
+    </HashRouter>
   );
 }

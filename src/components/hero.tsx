@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { CONTACT, IMG, MARQUEE, ORGS, yearsOfExperience } from "../data";
 import {
   GoldUnderline,
@@ -14,21 +15,27 @@ import {
 /* ------------------------------------------------------------------ */
 /*  Category ticker (gold band)                                        */
 /* ------------------------------------------------------------------ */
-export function Ticker({ words = MARQUEE }: { words?: string[] }) {
+export function Ticker({
+  words = MARQUEE,
+  className = "border-y border-pine/15 bg-gold text-pine",
+}: {
+  words?: string[];
+  className?: string;
+}) {
   const half = (hidden: boolean) => (
     <div aria-hidden={hidden} className="flex shrink-0 items-center">
       {words.map((w, i) => (
         <span key={i} className="flex items-center">
-          <span className="whitespace-nowrap px-6 font-display text-xl font-bold uppercase tracking-wide text-pine md:text-2xl">
+          <span className="whitespace-nowrap px-6 font-display text-xl font-bold uppercase tracking-wide md:text-2xl">
             {w}
           </span>
-          <IcSpark className="h-4 w-4 shrink-0 text-pine/60" />
+          <IcSpark className="h-4 w-4 shrink-0 opacity-60" />
         </span>
       ))}
     </div>
   );
   return (
-    <div className="ticker overflow-hidden border-y border-pine/15 bg-gold py-3.5">
+    <div className={`ticker overflow-hidden py-3.5 ${className}`}>
       <div className="ticker-track flex w-max">
         {half(false)}
         {half(true)}
@@ -109,14 +116,14 @@ export function Hero() {
 
           <Reveal delay={350}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a href="#projects" className="btn btn-pine">
+              <Link to="/projects" className="btn btn-pine">
                 View My Work
                 <IcArrowDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
-              </a>
-              <a href="#contact" className="btn btn-outline">
+              </Link>
+              <Link to="/contact" className="btn btn-outline">
                 Let's Talk
                 <IcArrowUpRight className="h-4 w-4" />
-              </a>
+              </Link>
             </div>
           </Reveal>
 

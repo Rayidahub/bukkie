@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { CONTACT, FOOTER_LINKS, NAV_LINKS, SERVICES } from "../data";
 import {
   IcArrowUp,
@@ -9,7 +10,6 @@ import {
   IcPhone,
   IcPin,
   IcSpark,
-  useActiveSection,
 } from "../lib";
 
 /* ------------------------------------------------------------------ */
@@ -17,7 +17,7 @@ import {
 /* ------------------------------------------------------------------ */
 export function Logo({ light = false }: { light?: boolean }) {
   return (
-    <a href="#home" className="group flex items-center gap-3" aria-label="Esther Bukola — home">
+    <Link to="/" className="group flex items-center gap-3" aria-label="Esther Bukola — home">
       <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-gold transition-transform duration-300 group-hover:rotate-12">
         <span className="font-display text-lg font-black text-pine">EB</span>
         <IcSpark className="absolute -right-0.5 -top-0.5 h-3.5 w-3.5 text-pine" />
@@ -38,31 +38,17 @@ export function Logo({ light = false }: { light?: boolean }) {
           Design & Media
         </span>
       </span>
-    </a>
+    </Link>
   );
 }
 
 /* ------------------------------------------------------------------ */
 /*  Navbar + mobile menu                                               */
 /* ------------------------------------------------------------------ */
-const SECTION_IDS = [
-  "home",
-  "services",
-  "about",
-  "skills",
-  "projects",
-  "case-studies",
-  "experience",
-  "philosophy",
-  "testimonials",
-  "insights",
-  "contact",
-];
-
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const active = useActiveSection(SECTION_IDS);
+  const { pathname } = useLocation();
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -84,15 +70,22 @@ export function Navbar() {
     };
   }, [open]);
 
-  const isActive = (id: string) =>
-    active === id ||
-    (id === "projects" && (active === "case-studies")) ||
-    (id === "home" && !SECTION_IDS.includes(active));
+  /* close the menu whenever the route changes */
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  const mobileLinks = [...NAV_LINKS, { path: "/contact", label: "Contact" }];
 
   return (
     <>
       <a
-        href="#home"
+        href="#main"
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById("main")?.focus();
+          window.scrollTo({ top: 0 });
+        }}
         className="fixed left-4 top-4 z-[120] -translate-y-24 rounded-full bg-gold px-5 py-2.5 text-sm font-bold text-pine transition-transform focus:translate-y-0"
       >
         Skip to content
@@ -110,12 +103,12 @@ export function Navbar() {
 
           <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
             {NAV_LINKS.map((link) => {
-              const on = isActive(link.id);
+              const on = pathname === link.path;
               return (
-                <a
-                  key={link.id}
-                  href={`#${link.id}`}
-                  aria-current={on ? "true" : undefined}
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  aria-current={on ? "page" : undefined}
                   className={`group relative rounded-full px-4 py-2 text-[14px] font-semibold transition-colors duration-300 ${
                     on ? "text-gold" : "text-white/80 hover:text-white"
                   }`}
@@ -123,22 +116,26 @@ export function Navbar() {
                   {link.label}
                   <span
                     className={`absolute -bottom-0.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-gold transition-all duration-300 ${
-                      on ? "opacity-100 scale-100" : "opacity-0 scale-0 group-hover:opacity-60 group-hover:scale-75"
+                      on
+                        ? "scale-100 opacity-100"
+                        : "scale-0 opacity-0 group-hover:scale-75 group-hover:opacity-60"
                     }`}
                   />
-                </a>
+                </Link>
               );
             })}
           </nav>
 
           <div className="flex items-center gap-3">
-            <a
-              href="#contact"
-              className="btn btn-gold hidden !px-6 !py-2.5 text-[14px] lg:inline-flex"
+            <Link
+              to="/contact"
+              className={`btn !px-6 !py-2.5 text-[14px] ${
+                pathname === "/contact" ? "btn-outline-light" : "btn-gold"
+              } hidden lg:inline-flex`}
             >
               Contact Me
               <IcArrowUpRight className="h-4 w-4" />
-            </a>
+            </Link>
             <button
               className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-gold hover:text-gold lg:hidden"
               aria-label="Open menu"
@@ -173,30 +170,31 @@ export function Navbar() {
             </button>
           </div>
 
-          <nav aria-label="Mobile" className="container-x mt-6 flex flex-col">
-            {NAV_LINKS.concat({ id: "contact", label: "Contact" }).map((link, i) => (
-              <a
-                key={link.id}
-                href={`#${link.id}`}
-                onClick={() => setOpen(false)}
-                className={`flex items-center justify-between border-b border-white/10 py-4 font-display text-3xl font-bold transition-colors hover:text-gold ${
-                  active === link.id ? "text-gold" : "text-white"
-                }`}
-                style={{ transitionDelay: `${i * 30}ms` }}
-              >
-                {link.label}
-                <span className="font-body text-xs font-bold uppercase tracking-[0.2em] text-white/35">
-                  0{i + 1}
-                </span>
-              </a>
-            ))}
+          <nav aria-label="Mobile" className="container-x mt-6 flex flex-col overflow-y-auto pb-6">
+            {mobileLinks.map((link, i) => {
+              const on = pathname === link.path;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setOpen(false)}
+                  aria-current={on ? "page" : undefined}
+                  className={`flex items-center justify-between border-b border-white/10 py-4 font-display text-3xl font-bold transition-colors hover:text-gold ${
+                    on ? "text-gold" : "text-white"
+                  }`}
+                >
+                  {link.label}
+                  <span className="font-body text-xs font-bold uppercase tracking-[0.2em] text-white/35">
+                    0{i + 1}
+                  </span>
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="container-x mt-auto pb-10">
             <div className="rounded-2xl border border-white/15 p-5">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold">
-                Let's talk
-              </p>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold">Let's talk</p>
               <a
                 href={`mailto:${CONTACT.email}`}
                 className="mt-2 block text-[15px] font-semibold text-white underline-offset-4 hover:underline"
@@ -231,8 +229,8 @@ export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-pine text-white">
       <div className="dots-light pointer-events-none absolute right-0 top-0 h-56 w-56 opacity-60" />
-      <div className="pointer-events-none absolute -left-24 -bottom-24 h-72 w-72 rounded-full border border-white/10" />
-      <div className="pointer-events-none absolute -left-12 -bottom-12 h-72 w-72 rounded-full border border-gold/20" />
+      <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full border border-white/10" />
+      <div className="pointer-events-none absolute -bottom-12 -left-12 h-72 w-72 rounded-full border border-gold/20" />
 
       <div className="container-x relative grid gap-12 py-16 md:grid-cols-12 md:py-20">
         <div className="md:col-span-5">
@@ -253,16 +251,16 @@ export function Footer() {
 
         <nav aria-label="Footer" className="md:col-span-3">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-gold">Sitemap</p>
-          <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-3">
+          <ul className="mt-5 space-y-3">
             {FOOTER_LINKS.map((l) => (
-              <li key={l.id}>
-                <a
-                  href={`#${l.id}`}
+              <li key={l.path}>
+                <Link
+                  to={l.path}
                   className="group inline-flex items-center gap-1.5 text-[14px] font-medium text-white/70 transition-colors hover:text-gold"
                 >
                   <span className="h-px w-0 bg-gold transition-all duration-300 group-hover:w-3" />
                   {l.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -306,11 +304,13 @@ export function Footer() {
           </p>
           <ul className="mt-4 flex flex-wrap gap-2">
             {SERVICES.map((s) => (
-              <li
-                key={s.no}
-                className="rounded-full border border-white/15 px-3.5 py-1.5 text-[12px] font-semibold text-white/70"
-              >
-                {s.title.split(" & ")[0]}
+              <li key={s.no}>
+                <Link
+                  to="/services"
+                  className="block rounded-full border border-white/15 px-3.5 py-1.5 text-[12px] font-semibold text-white/70 transition-colors hover:border-gold hover:text-gold"
+                >
+                  {s.title.split(" & ")[0]}
+                </Link>
               </li>
             ))}
           </ul>

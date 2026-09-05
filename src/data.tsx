@@ -42,25 +42,22 @@ export function yearsOfExperience(): number {
 
 /* ---------------- navigation --------------------------------------- */
 export const NAV_LINKS = [
-  { id: "home", label: "Home" },
-  { id: "services", label: "Services" },
-  { id: "about", label: "About" },
-  { id: "projects", label: "Projects" },
-  { id: "insights", label: "Blog" },
-  { id: "testimonials", label: "Testimonials" },
+  { path: "/", label: "Home" },
+  { path: "/services", label: "Services" },
+  { path: "/about", label: "About" },
+  { path: "/projects", label: "Projects" },
+  { path: "/blog", label: "Blog" },
+  { path: "/testimonials", label: "Testimonials" },
 ];
 
 export const FOOTER_LINKS = [
-  { id: "home", label: "Home" },
-  { id: "services", label: "Services" },
-  { id: "about", label: "About" },
-  { id: "projects", label: "Projects" },
-  { id: "case-studies", label: "Case Studies" },
-  { id: "experience", label: "Experience" },
-  { id: "skills", label: "Skills" },
-  { id: "insights", label: "Blog" },
-  { id: "testimonials", label: "Testimonials" },
-  { id: "contact", label: "Contact" },
+  { path: "/", label: "Home" },
+  { path: "/services", label: "Services" },
+  { path: "/about", label: "About" },
+  { path: "/projects", label: "Projects" },
+  { path: "/blog", label: "Blog" },
+  { path: "/testimonials", label: "Testimonials" },
+  { path: "/contact", label: "Contact" },
 ];
 
 /* ---------------- services / professional focus ------------------- */

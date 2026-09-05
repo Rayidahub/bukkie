@@ -351,7 +351,7 @@ export type CaseStudy = {
   responsibilities: string[];
   tools: string[];
   impact: string;
-  theme: "forest" | "paper" | "gold";
+  theme: "pine" | "paper" | "gold";
 };
 
 export const CASE_STUDIES: CaseStudy[] = [
@@ -373,7 +373,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tools: ["Adobe Photoshop", "Canva"],
     impact:
       "Contributed to organizational growth, stronger audience engagement, active volunteer participation, and recognition through awards.",
-    theme: "forest",
+    theme: "pine",
   },
   {
     no: "02",

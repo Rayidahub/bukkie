@@ -2,7 +2,7 @@
 
 @theme {
   --color-pine: #00439a;
-  --color-forest: #002e66;
+  --color-pine-dark: #002e66;
   --color-fern: #3f6fc0;
   --color-sage: #dce7f5;
   --color-mist: #f5f6f3;
@@ -41,7 +41,7 @@ body {
   background: var(--color-mist);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-forest);
+  background: var(--color-pine);
   border-radius: 8px;
   border: 2px solid var(--color-mist);
 }
@@ -78,7 +78,7 @@ body {
   font-size: 13px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-forest);
+  color: var(--color-pine);
 }
 .eyebrow::before {
   content: "";
@@ -120,21 +120,21 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 16px 32px -16px rgb(247 185 0 / 0.65);
 }
-.btn-forest {
-  background: var(--color-forest);
+.btn-pine {
+  background: var(--color-pine);
   color: #fff;
 }
-.btn-forest:hover {
-  background: var(--color-pine);
+.btn-pine:hover {
+  background: var(--color-pine-dark);
   transform: translateY(-2px);
   box-shadow: 0 18px 36px -18px rgb(0 67 154 / 0.7);
 }
 .btn-outline {
-  border: 1.5px solid rgb(0 46 102 / 0.35);
-  color: var(--color-forest);
+  border: 1.5px solid rgb(0 67 154 / 0.4);
+  color: var(--color-pine);
 }
 .btn-outline:hover {
-  border-color: var(--color-forest);
+  border-color: var(--color-pine);
   background: var(--color-sage);
   transform: translateY(-2px);
 }
@@ -174,8 +174,8 @@ body {
   transition: all 0.3s;
 }
 .chip:hover {
-  border-color: var(--color-forest);
-  color: var(--color-forest);
+  border-color: var(--color-pine);
+  color: var(--color-pine);
   background: var(--color-sage);
   transform: translateY(-2px);
 }
@@ -199,7 +199,7 @@ body {
 }
 .input-base:focus {
   outline: none;
-  border-color: var(--color-forest);
+  border-color: var(--color-pine);
   background: #fff;
   box-shadow: 0 0 0 4px var(--color-sage);
 }

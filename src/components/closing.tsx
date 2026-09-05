@@ -29,7 +29,7 @@ export function Philosophy() {
           title={[
             <>The principles behind</>,
             <>
-              <span className="italic text-forest">every pixel.</span>
+              <span className="italic text-pine">every pixel.</span>
             </>,
           ]}
         />
@@ -181,7 +181,7 @@ function ArticleModal({ article, onClose }: { article: Insight; onClose: () => v
           <button
             onClick={onClose}
             aria-label="Close article"
-            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white text-forest shadow-lift transition-colors hover:bg-gold hover:text-pine"
+            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white text-pine shadow-lift transition-colors hover:bg-gold hover:text-pine"
           >
             <IcClose className="h-4 w-4" />
           </button>
@@ -203,7 +203,7 @@ function ArticleModal({ article, onClose }: { article: Insight; onClose: () => v
           <div className="mt-8 rounded-r-2xl border-l-4 border-gold bg-mist p-5">
             <p className="text-[13.5px] font-semibold leading-[1.65] text-ink">
               Need something like this for your organization?{" "}
-              <a href="#contact" onClick={onClose} className="font-bold text-forest underline decoration-gold decoration-2 underline-offset-4 hover:text-pine">
+              <a href="#contact" onClick={onClose} className="font-bold text-pine underline decoration-gold decoration-2 underline-offset-4 hover:text-pine-dark">
                 Let's talk →
               </a>
             </p>
@@ -227,7 +227,7 @@ export function Insights() {
           title={[
             <>Notes from the</>,
             <>
-              <span className="italic text-forest">studio desk.</span>
+              <span className="italic text-pine">studio desk.</span>
             </>,
           ]}
           right="Short, practical lessons from real campaigns, print floors, and content systems — the thinking behind the portfolio."
@@ -258,7 +258,7 @@ export function Insights() {
                   <p className="mt-2.5 text-[14px] leading-[1.65] text-slate">{a.excerpt}</p>
                   <button
                     onClick={() => setOpenId(a.id)}
-                    className="mt-auto inline-flex items-center gap-2 pt-5 text-left text-[14px] font-bold text-forest transition-colors hover:text-pine"
+                    className="mt-auto inline-flex items-center gap-2 pt-5 text-left text-[14px] font-bold text-pine transition-colors hover:text-pine-dark"
                   >
                     Read Article
                     <IcArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -313,7 +313,7 @@ function CopyRow({
   return (
     <div className="flex items-center justify-between gap-3 border-b border-line py-4 last:border-0">
       <div className="flex min-w-0 items-center gap-3.5">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sage text-forest">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sage text-pine">
           {icon}
         </span>
         <div className="min-w-0">
@@ -321,7 +321,7 @@ function CopyRow({
             {label}
           </p>
           {href ? (
-            <a href={href} className="block truncate text-[14.5px] font-bold text-ink transition-colors hover:text-forest">
+            <a href={href} className="block truncate text-[14.5px] font-bold text-ink transition-colors hover:text-pine">
               {value}
             </a>
           ) : (
@@ -334,8 +334,8 @@ function CopyRow({
         aria-label={`Copy ${label}`}
         className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-wide transition-all duration-300 ${
           copied
-            ? "border-forest bg-forest text-white"
-            : "border-line text-slate hover:border-forest hover:text-forest"
+            ? "border-pine bg-pine text-white"
+            : "border-line text-slate hover:border-pine hover:text-pine"
         }`}
       >
         {copied ? <IcCheck className="h-3.5 w-3.5" /> : <IcCopy className="h-3.5 w-3.5" />}
@@ -419,7 +419,7 @@ export function Contact() {
         <div id="brief" className="mt-14 grid gap-8 lg:grid-cols-12">
           <Reveal className="lg:col-span-5">
             <div className="card h-full p-7 shadow-soft md:p-8">
-              <p className="flex items-center gap-2.5 text-[13px] font-bold text-forest">
+              <p className="flex items-center gap-2.5 text-[13px] font-bold text-pine">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-pulse-soft absolute h-2.5 w-2.5 rounded-full bg-gold" />
                   <span className="h-2.5 w-2.5 rounded-full bg-gold" />
@@ -477,7 +477,7 @@ export function Contact() {
 
           <Reveal delay={140} className="lg:col-span-7">
             <form onSubmit={submit} className="card h-full p-7 shadow-soft md:p-9" noValidate>
-              <p className="flex items-center gap-3 text-[12px] font-extrabold uppercase tracking-[0.22em] text-forest">
+              <p className="flex items-center gap-3 text-[12px] font-extrabold uppercase tracking-[0.22em] text-pine">
                 <span className="h-0.5 w-7 rounded bg-gold" /> Project brief — quick form
               </p>
 
@@ -555,12 +555,12 @@ export function Contact() {
                 </p>
               )}
               {sent && !error && (
-                <p className="mt-5 flex items-center gap-2 rounded-full bg-sage px-4 py-2.5 text-[13px] font-bold text-forest">
+                <p className="mt-5 flex items-center gap-2 rounded-full bg-sage px-4 py-2.5 text-[13px] font-bold text-pine">
                   <IcCheck className="h-3.5 w-3.5" /> Draft opened in your mail app — talk soon!
                 </p>
               )}
 
-              <button type="submit" className="btn btn-forest mt-7 w-full">
+              <button type="submit" className="btn btn-pine mt-7 w-full">
                 Send via Email
                 <IcArrowUpRight className="h-4 w-4" />
               </button>

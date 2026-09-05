@@ -22,9 +22,21 @@ export function Ticker({
   words?: string[];
   className?: string;
 }) {
+  const clean = words.map((w) => w.trim()).filter(Boolean);
+  const list = clean.length ? clean : MARQUEE;
+
+  /* Repeat the list so each half always exceeds the widest viewport —
+     this keeps the -50% loop seamless even with very few words. */
+  const repeated = Array.from({
+    length: Math.max(1, Math.ceil(12 / list.length)),
+  }).flatMap(() => list);
+
+  /* Pace scales with content length so scroll speed feels constant. */
+  const duration = Math.min(60, Math.max(24, repeated.length * 2.4));
+
   const half = (hidden: boolean) => (
     <div aria-hidden={hidden} className="flex shrink-0 items-center">
-      {words.map((w, i) => (
+      {repeated.map((w, i) => (
         <span key={i} className="flex items-center">
           <span className="whitespace-nowrap px-6 font-display text-xl font-bold uppercase tracking-wide md:text-2xl">
             {w}
@@ -36,7 +48,10 @@ export function Ticker({
   );
   return (
     <div className={`ticker overflow-hidden py-3.5 ${className}`}>
-      <div className="ticker-track flex w-max">
+      <div
+        className="ticker-track flex w-max"
+        style={{ animationDuration: `${duration}s` }}
+      >
         {half(false)}
         {half(true)}
       </div>
@@ -234,13 +249,7 @@ export function Hero() {
         </div>
       </div>
 
-      <Ticker
-        words={
-          hero.tickerWords.filter((w) => w.trim()).length > 0
-            ? hero.tickerWords.filter((w) => w.trim())
-            : MARQUEE
-        }
-      />
+      <Ticker words={hero.tickerWords} />
     </section>
   );
 }

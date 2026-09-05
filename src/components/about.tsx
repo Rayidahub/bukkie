@@ -9,6 +9,7 @@ import {
   SOFT_SKILLS,
   yearsOfExperience,
 } from "../data";
+import { Link } from "react-router-dom";
 import {
   CountUp,
   IcChat,
@@ -82,28 +83,30 @@ function ServiceIcon({ icon, className = "h-7 w-7" }: { icon: string; className?
   return <IcChip className={className} />;
 }
 
-export function ServicesSection() {
+export function ServicesSection({ showHead = true }: { showHead?: boolean }) {
   return (
     <section id="services" aria-label="Services" className="relative bg-mist py-20 md:py-28">
       <div className="container-x">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <SectionHead
-            no="01"
-            eyebrow="Services"
-            title={[
-              <>Services I</>,
-              <>
-                <span className="italic text-pine">provide.</span>
-              </>,
-            ]}
-          />
-          <Reveal delay={200} className="-mt-6 mb-12 md:-mt-8 lg:mb-16">
-            <a href="#contact" className="btn btn-outline !py-3 text-[14px]">
-              Hire Me
-              <IcSpark className="h-3.5 w-3.5 text-gold" />
-            </a>
-          </Reveal>
-        </div>
+        {showHead && (
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <SectionHead
+              no="01"
+              eyebrow="Services"
+              title={[
+                <>Services I</>,
+                <>
+                  <span className="italic text-pine">provide.</span>
+                </>,
+              ]}
+            />
+            <Reveal delay={200} className="-mt-6 mb-12 md:-mt-8 lg:mb-16">
+              <Link to="/contact" className="btn btn-outline !py-3 text-[14px]">
+                Hire Me
+                <IcSpark className="h-3.5 w-3.5 text-gold" />
+              </Link>
+            </Reveal>
+          </div>
+        )}
 
         <div className="grid gap-6 md:grid-cols-3">
           {SERVICES.map((s, i) => (
@@ -178,15 +181,15 @@ export function ServicesSection() {
                   )}
                 </ul>
 
-                <a
-                  href="#projects"
+                <Link
+                  to="/projects"
                   className={`mt-auto inline-flex items-center gap-2 pt-6 text-[14px] font-bold transition-colors ${
                     s.featured ? "text-gold hover:text-honey" : "text-pine hover:text-pine-dark"
                   }`}
                 >
                   See related work
                   <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </a>
+                </Link>
               </article>
             </Reveal>
           ))}
@@ -425,9 +428,16 @@ export function AboutSection() {
                 <IcDownload className="h-4 w-4" />
                 Download CV
               </button>
-              <a href="#experience" className="btn btn-outline-light">
+              <button
+                onClick={() =>
+                  document
+                    .getElementById("experience")
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
+                className="btn btn-outline-light"
+              >
                 My Experience
-              </a>
+              </button>
             </div>
           </Reveal>
         </div>

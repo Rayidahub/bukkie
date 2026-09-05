@@ -179,7 +179,7 @@ export function ToolsSection() {
 /* ------------------------------------------------------------------ */
 /*  Projects gallery + case-study lightbox                             */
 /* ------------------------------------------------------------------ */
-export function Gallery() {
+export function Gallery({ showHead = true }: { showHead?: boolean }) {
   const [cat, setCat] = useState<(typeof CATEGORIES)[number]>("All");
   const [showAll, setShowAll] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -213,27 +213,29 @@ export function Gallery() {
   return (
     <section id="projects" aria-label="Selected projects" className="relative bg-mist py-20 md:py-28">
       <div className="container-x">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <SectionHead
-            no="04"
-            eyebrow="Selected Work"
-            title={[
-              <>Featured</>,
-              <>
-                <span className="italic text-pine">projects.</span>
-              </>,
-            ]}
-          />
-          <Reveal delay={200} className="-mt-6 mb-12 md:-mt-8 lg:mb-16">
-            <button
-              onClick={() => setShowAll((v) => !v)}
-              className="btn btn-outline !py-3 text-[14px]"
-            >
-              {showAll ? "Show Less" : "View All Projects"}
-              <IcArrowRight className="h-4 w-4" />
-            </button>
-          </Reveal>
-        </div>
+        {showHead && (
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <SectionHead
+              no="04"
+              eyebrow="Selected Work"
+              title={[
+                <>Featured</>,
+                <>
+                  <span className="italic text-pine">projects.</span>
+                </>,
+              ]}
+            />
+            <Reveal delay={200} className="-mt-6 mb-12 md:-mt-8 lg:mb-16">
+              <button
+                onClick={() => setShowAll((v) => !v)}
+                className="btn btn-outline !py-3 text-[14px]"
+              >
+                {showAll ? "Show Less" : "View All Projects"}
+                <IcArrowRight className="h-4 w-4" />
+              </button>
+            </Reveal>
+          </div>
+        )}
 
         {/* filters */}
         <Reveal className="mb-10 flex flex-wrap gap-2.5">

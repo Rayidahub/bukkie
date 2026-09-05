@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { CONTACT, INSIGHTS, PRINCIPLES, SERVICES, TESTIMONIALS, type Insight } from "../data";
 import {
   IcArrowUpRight,
@@ -99,25 +100,27 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-export function Testimonials() {
+export function Testimonials({ showHead = true }: { showHead?: boolean }) {
   return (
     <section id="testimonials" aria-label="Testimonials" className="relative overflow-hidden bg-pine py-20 text-white md:py-28">
       <div aria-hidden className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full border border-white/8" />
       <div aria-hidden className="dots-light pointer-events-none absolute bottom-10 right-10 h-40 w-40 opacity-60" />
 
       <div className="container-x">
-        <SectionHead
-          dark
-          no="08"
-          eyebrow="Testimonials"
-          title={[
-            <>Kind words from</>,
-            <>
-              <span className="italic text-gold">the teams.</span>
-            </>,
-          ]}
-          right="Feedback from the organizations behind the campaigns, newsletters, and outreach materials in this portfolio."
-        />
+        {showHead && (
+          <SectionHead
+            dark
+            no="08"
+            eyebrow="Testimonials"
+            title={[
+              <>Kind words from</>,
+              <>
+                <span className="italic text-gold">the teams.</span>
+              </>,
+            ]}
+            right="Feedback from the organizations behind the campaigns, newsletters, and outreach materials in this portfolio."
+          />
+        )}
 
         <div className="grid gap-6 md:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (
@@ -203,9 +206,9 @@ function ArticleModal({ article, onClose }: { article: Insight; onClose: () => v
           <div className="mt-8 rounded-r-2xl border-l-4 border-gold bg-mist p-5">
             <p className="text-[13.5px] font-semibold leading-[1.65] text-ink">
               Need something like this for your organization?{" "}
-              <a href="#contact" onClick={onClose} className="font-bold text-pine underline decoration-gold decoration-2 underline-offset-4 hover:text-pine-dark">
+              <Link to="/contact" onClick={onClose} className="font-bold text-pine underline decoration-gold decoration-2 underline-offset-4 hover:text-pine-dark">
                 Let's talk →
-              </a>
+              </Link>
             </p>
           </div>
         </div>
@@ -214,24 +217,26 @@ function ArticleModal({ article, onClose }: { article: Insight; onClose: () => v
   );
 }
 
-export function Insights() {
+export function Insights({ showHead = true }: { showHead?: boolean }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const article = INSIGHTS.find((a) => a.id === openId) ?? null;
 
   return (
     <section id="insights" aria-label="Blog and insights" className="relative bg-mist py-20 md:py-28">
       <div className="container-x">
-        <SectionHead
-          no="09"
-          eyebrow="Blog & Insights"
-          title={[
-            <>Notes from the</>,
-            <>
-              <span className="italic text-pine">studio desk.</span>
-            </>,
-          ]}
-          right="Short, practical lessons from real campaigns, print floors, and content systems — the thinking behind the portfolio."
-        />
+        {showHead && (
+          <SectionHead
+            no="09"
+            eyebrow="Blog & Insights"
+            title={[
+              <>Notes from the</>,
+              <>
+                <span className="italic text-pine">studio desk.</span>
+              </>,
+            ]}
+            right="Short, practical lessons from real campaigns, print floors, and content systems — the thinking behind the portfolio."
+          />
+        )}
 
         <div className="grid gap-7 md:grid-cols-3">
           {INSIGHTS.map((a, i) => (
@@ -345,6 +350,44 @@ function CopyRow({
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  Reusable CTA banner (Home, Services, etc.)                         */
+/* ------------------------------------------------------------------ */
+export function CtaBanner() {
+  return (
+    <section aria-label="Start a project" className="relative bg-mist px-0 pb-20 md:pb-28">
+      <div className="container-x">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl bg-pine p-9 text-center text-white shadow-lift md:p-16">
+            <div aria-hidden className="dots-light absolute left-8 top-8 h-32 w-32 opacity-60" />
+            <div aria-hidden className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gold/15" />
+            <div aria-hidden className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full border border-gold/25" />
+            <p className="eyebrow eyebrow-light justify-center">Let's work together</p>
+            <h2 className="mx-auto mt-5 max-w-3xl font-display text-[clamp(2rem,4.6vw,3.6rem)] font-black leading-[1.06] tracking-[-0.015em]">
+              Have a project in mind? Let's build something{" "}
+              <span className="italic text-gold">meaningful together.</span>
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-[1.7] text-white/70">
+              From a single flyer to a full campaign system — tell me what
+              you're building and I'll tell you how design can carry it.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <Link to="/contact" className="btn btn-gold">
+                Start a Project
+                <IcArrowUpRight className="h-4 w-4" />
+              </Link>
+              <a href={`mailto:${CONTACT.email}`} className="btn btn-outline-light">
+                <IcMail className="h-4 w-4" />
+                {CONTACT.email}
+              </a>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 export function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -387,36 +430,8 @@ export function Contact() {
   return (
     <section id="contact" aria-label="Contact" className="relative overflow-hidden bg-mist py-20 md:py-28">
       <div className="container-x">
-        {/* CTA banner */}
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl bg-pine p-9 text-center text-white shadow-lift md:p-16">
-            <div aria-hidden className="dots-light absolute left-8 top-8 h-32 w-32 opacity-60" />
-            <div aria-hidden className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gold/15" />
-            <div aria-hidden className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full border border-gold/25" />
-            <p className="eyebrow eyebrow-light justify-center">10 — Contact</p>
-            <h2 className="mx-auto mt-5 max-w-3xl font-display text-[clamp(2rem,4.6vw,3.6rem)] font-black leading-[1.06] tracking-[-0.015em]">
-              Have a project in mind? Let's build something{" "}
-              <span className="italic text-gold">meaningful together.</span>
-            </h2>
-            <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-[1.7] text-white/70">
-              From a single flyer to a full campaign system — tell me what
-              you're building and I'll tell you how design can carry it.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <a href="#brief" className="btn btn-gold">
-                Start a Project
-                <IcArrowUpRight className="h-4 w-4" />
-              </a>
-              <a href={`mailto:${CONTACT.email}`} className="btn btn-outline-light">
-                <IcMail className="h-4 w-4" />
-                {CONTACT.email}
-              </a>
-            </div>
-          </div>
-        </Reveal>
-
         {/* details + form */}
-        <div id="brief" className="mt-14 grid gap-8 lg:grid-cols-12">
+        <div id="brief" className="grid gap-8 lg:grid-cols-12">
           <Reveal className="lg:col-span-5">
             <div className="card h-full p-7 shadow-soft md:p-8">
               <p className="flex items-center gap-2.5 text-[13px] font-bold text-pine">

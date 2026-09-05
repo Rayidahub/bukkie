@@ -15,7 +15,7 @@ export function ExperienceSection() {
           title={[
             <>Experience &</>,
             <>
-              <span className="italic text-forest">certifications.</span>
+              <span className="italic text-pine">certifications.</span>
             </>,
           ]}
           right="From ministry IT support to print-press floors to digital media teams — every seat taught me a different side of how communication actually gets produced."
@@ -27,7 +27,7 @@ export function ExperienceSection() {
             <div className="relative pl-8 md:pl-10">
               <span
                 aria-hidden
-                className="absolute bottom-2 left-[9px] top-2 w-0.5 rounded bg-forest/15 md:left-[13px]"
+                className="absolute bottom-2 left-[9px] top-2 w-0.5 rounded bg-pine/15 md:left-[13px]"
               />
               <ul className="space-y-6">
                 {EXPERIENCE.map((r, i) => (
@@ -36,16 +36,16 @@ export function ExperienceSection() {
                       <span
                         aria-hidden
                         className={`absolute -left-8 top-7 h-5 w-5 rounded-full border-4 border-mist md:-left-10 md:h-6 md:w-6 ${
-                          r.current ? "bg-gold" : "bg-forest"
+                          r.current ? "bg-gold" : "bg-pine"
                         }`}
                       >
                         {r.current && (
                           <span className="animate-pulse-soft absolute inset-0 rounded-full bg-gold" />
                         )}
                       </span>
-                      <div className="card p-6 shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:border-forest/40 group-hover:shadow-lift md:p-7">
+                      <div className="card p-6 shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:border-pine/40 group-hover:shadow-lift md:p-7">
                         <div className="flex flex-wrap items-center gap-2.5">
-                          <span className="rounded-full bg-forest px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-wide text-white">
+                          <span className="rounded-full bg-pine px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-wide text-white">
                             {r.period}
                           </span>
                           {r.current && (
@@ -57,7 +57,7 @@ export function ExperienceSection() {
                         <h3 className="mt-3.5 font-display text-[21px] font-bold leading-snug text-ink">
                           {r.title}
                         </h3>
-                        <p className="mt-1 text-[14px] font-bold text-forest">{r.org}</p>
+                        <p className="mt-1 text-[14px] font-bold text-pine">{r.org}</p>
                         <p className="mt-2.5 text-[14px] leading-[1.65] text-slate">{r.note}</p>
                       </div>
                     </div>
@@ -70,7 +70,7 @@ export function ExperienceSection() {
           {/* certifications */}
           <div className="lg:col-span-5">
             <Reveal>
-              <p className="flex items-center gap-3 text-[12px] font-extrabold uppercase tracking-[0.2em] text-forest">
+              <p className="flex items-center gap-3 text-[12px] font-extrabold uppercase tracking-[0.2em] text-pine">
                 <span className="h-0.5 w-7 rounded bg-gold" />
                 Certifications & Training
               </p>
@@ -79,7 +79,7 @@ export function ExperienceSection() {
               {CERTS.map((c, i) => (
                 <Reveal as="li" key={c.title} delay={i * 80}>
                   <div className="group flex items-start gap-4 rounded-2xl border border-line bg-white p-5 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-lift">
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sage font-display text-[15px] font-black text-forest transition-colors duration-300 group-hover:bg-gold group-hover:text-pine">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sage font-display text-[15px] font-black text-pine transition-colors duration-300 group-hover:bg-gold group-hover:text-pine">
                       {c.year.slice(2)}
                     </span>
                     <div>
@@ -87,7 +87,7 @@ export function ExperienceSection() {
                         {c.title}
                       </h4>
                       <p className="mt-1 text-[13px] leading-[1.6] text-slate">{c.org}</p>
-                      <p className="mt-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-forest">
+                      <p className="mt-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-pine">
                         {c.year}
                       </p>
                     </div>

@@ -20,7 +20,7 @@ export function Logo({ light = false }: { light?: boolean }) {
     <a href="#home" className="group flex items-center gap-3" aria-label="Esther Bukola — home">
       <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-gold transition-transform duration-300 group-hover:rotate-12">
         <span className="font-display text-lg font-black text-pine">EB</span>
-        <IcSpark className="absolute -right-0.5 -top-0.5 h-3.5 w-3.5 text-forest" />
+        <IcSpark className="absolute -right-0.5 -top-0.5 h-3.5 w-3.5 text-pine" />
       </span>
       <span className="leading-tight">
         <span

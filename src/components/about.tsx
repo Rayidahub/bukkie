@@ -93,7 +93,7 @@ export function ServicesSection() {
             title={[
               <>Services I</>,
               <>
-                <span className="italic text-forest">provide.</span>
+                <span className="italic text-pine">provide.</span>
               </>,
             ]}
           />
@@ -111,14 +111,14 @@ export function ServicesSection() {
               <article
                 className={`group flex h-full flex-col rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${
                   s.featured
-                    ? "bg-forest text-white shadow-lift hover:shadow-[0_44px_80px_-32px_rgb(0_67_154/0.75)]"
+                    ? "bg-pine text-white shadow-lift hover:shadow-[0_44px_80px_-32px_rgb(0_67_154/0.75)]"
                     : "card shadow-soft hover:shadow-lift"
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <span
                     className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105 ${
-                      s.featured ? "bg-gold text-pine" : "bg-sage text-forest"
+                      s.featured ? "bg-gold text-pine" : "bg-sage text-pine"
                     }`}
                   >
                     <ServiceIcon icon={s.icon} />
@@ -134,7 +134,7 @@ export function ServicesSection() {
 
                 <p
                   className={`mt-6 text-[11px] font-bold uppercase tracking-[0.18em] ${
-                    s.featured ? "text-gold" : "text-forest"
+                    s.featured ? "text-gold" : "text-pine"
                   }`}
                 >
                   {s.kicker}
@@ -170,7 +170,7 @@ export function ServicesSection() {
                   {s.tags.length > 5 && (
                     <li
                       className={`rounded-full px-3 py-1 text-[11.5px] font-bold ${
-                        s.featured ? "bg-gold text-pine" : "bg-forest text-white"
+                        s.featured ? "bg-gold text-pine" : "bg-pine text-white"
                       }`}
                     >
                       +{s.tags.length - 5} more
@@ -181,7 +181,7 @@ export function ServicesSection() {
                 <a
                   href="#projects"
                   className={`mt-auto inline-flex items-center gap-2 pt-6 text-[14px] font-bold transition-colors ${
-                    s.featured ? "text-gold hover:text-honey" : "text-forest hover:text-pine"
+                    s.featured ? "text-gold hover:text-honey" : "text-pine hover:text-pine-dark"
                   }`}
                 >
                   See related work
@@ -225,14 +225,14 @@ function CvModal({ onClose }: { onClose: () => void }) {
         <div className="cv-no-print flex justify-end gap-2">
           <button
             onClick={() => window.print()}
-            className="btn btn-forest !px-5 !py-2.5 text-[13.5px]"
+            className="btn btn-pine !px-5 !py-2.5 text-[13.5px]"
           >
             <IcPrinter className="h-4 w-4" /> Print / Save PDF
           </button>
           <button
             onClick={onClose}
             aria-label="Close CV"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-slate transition-colors hover:border-forest hover:text-forest"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-slate transition-colors hover:border-pine hover:text-pine"
           >
             <IcClose className="h-4 w-4" />
           </button>
@@ -240,19 +240,19 @@ function CvModal({ onClose }: { onClose: () => void }) {
 
         {/* CV content */}
         <div className="mt-2">
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-forest pb-5">
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-pine pb-5">
             <div>
               <h3 className="font-display text-3xl font-black text-ink">
                 Olowomakan Esther Bukola
               </h3>
-              <p className="mt-1 text-[15px] font-bold text-forest">
+              <p className="mt-1 text-[15px] font-bold text-pine">
                 Creative Graphics Designer & Digital Media Specialist
               </p>
             </div>
             <div className="space-y-0.5 text-[12.5px] text-slate">
-              <p className="flex items-center gap-2"><IcMail className="h-3.5 w-3.5 text-forest" /> esther.olowomakan@gmail.com</p>
-              <p className="flex items-center gap-2"><IcPhone className="h-3.5 w-3.5 text-forest" /> +234 814 590 4088 · +234 701 492 1004</p>
-              <p className="flex items-center gap-2"><IcPin className="h-3.5 w-3.5 text-forest" /> Ikorodu, Lagos State, Nigeria</p>
+              <p className="flex items-center gap-2"><IcMail className="h-3.5 w-3.5 text-pine" /> esther.olowomakan@gmail.com</p>
+              <p className="flex items-center gap-2"><IcPhone className="h-3.5 w-3.5 text-pine" /> +234 814 590 4088 · +234 701 492 1004</p>
+              <p className="flex items-center gap-2"><IcPin className="h-3.5 w-3.5 text-pine" /> Ikorodu, Lagos State, Nigeria</p>
             </div>
           </div>
 
@@ -264,31 +264,31 @@ function CvModal({ onClose }: { onClose: () => void }) {
             innovative design and strategic communication.
           </p>
 
-          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-forest">
+          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-pine">
             <span className="h-1.5 w-6 rounded bg-gold" /> Experience
           </h4>
           <ul className="mt-3 space-y-3">
             {EXPERIENCE.map((r) => (
               <li key={r.org} className="border-l-2 border-sage pl-4">
                 <p className="text-[13.5px] font-bold text-ink">{r.title} — {r.org}</p>
-                <p className="text-[12px] font-semibold uppercase tracking-wide text-forest">{r.period}</p>
+                <p className="text-[12px] font-semibold uppercase tracking-wide text-pine">{r.period}</p>
                 <p className="mt-0.5 text-[13px] text-slate">{r.note}</p>
               </li>
             ))}
           </ul>
 
-          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-forest">
+          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-pine">
             <span className="h-1.5 w-6 rounded bg-gold" /> Certifications & Training
           </h4>
           <ul className="mt-3 grid gap-2 sm:grid-cols-2">
             {CERTS.map((c) => (
               <li key={c.title} className="text-[13px] text-slate">
-                <span className="font-bold text-forest">{c.year}</span> — {c.title}
+                <span className="font-bold text-pine">{c.year}</span> — {c.title}
               </li>
             ))}
           </ul>
 
-          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-forest">
+          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-pine">
             <span className="h-1.5 w-6 rounded bg-gold" /> Core Skills
           </h4>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -309,7 +309,7 @@ function CvModal({ onClose }: { onClose: () => void }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  About (dark green) + stats + CV                                    */
+/*  About (brand blue) + stats + CV                                    */
 /* ------------------------------------------------------------------ */
 function Statistic({
   value,
@@ -365,10 +365,10 @@ export function AboutSection() {
                   onError={portraitFallback}
                 />
               </div>
-              <span className="animate-float absolute -right-4 top-8 z-10 rounded-full bg-forest px-4 py-2 text-[12.5px] font-bold text-white shadow-lift">
+              <span className="animate-float absolute -right-4 top-8 z-10 rounded-full bg-pine-dark px-4 py-2 text-[12.5px] font-bold text-white shadow-lift">
                 ✦ Brand Systems
               </span>
-              <span className="animate-float-late absolute -left-5 bottom-10 z-10 rounded-full bg-white px-4 py-2 text-[12.5px] font-bold text-forest shadow-lift">
+              <span className="animate-float-late absolute -left-5 bottom-10 z-10 rounded-full bg-white px-4 py-2 text-[12.5px] font-bold text-pine shadow-lift">
                 Print ↔ Digital
               </span>
             </div>

@@ -50,7 +50,7 @@ function ToolCard({ tool, delay }: { tool: Tool; delay: number }) {
   return (
     <Reveal delay={delay}>
       <div className="group flex flex-col items-center text-center">
-        <span className="flex h-24 w-24 items-center justify-center rounded-full border border-line bg-mist text-forest transition-all duration-300 group-hover:-translate-y-1.5 group-hover:border-gold group-hover:bg-forest group-hover:text-gold group-hover:shadow-lift md:h-28 md:w-28">
+        <span className="flex h-24 w-24 items-center justify-center rounded-full border border-line bg-mist text-pine transition-all duration-300 group-hover:-translate-y-1.5 group-hover:border-gold group-hover:bg-pine group-hover:text-gold group-hover:shadow-lift md:h-28 md:w-28">
           <ToolIcon icon={tool.icon} />
         </span>
         <p className="mt-3.5 max-w-[120px] text-[13px] font-bold leading-tight text-ink">
@@ -79,7 +79,7 @@ function ProficiencyBar({
     <div ref={ref} className="border-b border-line py-5 first:pt-0">
       <div className="flex items-baseline justify-between gap-4">
         <h3 className="font-display text-[19px] font-bold text-ink">{name}</h3>
-        <span className="text-[13px] font-extrabold text-forest">{level}%</span>
+        <span className="text-[13px] font-extrabold text-pine">{level}%</span>
       </div>
       <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-sage">
         <div
@@ -95,7 +95,7 @@ function ProficiencyBar({
 export function ToolsSection() {
   const chipGroup = (label: string, items: string[], icon: React.ReactNode) => (
     <div className="mt-8">
-      <p className="flex items-center gap-2.5 text-[12px] font-bold uppercase tracking-[0.18em] text-forest">
+      <p className="flex items-center gap-2.5 text-[12px] font-bold uppercase tracking-[0.18em] text-pine">
         {icon}
         {label}
       </p>
@@ -118,7 +118,7 @@ export function ToolsSection() {
           title={[
             <>Tools & skills I</>,
             <>
-              <span className="italic text-forest">work with.</span>
+              <span className="italic text-pine">work with.</span>
             </>,
           ]}
           right="The stack behind every deliverable — design tools up front, and the communication and production skills that get work out the door."
@@ -134,7 +134,7 @@ export function ToolsSection() {
             </div>
             <Reveal delay={200}>
               <div className="mt-10 rounded-2xl bg-sage/70 p-6">
-                <p className="flex items-center gap-2 text-[13px] font-bold text-forest">
+                <p className="flex items-center gap-2 text-[13px] font-bold text-pine">
                   <IcSpark className="h-4 w-4 text-gold" />
                   Beyond the screen
                 </p>
@@ -150,7 +150,7 @@ export function ToolsSection() {
           {/* proficiency + chips */}
           <div className="lg:col-span-7">
             <Reveal>
-              <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-forest">
+              <p className="text-[12px] font-bold uppercase tracking-[0.18em] text-pine">
                 Design proficiency
               </p>
             </Reveal>
@@ -220,7 +220,7 @@ export function Gallery() {
             title={[
               <>Featured</>,
               <>
-                <span className="italic text-forest">projects.</span>
+                <span className="italic text-pine">projects.</span>
               </>,
             ]}
           />
@@ -252,12 +252,12 @@ export function Gallery() {
                 aria-pressed={isActive}
                 className={`rounded-full px-5 py-2.5 text-[13px] font-bold transition-all duration-300 ${
                   isActive
-                    ? "bg-forest text-white shadow-soft"
-                    : "border border-line bg-white text-slate hover:-translate-y-0.5 hover:border-forest hover:text-forest"
+                    ? "bg-pine text-white shadow-soft"
+                    : "border border-line bg-white text-slate hover:-translate-y-0.5 hover:border-pine hover:text-pine"
                 }`}
               >
                 {c}
-                <sup className={`ml-1 text-[10px] ${isActive ? "text-gold" : "text-forest"}`}>
+                <sup className={`ml-1 text-[10px] ${isActive ? "text-gold" : "text-pine"}`}>
                   {count}
                 </sup>
               </button>
@@ -284,21 +284,21 @@ export function Gallery() {
                   <span className="absolute left-4 top-4 rounded-full bg-gold px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-wide text-pine">
                     {g.cat}
                   </span>
-                  <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-bold text-forest">
+                  <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-bold text-pine">
                     {g.year}
                   </span>
                   {g.cat === "Video & Motion" && (
-                    <span className="absolute inset-0 m-auto flex h-14 w-14 items-center justify-center rounded-full bg-forest text-gold shadow-lift transition-transform duration-300 group-hover:scale-110">
+                    <span className="absolute inset-0 m-auto flex h-14 w-14 items-center justify-center rounded-full bg-pine text-gold shadow-lift transition-transform duration-300 group-hover:scale-110">
                       <IcPlay className="ml-0.5 h-5 w-5" />
                     </span>
                   )}
-                  <span className="absolute bottom-4 right-4 flex translate-y-3 items-center gap-2 rounded-full bg-white px-4 py-2 text-[12px] font-bold text-forest opacity-0 shadow-soft transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                  <span className="absolute bottom-4 right-4 flex translate-y-3 items-center gap-2 rounded-full bg-white px-4 py-2 text-[12px] font-bold text-pine opacity-0 shadow-soft transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                     Open Case Study <IcArrowRight className="h-3.5 w-3.5" />
                   </span>
                 </div>
 
                 <div className="p-6">
-                  <p className="text-[11.5px] font-extrabold uppercase tracking-[0.16em] text-forest">
+                  <p className="text-[11.5px] font-extrabold uppercase tracking-[0.16em] text-pine">
                     {g.org}
                   </p>
                   <h3 className="mt-1.5 font-display text-[21px] font-bold leading-snug text-ink">
@@ -347,7 +347,7 @@ export function Gallery() {
             </div>
 
             <div className="p-7 md:p-10">
-              <p className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.22em] text-forest">
+              <p className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.22em] text-pine">
                 <IcSpark className="h-3.5 w-3.5 text-gold" /> Case Study
               </p>
               <h3 className="mt-3 font-display text-3xl font-black leading-tight text-ink md:text-4xl">
@@ -359,21 +359,21 @@ export function Gallery() {
 
               <p className="mt-5 text-[15px] leading-[1.7] text-slate">{active.study.objective}</p>
 
-              <p className="mt-6 text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-forest">
+              <p className="mt-6 text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-pine">
                 Deliverables
               </p>
               <ul className="mt-3 space-y-2.5">
                 {active.study.deliverables.map((d) => (
                   <li key={d} className="flex items-start gap-2.5 text-[14px] leading-snug text-ink/85">
                     <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sage">
-                      <IcCheck className="h-3 w-3 text-forest" />
+                      <IcCheck className="h-3 w-3 text-pine" />
                     </span>
                     {d}
                   </li>
                 ))}
               </ul>
 
-              <p className="mt-6 text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-forest">
+              <p className="mt-6 text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-pine">
                 Tools
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -385,7 +385,7 @@ export function Gallery() {
               </div>
 
               <div className="mt-7 rounded-r-2xl border-l-4 border-gold bg-mist p-5">
-                <p className="text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-forest">
+                <p className="text-[11.5px] font-extrabold uppercase tracking-[0.2em] text-pine">
                   Impact
                 </p>
                 <p className="mt-2 text-[14px] font-semibold leading-[1.65] text-ink">
@@ -397,7 +397,7 @@ export function Gallery() {
             <button
               onClick={() => setLightbox(null)}
               aria-label="Close"
-              className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-forest shadow-lift transition-colors hover:bg-gold hover:text-pine"
+              className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-pine shadow-lift transition-colors hover:bg-gold hover:text-pine"
             >
               <IcClose className="h-4.5 w-4.5" />
             </button>
@@ -407,7 +407,7 @@ export function Gallery() {
                 onClick={() =>
                   setLightbox((v) => (v === null ? v : (v - 1 + items.length) % items.length))
                 }
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-forest shadow-lift transition-colors hover:bg-forest hover:text-white"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-pine shadow-lift transition-colors hover:bg-pine hover:text-white"
               >
                 <IcArrowRight className="h-4.5 w-4.5 rotate-180" />
               </button>
@@ -416,7 +416,7 @@ export function Gallery() {
                 onClick={() =>
                   setLightbox((v) => (v === null ? v : (v + 1) % items.length))
                 }
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-forest shadow-lift transition-colors hover:bg-forest hover:text-white"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-pine shadow-lift transition-colors hover:bg-pine hover:text-white"
               >
                 <IcArrowRight className="h-4.5 w-4.5" />
               </button>
@@ -442,7 +442,7 @@ const THEME: Record<
     kicker: string;
   }
 > = {
-  forest: {
+  pine: {
     wrap: "bg-pine text-white",
     sub: "text-white/70",
     chip: "border-white/25 text-white/85",
@@ -456,7 +456,7 @@ const THEME: Record<
     chip: "border-line text-slate",
     num: "text-ink/6",
     impact: "bg-mist border-gold",
-    kicker: "text-forest",
+    kicker: "text-pine",
   },
   gold: {
     wrap: "bg-gold text-pine",
@@ -478,7 +478,7 @@ export function FeaturedProjects() {
           title={[
             <>How the work</>,
             <>
-              <span className="italic text-forest">came together.</span>
+              <span className="italic text-pine">came together.</span>
             </>,
           ]}
           right="Each project follows a case-study structure — so you can see not only what was designed, but why it was designed and the value it created."

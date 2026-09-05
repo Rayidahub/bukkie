@@ -618,6 +618,7 @@ export type HeroContent = {
   portrait: string;
   primary: { label: string; link: string };
   secondary: { label: string; link: string };
+  tickerWords: string[];
   teamsLabel: string;
   orgs: string[];
   tags: string[];
@@ -636,6 +637,16 @@ export const HERO: HeroContent = {
   portrait: IMG.portrait,
   primary: { label: "View My Work", link: "/projects" },
   secondary: { label: "Let's Talk", link: "/contact" },
+  tickerWords: [
+    "Social Media Design",
+    "Branding",
+    "Print Production",
+    "Newsletters",
+    "Campaigns",
+    "Video Content",
+    "Event Graphics",
+    "Digital Media",
+  ],
   teamsLabel: "Designing for teams at",
   orgs: [
     "Business Women Hub",

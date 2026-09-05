@@ -46,7 +46,14 @@ function load(): SiteContent {
     const raw = localStorage.getItem(LS_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<SiteContent>;
-      return { ...defaults(), ...parsed };
+      const base = defaults();
+      return {
+        ...base,
+        ...parsed,
+        // merge nested objects so older saved copies gain newly added fields
+        hero: { ...base.hero, ...(parsed.hero ?? {}) },
+        about: { ...base.about, ...(parsed.about ?? {}) },
+      };
     }
   } catch {
     /* corrupted storage — fall through to defaults */

@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AboutSection, SectionHead, ServicesSection } from "./components/about";
 import { ExperienceSection } from "./components/career";
@@ -18,6 +18,7 @@ import {
 } from "./data";
 import {
   IcArrowRight,
+  IcArrowUp,
   IcArrowUpRight,
   IcChat,
   IcCheck,
@@ -809,7 +810,58 @@ function HeroEditor() {
   const store = useContent();
   const [draft, setDraft] = useState<HeroContent>({ ...store.hero });
   const [toast, setToast] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [fileError, setFileError] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
   const set = (patch: Partial<HeroContent>) => setDraft((d) => ({ ...d, ...patch }));
+
+  /** Pick a photo from the computer, optimize it, and embed it in the content. */
+  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow re-selecting the same file
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setFileError("That file isn't an image — try a JPG, PNG, or WEBP.");
+      return;
+    }
+    setFileError("");
+    setUploading(true);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        // Downscale to max 900px so the embedded image stays light in storage
+        const max = 900;
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(img.width * scale));
+        canvas.height = Math.max(1, Math.round(img.height * scale));
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          setUploading(false);
+          setFileError("Couldn't process that image — try a different file.");
+          return;
+        }
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        set({ portrait: canvas.toDataURL("image/jpeg", 0.86) });
+        setUploading(false);
+      };
+      img.onerror = () => {
+        setUploading(false);
+        setFileError("Couldn't read that image file — it may be corrupted.");
+      };
+      img.src = String(reader.result);
+    };
+    reader.onerror = () => {
+      setUploading(false);
+      setFileError("Couldn't read that file. Please try again.");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const embeddedKb = draft.portrait.startsWith("data:")
+    ? Math.round((draft.portrait.length * 3) / 4 / 1024)
+    : 0;
 
   const save = () => {
     const tags = draft.tags.map((t) => t.trim()).filter(Boolean).slice(0, 3);
@@ -896,9 +948,62 @@ function HeroEditor() {
             </div>
             <div className="min-w-0 flex-1">
               <TextField label="Image path or URL" value={draft.portrait} onChange={(v) => set({ portrait: v })} placeholder="/img/image1.jpeg" />
-              <p className="mt-2 rounded-r-xl border-l-4 border-gold bg-mist p-3 text-[12.5px] font-semibold leading-[1.6] text-slate">
-                For a file on your computer: copy it into <code className="rounded bg-white px-1.5 py-0.5 text-[11.5px] text-pine">public/img/</code> in the project folder, then use{" "}
-                <code className="rounded bg-white px-1.5 py-0.5 text-[11.5px] text-pine">/img/yourfile.jpeg</code>. Any full https:// URL also works.
+
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <input ref={fileRef} type="file" accept="image/*" className="hidden" aria-label="Upload portrait image" onChange={handleFile} />
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={uploading}
+                  className={`btn btn-gold !py-2.5 text-[13.5px] ${uploading ? "cursor-wait opacity-70" : ""}`}
+                >
+                  {uploading ? (
+                    <>
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-pulse-soft absolute h-2 w-2 rounded-full bg-pine" />
+                        <span className="h-2 w-2 rounded-full bg-pine" />
+                      </span>
+                      Processing…
+                    </>
+                  ) : (
+                    <>
+                      <IcArrowUp className="h-4 w-4" />
+                      Upload from computer
+                    </>
+                  )}
+                </button>
+                {draft.portrait.startsWith("data:") && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      set({ portrait: "./img/image1.jpeg" });
+                      setFileError("");
+                    }}
+                    className="text-[12.5px] font-bold text-pine underline decoration-gold decoration-2 underline-offset-4 transition-colors hover:text-pine-dark"
+                  >
+                    Use file path instead
+                  </button>
+                )}
+              </div>
+
+              {fileError && (
+                <p className="animate-pop-in mt-3 flex items-center gap-2 rounded-full bg-gold/15 px-4 py-2.5 text-[12.5px] font-bold text-pine">
+                  <IcClose className="h-3.5 w-3.5" /> {fileError}
+                </p>
+              )}
+
+              {embeddedKb > 0 && !fileError && (
+                <p className="mt-3 flex items-center gap-2 rounded-full bg-pine/8 px-4 py-2 text-[12px] font-bold text-pine">
+                  <IcCheck className="h-3.5 w-3.5 text-gold" />
+                  Photo embedded with your content · {embeddedKb} KB — saved when you hit Save Hero
+                </p>
+              )}
+
+              <p className="mt-3 rounded-r-xl border-l-4 border-gold bg-mist p-3 text-[12.5px] font-semibold leading-[1.6] text-slate">
+                <span className="font-bold text-pine">Easiest:</span> hit <span className="font-bold text-pine">Upload from computer</span> — the photo is
+                automatically resized and stored right inside your content. Alternatively, place a file in{" "}
+                <code className="rounded bg-white px-1.5 py-0.5 text-[11.5px] text-pine">public/img/</code> and use{" "}
+                <code className="rounded bg-white px-1.5 py-0.5 text-[11.5px] text-pine">/img/yourfile.jpeg</code>, or paste any full https:// URL.
               </p>
             </div>
           </div>

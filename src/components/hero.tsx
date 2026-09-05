@@ -234,7 +234,13 @@ export function Hero() {
         </div>
       </div>
 
-      <Ticker />
+      <Ticker
+        words={
+          hero.tickerWords.filter((w) => w.trim()).length > 0
+            ? hero.tickerWords.filter((w) => w.trim())
+            : MARQUEE
+        }
+      />
     </section>
   );
 }

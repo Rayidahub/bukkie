@@ -948,6 +948,7 @@ function HeroEditor() {
       ...draft,
       orgs: draft.orgs.map((o) => o.trim()).filter(Boolean),
       tags,
+      tickerWords: draft.tickerWords.map((w) => w.trim()).filter(Boolean),
     });
     setToast(true);
     setTimeout(() => setToast(false), 1800);
@@ -1008,6 +1009,14 @@ function HeroEditor() {
             value={draft.orgs.join("\n")}
             onChange={(v) => set({ orgs: v.split("\n") })}
             rows={4}
+          />
+
+          <p className={`${groupTitle} pt-4`}>{bar} Ticker (gold scrolling band)</p>
+          <AreaField
+            label="Ticker words (one per line — they loop across the band)"
+            value={draft.tickerWords.join("\n")}
+            onChange={(v) => set({ tickerWords: v.split("\n") })}
+            rows={6}
           />
         </div>
 

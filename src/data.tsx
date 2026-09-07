@@ -515,6 +515,21 @@ export const PRINCIPLES: { word: string; title: string; body: string }[] = [
   },
 ];
 
+/* ---------------- social media -------------------------------------- */
+export type SocialLink = {
+  platform: "linkedin" | "instagram" | "behance" | "dribbble" | "twitter" | "facebook" | "whatsapp";
+  url: string;
+  label: string;
+};
+
+export const SOCIAL_LINKS: SocialLink[] = [
+  { platform: "linkedin", url: "", label: "LinkedIn" },
+  { platform: "instagram", url: "", label: "Instagram" },
+  { platform: "behance", url: "", label: "Behance" },
+  { platform: "dribbble", url: "", label: "Dribbble" },
+  { platform: "whatsapp", url: "", label: "WhatsApp" },
+];
+
 /* ---------------- testimonials -------------------------------------- */
 export const TESTIMONIALS: {
   quote: string;

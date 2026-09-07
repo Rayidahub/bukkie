@@ -11,12 +11,14 @@ import {
   HERO,
   INSIGHTS,
   SERVICES,
+  SOCIAL_LINKS,
   TESTIMONIALS,
   type AboutContent,
   type GalleryItem,
   type HeroContent,
   type Insight,
   type Service,
+  type SocialLink,
 } from "./data";
 
 const LS_KEY = "eb-portfolio-content-v1";

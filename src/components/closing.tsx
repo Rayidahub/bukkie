@@ -128,9 +128,17 @@ export function Testimonials({ showHead = true }: { showHead?: boolean }) {
                 <IcQuote className="h-8 w-8 text-gold" />
                 <blockquote className="mt-5 flex-1 text-[15px] font-medium leading-[1.75] text-white/85">“{t.quote}”</blockquote>
                 <figcaption className="mt-6 flex items-center gap-3.5 border-t border-white/15 pt-5">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold font-display text-[15px] font-black text-pine">
-                    {initials(t.role)}
-                  </span>
+                  {t.avatar ? (
+                    <img
+                      src={t.avatar}
+                      alt={t.name}
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold font-display text-[15px] font-black text-pine">
+                      {initials(t.role)}
+                    </span>
+                  )}
                   <div>
                     <p className="text-[14px] font-bold text-white">{t.name}</p>
                     <p className="text-[12.5px] text-white/60">

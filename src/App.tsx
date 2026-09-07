@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Footer, Navbar } from "./components/chrome";
 import {
   AboutPage,
@@ -61,10 +61,10 @@ function Shell() {
 export default function App() {
   return (
     <ContentProvider>
-      <HashRouter>
+      <BrowserRouter>
         <ScrollAndTitle />
         <Shell />
-      </HashRouter>
+      </BrowserRouter>
     </ContentProvider>
   );
 }

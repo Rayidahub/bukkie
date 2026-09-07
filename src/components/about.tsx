@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   CERTS,
@@ -10,19 +10,15 @@ import {
   CountUp,
   IcChat,
   IcChip,
-  IcClose,
   IcDownload,
-  IcMail,
   IcPen,
-  IcPhone,
-  IcPin,
-  IcPrinter,
   IcSpark,
   MaskLines,
   portraitFallback,
   Reveal,
 } from "../lib";
 import { useContent } from "../store";
+import { generateCV } from "../utils/generateCV";
 
 /* ------------------------------------------------------------------ */
 /*  Shared section heading                                             */
@@ -176,112 +172,6 @@ export function ServicesSection({ showHead = true }: { showHead?: boolean }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  CV modal (printable)                                               */
-/* ------------------------------------------------------------------ */
-function CvModal({ onClose }: { onClose: () => void }) {
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [onClose]);
-
-  return (
-    <div
-      className="animate-fade-in fixed inset-0 z-[130] flex items-start justify-center overflow-y-auto bg-pine/70 p-4 backdrop-blur-sm md:py-10"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Curriculum vitae"
-      onClick={onClose}
-    >
-      <div
-        className="cv-sheet animate-pop-in relative w-full max-w-3xl rounded-3xl bg-white p-8 shadow-lift md:p-12"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="cv-no-print flex justify-end gap-2">
-          <button onClick={() => window.print()} className="btn btn-pine !px-5 !py-2.5 text-[13.5px]">
-            <IcPrinter className="h-4 w-4" /> Print / Save PDF
-          </button>
-          <button
-            onClick={onClose}
-            aria-label="Close CV"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-slate transition-colors hover:border-pine hover:text-pine"
-          >
-            <IcClose className="h-4 w-4" />
-          </button>
-        </div>
-
-        <div className="mt-2">
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-pine pb-5">
-            <div>
-              <h3 className="font-display text-3xl font-black text-ink">Olowomakan Esther Bukola</h3>
-              <p className="mt-1 text-[15px] font-bold text-pine">
-                Creative Graphics Designer & Digital Media Specialist
-              </p>
-            </div>
-            <div className="space-y-0.5 text-[12.5px] text-slate">
-              <p className="flex items-center gap-2"><IcMail className="h-3.5 w-3.5 text-pine" /> esther.olowomakan@gmail.com</p>
-              <p className="flex items-center gap-2"><IcPhone className="h-3.5 w-3.5 text-pine" /> +234 814 590 4088 · +234 701 492 1004</p>
-              <p className="flex items-center gap-2"><IcPin className="h-3.5 w-3.5 text-pine" /> Ikorodu, Lagos State, Nigeria</p>
-            </div>
-          </div>
-
-          <p className="mt-5 text-[14px] leading-[1.7] text-slate">
-            Detail-oriented and result-driven creative professional with
-            experience in graphics design, digital media, social media
-            management, communications, customer service, and IT support.
-            Creating positive customer and audience experiences through
-            innovative design and strategic communication.
-          </p>
-
-          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-pine">
-            <span className="h-1.5 w-6 rounded bg-gold" /> Experience
-          </h4>
-          <ul className="mt-3 space-y-3">
-            {EXPERIENCE.map((r) => (
-              <li key={r.org} className="border-l-2 border-sage pl-4">
-                <p className="text-[13.5px] font-bold text-ink">{r.title} — {r.org}</p>
-                <p className="text-[12px] font-semibold uppercase tracking-wide text-pine">{r.period}</p>
-                <p className="mt-0.5 text-[13px] text-slate">{r.note}</p>
-              </li>
-            ))}
-          </ul>
-
-          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-pine">
-            <span className="h-1.5 w-6 rounded bg-gold" /> Certifications & Training
-          </h4>
-          <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-            {CERTS.map((c) => (
-              <li key={c.title} className="text-[13px] text-slate">
-                <span className="font-bold text-pine">{c.year}</span> — {c.title}
-              </li>
-            ))}
-          </ul>
-
-          <h4 className="mt-6 flex items-center gap-3 font-display text-lg font-bold text-pine">
-            <span className="h-1.5 w-6 rounded bg-gold" /> Core Skills
-          </h4>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {[...DESIGN_SKILLS.map((s) => s.name), ...SOFT_SKILLS.slice(0, 5)].map((s) => (
-              <span key={s} className="rounded-full bg-mist px-3 py-1 text-[12px] font-semibold text-slate">
-                {s}
-              </span>
-            ))}
-          </div>
-
-          <p className="mt-7 border-t border-line pt-4 text-center text-[11px] uppercase tracking-[0.2em] text-slate/60">
-            References available on request
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /*  About (dark pine) + stats + CV                                     */
 /* ------------------------------------------------------------------ */
 function Statistic({
@@ -309,7 +199,6 @@ function Statistic({
 
 export function AboutSection() {
   const { about } = useContent();
-  const [cvOpen, setCvOpen] = useState(false);
 
   return (
     <section id="about" aria-label="About Esther Bukola" className="relative overflow-hidden bg-pine py-20 text-white md:py-28">
@@ -378,7 +267,7 @@ export function AboutSection() {
 
           <Reveal delay={250}>
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <button onClick={() => setCvOpen(true)} className="btn btn-gold">
+              <button onClick={() => generateCV()} className="btn btn-gold">
                 <IcDownload className="h-4 w-4" />
                 {about.cvLabel}
               </button>
@@ -396,8 +285,6 @@ export function AboutSection() {
           </Reveal>
         </div>
       </div>
-
-      {cvOpen && <CvModal onClose={() => setCvOpen(false)} />}
     </section>
   );
 }

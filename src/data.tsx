@@ -521,6 +521,7 @@ export const TESTIMONIALS: {
   name: string;
   role: string;
   org: string;
+  avatar?: string;
 }[] = [
   {
     quote:
@@ -528,6 +529,7 @@ export const TESTIMONIALS: {
     name: "Programs Director",
     role: "Volunteer & Campaign Lead",
     org: "Bramble Network",
+    avatar: "",
   },
   {
     quote:
@@ -535,6 +537,7 @@ export const TESTIMONIALS: {
     name: "Founder",
     role: "Membership & Partnerships",
     org: "Business Women Hub",
+    avatar: "",
   },
   {
     quote:
@@ -542,6 +545,7 @@ export const TESTIMONIALS: {
     name: "Event Coordinator",
     role: "Outreach & Communications",
     org: "Shapers of Nation",
+    avatar: "",
   },
 ];
 

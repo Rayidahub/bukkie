@@ -803,6 +803,14 @@ function TestimonialEditor({ initial, onSave, onClose }: { initial: Testimonial;
         <TextField label="Role" value={d.role} onChange={(v) => set({ role: v })} />
       </div>
       <TextField label="Organization" value={d.org} onChange={(v) => set({ org: v })} />
+      <div className="mt-6">
+        <p className="mb-3 text-[12px] font-extrabold uppercase tracking-[0.18em] text-slate">Avatar Photo</p>
+        <ImageUpload
+          value={d.avatar || ""}
+          onPick={(dataUrl) => set({ avatar: dataUrl })}
+          label="Upload avatar"
+        />
+      </div>
     </EditorShell>
   );
 }
@@ -1362,7 +1370,7 @@ export function AdminPage() {
     read: "3 min read",
     body: [],
   });
-  const blankTestimonial = (): Testimonial => ({ quote: "", name: "", role: "", org: "" });
+  const blankTestimonial = (): Testimonial => ({ quote: "", name: "", role: "", org: "", avatar: "" });
 
   const startAdd = () => {
     const id = uid();

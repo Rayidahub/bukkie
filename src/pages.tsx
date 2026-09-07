@@ -1560,6 +1560,21 @@ export function AdminPage() {
             <button onClick={confirmReset} className="btn btn-outline !py-2.5 text-[13.5px]">
               Reset
             </button>
+            <button
+              onClick={() => {
+                if (window.confirm("Are you sure you want to logout?")) {
+                  try {
+                    sessionStorage.removeItem(GATE_KEY);
+                  } catch {
+                    /* fine */
+                  }
+                  setAuthed(false);
+                }
+              }}
+              className="btn !border-red-500 !text-red-500 !py-2.5 text-[13.5px] hover:!bg-red-500 hover:!text-white"
+            >
+              Logout
+            </button>
           </div>
         </div>
 

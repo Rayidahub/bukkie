@@ -16,6 +16,7 @@ import {
 } from "../lib";
 import { useContent } from "../store";
 import { SectionHead } from "./about";
+import { LazyImage } from "./LazyImage";
 
 /* ------------------------------------------------------------------ */
 /*  Philosophy                                                         */
@@ -129,7 +130,7 @@ export function Testimonials({ showHead = true }: { showHead?: boolean }) {
                 <blockquote className="mt-5 flex-1 text-[15px] font-medium leading-[1.75] text-white/85">“{t.quote}”</blockquote>
                 <figcaption className="mt-6 flex items-center gap-3.5 border-t border-white/15 pt-5">
                   {t.avatar ? (
-                    <img
+                    <LazyImage
                       src={t.avatar}
                       alt={t.name}
                       className="h-12 w-12 rounded-full object-cover"
@@ -179,7 +180,7 @@ function ArticleModal({ article, onClose }: { article: Insight; onClose: () => v
     >
       <div className="animate-pop-in relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-lift" onClick={(e) => e.stopPropagation()}>
         <div className="relative h-56 md:h-64">
-          <img src={article.cover} alt="" className="h-full w-full object-cover" />
+          <LazyImage src={article.cover} alt="" className="h-full w-full object-cover" />
           <span className="absolute left-5 top-5 rounded-full bg-gold px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-wide text-pine">
             {article.tag}
           </span>
@@ -248,10 +249,9 @@ export function Insights({ showHead = true }: { showHead?: boolean }) {
             <Reveal key={a.id} delay={i * 120}>
               <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-soft transition-all duration-300 hover:-translate-y-2 hover:shadow-lift">
                 <div className="relative h-48 overflow-hidden">
-                  <img
+                  <LazyImage
                     src={a.cover}
                     alt=""
-                    loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
                   />
                   <span className="absolute left-4 top-4 rounded-full bg-gold px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-wide text-pine">

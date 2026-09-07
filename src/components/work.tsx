@@ -19,6 +19,7 @@ import {
   IcClose,
   IcFigma,
   IcOffice,
+  IcPen,
   IcPlay,
   IcPress,
   IcPs,
@@ -28,6 +29,7 @@ import {
   useReducedMotion,
 } from "../lib";
 import { useContent } from "../store";
+import { LazyImage } from "./LazyImage";
 import { SectionHead } from "./about";
 
 /* ------------------------------------------------------------------ */
@@ -260,10 +262,9 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
                 className="group h-full cursor-pointer overflow-hidden rounded-2xl border border-line bg-white shadow-soft transition-all duration-300 hover:-translate-y-2 hover:shadow-lift"
               >
                 <div className={`relative overflow-hidden ${g.ratio}`}>
-                  <img
+                  <LazyImage
                     src={g.img}
                     alt={`${g.title} — ${g.org}`}
-                    loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
                   />
                   <div className="absolute inset-0 bg-pine/0 transition-colors duration-300 group-hover:bg-pine/35" />
@@ -316,7 +317,7 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
           />
           <div className="animate-pop-in relative grid max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-3xl bg-white shadow-lift lg:grid-cols-2">
             <div className="relative overflow-hidden bg-sage lg:rounded-l-3xl">
-              <img src={active.img} alt={active.title} className="h-full max-h-[34vh] w-full object-cover lg:max-h-none" />
+              <LazyImage src={active.img} alt={active.title} className="h-full max-h-[34vh] w-full object-cover lg:max-h-none" />
               <span className="absolute left-5 top-5 rounded-full bg-gold px-4 py-1.5 text-[11.5px] font-extrabold uppercase tracking-wide text-pine">
                 {active.cat} · {active.year}
               </span>

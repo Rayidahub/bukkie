@@ -17,6 +17,7 @@ import {
   type HeroContent,
   type Insight,
   type Service,
+  type SocialLink,
 } from "./data";
 import {
   IcArrowRight,
@@ -1281,8 +1282,106 @@ const TABS = [
   { key: "projects", label: "Projects" },
   { key: "articles", label: "Blog Posts" },
   { key: "testimonials", label: "Testimonials" },
+  { key: "social", label: "Social Links" },
 ] as const;
 type TabKey = (typeof TABS)[number]["key"];
+
+/* ---------- social links editor ---------- */
+function SocialLinksEditor() {
+  const store = useContent();
+  const [draft, setDraft] = useState(store.socialLinks);
+  const [toast, setToast] = useState(false);
+  const set = (index: number, patch: Partial<SocialLink>) =>
+    setDraft((d) => d.map((item, i) => (i === index ? { ...item, ...patch } : item)));
+
+  const save = () => {
+    store.setSocialLinks(draft);
+    setToast(true);
+    setTimeout(() => setToast(false), 1800);
+  };
+
+  const platforms: SocialLink["platform"][] = [
+    "linkedin",
+    "instagram",
+    "behance",
+    "dribbble",
+    "twitter",
+    "facebook",
+    "whatsapp",
+  ];
+
+  return (
+    <div className="card animate-pop-in mt-8 p-6 shadow-soft md:p-9">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 className="font-display text-2xl font-black text-ink">Social links editor</h2>
+          <p className="mt-1 text-[13.5px] text-slate">
+            Add your social media profiles. Leave URL empty to hide a platform.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link to="/" className="btn btn-outline !py-2.5 text-[13.5px]">
+            View Site
+            <IcArrowUpRight className="h-4 w-4" />
+          </Link>
+          <button onClick={save} className="btn btn-gold !py-2.5 text-[13.5px]">
+            <IcCheck className="h-4 w-4" />
+            Save Social Links
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-9 grid gap-6 md:grid-cols-2">
+        {draft.map((link, i) => (
+          <div key={i} className="space-y-3 rounded-2xl bg-mist p-5">
+            <div>
+              <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate">
+                Platform
+              </label>
+              <select
+                value={link.platform}
+                onChange={(e) => set(i, { platform: e.target.value as SocialLink["platform"] })}
+                className="input-base"
+              >
+                {platforms.map((p) => (
+                  <option key={p} value={p}>
+                    {p.charAt(0).toUpperCase() + p.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate">
+                Profile URL
+              </label>
+              <input
+                type="url"
+                value={link.url}
+                onChange={(e) => set(i, { url: e.target.value })}
+                placeholder="https://linkedin.com/in/your-profile"
+                className="input-base"
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate">
+                Label (for accessibility)
+              </label>
+              <input
+                type="text"
+                value={link.label}
+                onChange={(e) => set(i, { label: e.target.value })}
+                placeholder="LinkedIn"
+                className="input-base"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <SavedToast show={toast}>Social links saved — live in the footer</SavedToast>
+    </div>
+  );
+}
 
 export function AdminPage() {
   const [authed, setAuthed] = useState(() => {
@@ -1317,6 +1416,7 @@ export function AdminPage() {
     projects: store.projects.length,
     articles: store.articles.length,
     testimonials: store.testimonials.length,
+    social: "✎",
   };
 
   const exportJson = () => {
@@ -1487,6 +1587,8 @@ export function AdminPage() {
           <HeroEditor />
         ) : tab === "about" ? (
           <AboutEditor />
+        ) : tab === "social" ? (
+          <SocialLinksEditor />
         ) : (
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {items.map((it) => (

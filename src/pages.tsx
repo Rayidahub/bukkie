@@ -514,8 +514,9 @@ export function NotFound() {
             Back to Home
             <IcArrowRight className="h-4 w-4" />
           </Link>
-          <Link to="/projects" className="btn btn-outline-light">
+          <Link to="/projects" className="btn btn-outline">
             See the Work
+            <IcArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

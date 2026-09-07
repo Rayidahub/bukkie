@@ -4,6 +4,7 @@ import { MARQUEE, yearsOfExperience } from "../data";
 import { useContent } from "../store";
 import {
   IcArrowDown,
+  IcArrowRight,
   IcArrowUpRight,
   IcPin,
   IcSpark,
@@ -95,7 +96,7 @@ function HeroButton({
 }) {
   const cls = `btn ${primary ? "btn-pine" : "btn-outline"}`;
   const icon = primary ? (
-    <IcArrowDown className="h-4 w-4" />
+    <IcArrowRight className="h-4 w-4" />
   ) : (
     <IcArrowUpRight className="h-4 w-4" />
   );

@@ -14,6 +14,7 @@ import {
   TestimonialsPage,
 } from "./pages";
 import { ContentProvider } from "./store";
+import { ThemeProvider } from "./ThemeContext";
 import { CONTACT } from "./data";
 
 const PAGE_DATA: Record<string, { title: string; description: string }> = {
@@ -113,11 +114,13 @@ function Shell() {
 
 export default function App() {
   return (
-    <ContentProvider>
-      <BrowserRouter>
-        <ScrollAndTitle />
-        <Shell />
-      </BrowserRouter>
-    </ContentProvider>
+    <ThemeProvider>
+      <ContentProvider>
+        <BrowserRouter>
+          <ScrollAndTitle />
+          <Shell />
+        </BrowserRouter>
+      </ContentProvider>
+    </ThemeProvider>
   );
 }

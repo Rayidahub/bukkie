@@ -12,13 +12,16 @@ import {
   IcLinkedIn,
   IcMail,
   IcMenu,
+  IcMoon,
   IcPhone,
   IcPin,
   IcSpark,
+  IcSun,
   IcTwitter,
   IcWhatsApp,
 } from "../lib";
 import { useContent } from "../store";
+import { useTheme } from "../ThemeContext";
 
 /* ------------------------------------------------------------------ */
 /*  Logo                                                               */
@@ -50,6 +53,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -123,6 +127,13 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-gold hover:text-gold"
+              aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+            >
+              {theme === "light" ? <IcMoon className="h-5 w-5" /> : <IcSun className="h-5 w-5" />}
+            </button>
             <Link
               to="/contact"
               className={`hidden !px-6 !py-2.5 text-[14px] lg:inline-flex btn ${

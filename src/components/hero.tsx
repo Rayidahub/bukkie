@@ -12,6 +12,7 @@ import {
   portraitFallback,
   Reveal,
 } from "../lib";
+import { LazyImage } from "./LazyImage";
 
 /* ------------------------------------------------------------------ */
 /*  Category ticker (gold band by default)                             */
@@ -207,7 +208,7 @@ export function Hero() {
 
               {/* portrait */}
               <div className="relative aspect-square overflow-hidden rounded-full border-8 border-white shadow-lift">
-                <img
+                <LazyImage
                   src={hero.portrait}
                   alt="Portrait of Olowomakan Esther Bukola"
                   className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"

@@ -19,6 +19,7 @@ import {
 } from "../lib";
 import { useContent } from "../store";
 import { generateCV } from "../utils/generateCV";
+import { LazyImage } from "./LazyImage";
 
 /* ------------------------------------------------------------------ */
 /*  Shared section heading                                             */
@@ -213,10 +214,9 @@ export function AboutSection() {
             <div className="relative mx-auto max-w-[440px]">
               <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rounded-[28px] bg-gold" />
               <div className="relative overflow-hidden rounded-[28px] shadow-lift">
-                <img
+                <LazyImage
                   src={about.image}
                   alt="Olowomakan Esther Bukola — Creative Graphics Designer"
-                  loading="lazy"
                   className="w-full object-cover object-top transition-transform duration-700 hover:scale-105"
                   onError={portraitFallback}
                 />

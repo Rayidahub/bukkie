@@ -30,11 +30,12 @@ export function Ticker({
   /* Repeat the list so each half always exceeds the widest viewport —
      this keeps the -50% loop seamless even with very few words. */
   const repeated = Array.from({
-    length: Math.max(1, Math.ceil(12 / list.length)),
+    length: Math.max(1, Math.ceil(16 / list.length)),
   }).flatMap(() => list);
 
-  /* Pace scales with content length so scroll speed feels constant. */
-  const duration = Math.min(60, Math.max(24, repeated.length * 2.4));
+  /* Pace scales with content length for consistent, readable speed.
+     Target: ~50px per second for comfortable reading. */
+  const duration = Math.min(80, Math.max(30, repeated.length * 3.5));
 
   const half = (hidden: boolean) => (
     <div aria-hidden={hidden} className="flex shrink-0 items-center">

@@ -5,6 +5,7 @@ import {
   DESIGN_SKILLS,
   EXPERIENCE,
   SOFT_SKILLS,
+  yearsOfExperience,
 } from "../data";
 import {
   CountUp,
@@ -199,7 +200,15 @@ function Statistic({
 }
 
 export function AboutSection() {
-  const { about } = useContent();
+  const { about, projects, articles, testimonials } = useContent();
+  
+  // Calculate dynamic stats from current store data
+  const dynamicStats = [
+    { value: yearsOfExperience(), suffix: "+", label: "Years Experience" },
+    { value: EXPERIENCE.length, suffix: "", label: "Organizations" },
+    { value: CERTS.length, suffix: "", label: "Certifications" },
+    { value: projects.length, suffix: "", label: "Selected Works" },
+  ];
 
   return (
     <section id="about" aria-label="About Esther Bukola" className="relative overflow-hidden bg-pine py-20 text-white md:py-28">
@@ -260,7 +269,7 @@ export function AboutSection() {
           </Reveal>
 
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {about.stats.map((s, i) => (
+            {dynamicStats.map((s, i) => (
               <Statistic key={`${s.label}-${i}`} value={s.value} suffix={s.suffix} label={s.label} delay={i * 100} />
             ))}
           </div>

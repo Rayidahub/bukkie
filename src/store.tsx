@@ -32,6 +32,7 @@ export type SiteContent = {
   projects: GalleryItem[];
   articles: Insight[];
   testimonials: Testimonial[];
+  socialLinks: SocialLink[];
 };
 
 const defaults = (): SiteContent => ({
@@ -41,6 +42,7 @@ const defaults = (): SiteContent => ({
   projects: GALLERY,
   articles: INSIGHTS,
   testimonials: TESTIMONIALS,
+  socialLinks: SOCIAL_LINKS,
 });
 
 function load(): SiteContent {
@@ -70,6 +72,7 @@ type ContentCtx = SiteContent & {
   setProjects: (v: GalleryItem[]) => void;
   setArticles: (v: Insight[]) => void;
   setTestimonials: (v: Testimonial[]) => void;
+  setSocialLinks: (v: SocialLink[]) => void;
   reset: () => void;
 };
 
@@ -94,6 +97,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     setProjects: (projects) => setContent((c) => ({ ...c, projects })),
     setArticles: (articles) => setContent((c) => ({ ...c, articles })),
     setTestimonials: (testimonials) => setContent((c) => ({ ...c, testimonials })),
+    setSocialLinks: (socialLinks) => setContent((c) => ({ ...c, socialLinks })),
     reset: () => setContent(defaults()),
   };
 

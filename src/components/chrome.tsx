@@ -4,13 +4,21 @@ import { CONTACT, FOOTER_LINKS, NAV_LINKS, SERVICES } from "../data";
 import {
   IcArrowUp,
   IcArrowUpRight,
+  IcBehance,
   IcClose,
+  IcDribbble,
+  IcFacebook,
+  IcInstagram,
+  IcLinkedIn,
   IcMail,
   IcMenu,
   IcPhone,
   IcPin,
   IcSpark,
+  IcTwitter,
+  IcWhatsApp,
 } from "../lib";
+import { useContent } from "../store";
 
 /* ------------------------------------------------------------------ */
 /*  Logo                                                               */
@@ -201,10 +209,30 @@ export function Navbar() {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Social icon renderer                                               */
+/* ------------------------------------------------------------------ */
+function SocialIcon({ platform, className = "h-5 w-5" }: { platform: string; className?: string }) {
+  const icons: Record<string, React.ComponentType<{ className?: string }>> = {
+    linkedin: IcLinkedIn,
+    instagram: IcInstagram,
+    behance: IcBehance,
+    dribbble: IcDribbble,
+    twitter: IcTwitter,
+    facebook: IcFacebook,
+    whatsapp: IcWhatsApp,
+  };
+  const Icon = icons[platform];
+  return Icon ? <Icon className={className} /> : null;
+}
+
+/* ------------------------------------------------------------------ */
 /*  Footer                                                             */
 /* ------------------------------------------------------------------ */
 export function Footer() {
   const [showTop, setShowTop] = useState(false);
+  const { socialLinks } = useContent();
+  const activeLinks = socialLinks.filter((s) => s.url.trim());
+
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 600);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -283,6 +311,27 @@ export function Footer() {
               {CONTACT.location}
             </li>
           </ul>
+
+          {activeLinks.length > 0 && (
+            <>
+              <p className="mt-7 text-xs font-bold uppercase tracking-[0.22em] text-gold">Follow Me</p>
+              <ul className="mt-4 flex flex-wrap gap-3">
+                {activeLinks.map((link) => (
+                  <li key={link.platform}>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={link.label}
+                      className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:bg-gold hover:text-pine"
+                    >
+                      <SocialIcon platform={link.platform} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
 
           <p className="mt-7 text-xs font-bold uppercase tracking-[0.22em] text-gold">Specialties</p>
           <ul className="mt-4 flex flex-wrap gap-2">

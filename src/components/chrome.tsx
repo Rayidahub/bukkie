@@ -22,6 +22,7 @@ import {
 } from "../lib";
 import { useContent } from "../store";
 import { useTheme } from "../ThemeContext";
+import { useSwipe } from "../hooks/useSwipe";
 
 /* ------------------------------------------------------------------ */
 /*  Logo                                                               */
@@ -54,6 +55,11 @@ export function Navbar() {
   const { pathname } = useLocation();
   const closeRef = useRef<HTMLButtonElement>(null);
   const { theme, toggleTheme } = useTheme();
+
+  // Swipe gesture handlers for mobile menu
+  const swipeHandlers = useSwipe({
+    onSwipeRight: () => setOpen(false),
+  }, { threshold: 80 });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -163,6 +169,7 @@ export function Navbar() {
           aria-modal="true"
           aria-label="Navigation menu"
           className="animate-fade-in fixed inset-0 z-[110] flex flex-col bg-pine"
+          {...swipeHandlers}
         >
           <div className="container-x flex h-[72px] items-center justify-between">
             <Logo light />

@@ -1,12 +1,55 @@
-import { useState, type ImgHTMLAttributes, type SyntheticEvent } from "react";
+import { useState, useEffect, useRef, type ImgHTMLAttributes, type SyntheticEvent } from "react";
 
 interface LazyImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   fallback?: string;
+  srcSet?: string;
+  sizes?: string;
+  placeholder?: string;
+  rootMargin?: string;
+  threshold?: number;
 }
 
-export function LazyImage({ src, alt, className = "", fallback, onError, ...props }: LazyImageProps) {
+export function LazyImage({ 
+  src, 
+  alt, 
+  className = "", 
+  fallback, 
+  srcSet,
+  sizes,
+  placeholder,
+  rootMargin = "200px",
+  threshold = 0.01,
+  onError, 
+  ...props 
+}: LazyImageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const imgRef = useRef<HTMLDivElement>(null);
+
+  // Intersection Observer for lazy loading
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsInView(true);
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin,
+        threshold,
+      }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [rootMargin, threshold]);
 
   const handleLoad = () => {
     setIsLoading(false);
@@ -21,9 +64,20 @@ export function LazyImage({ src, alt, className = "", fallback, onError, ...prop
   };
 
   return (
-    <div className="relative overflow-hidden">
+    <div ref={imgRef} className="relative overflow-hidden">
+      {/* Blur-up placeholder */}
+      {placeholder && isLoading && (
+        <img
+          src={placeholder}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full scale-105 object-cover blur-lg transition-opacity duration-500"
+          style={{ opacity: isLoading ? 1 : 0 }}
+        />
+      )}
+
       {/* Loading skeleton */}
-      {isLoading && (
+      {isLoading && !placeholder && (
         <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800" />
       )}
 
@@ -49,17 +103,23 @@ export function LazyImage({ src, alt, className = "", fallback, onError, ...prop
         </div>
       )}
 
-      {/* Actual image */}
-      <img
-        src={hasError && fallback ? fallback : src}
-        alt={alt}
-        onLoad={handleLoad}
-        onError={handleError}
-        className={`transition-opacity duration-500 ${
-          isLoading ? "opacity-0" : "opacity-100"
-        } ${className}`}
-        {...props}
-      />
+      {/* Actual image - only render when in view */}
+      {isInView && (
+        <img
+          src={hasError && fallback ? fallback : src}
+          srcSet={srcSet}
+          sizes={sizes}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          onLoad={handleLoad}
+          onError={handleError}
+          className={`transition-all duration-500 ${
+            isLoading ? "opacity-0 scale-105" : "opacity-100 scale-100"
+          } ${className}`}
+          {...props}
+        />
+      )}
     </div>
   );
 }

@@ -13,7 +13,7 @@ import {
   ServicesPage,
   TestimonialsPage,
 } from "./pages";
-import { ContentProvider } from "./store-supabase";
+import { ContentProvider } from "./store";
 import { ThemeProvider } from "./ThemeContext";
 import { CONTACT } from "./data";
 

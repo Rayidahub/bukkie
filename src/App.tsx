@@ -2,20 +2,8 @@ import { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Footer, Navbar } from "./components/chrome";
 import { WhatsAppButton } from "./components/WhatsAppButton";
-import {
-  AboutPage,
-  AdminPage,
-  BlogPage,
-  ContactPage,
-  Home,
-  NotFound,
-  ProjectsPage,
-  ServicesPage,
-  TestimonialsPage,
-} from "./pages";
-import { ContentProvider } from "./store-supabase";
+import { ContentProvider } from "./store";
 import { ThemeProvider } from "./ThemeContext";
-import { CONTACT } from "./data";
 
 // Code splitting - lazy load pages for better performance
 const Home = lazy(() => import("./pages").then(module => ({ default: module.Home })));

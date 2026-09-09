@@ -23,6 +23,7 @@ import {
 import { useContent } from "../store";
 import { useTheme } from "../ThemeContext";
 import { useSwipe } from "../hooks/useSwipe";
+import { NewsletterSignup } from "./NewsletterSignup";
 
 /* ------------------------------------------------------------------ */
 /*  Logo                                                               */
@@ -262,6 +263,22 @@ export function Footer() {
       <div className="dots-light pointer-events-none absolute right-0 top-0 h-56 w-56 opacity-60" />
       <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full border border-white/10" />
       <div className="pointer-events-none absolute -bottom-12 -left-12 h-72 w-72 rounded-full border border-gold/20" />
+
+      {/* Newsletter Section */}
+      <div className="container-x relative border-b border-white/10 py-12">
+        <div className="grid gap-8 md:grid-cols-2 md:items-center">
+          <div>
+            <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-gold">Newsletter</p>
+            <h3 className="font-display text-3xl font-bold">Stay in the loop</h3>
+            <p className="mt-2 text-[15px] text-white/65">
+              Get updates on new projects, design insights, and creative tips. No spam, unsubscribe anytime.
+            </p>
+          </div>
+          <div className="md:max-w-md">
+            <NewsletterSignup />
+          </div>
+        </div>
+      </div>
 
       <div className="container-x relative grid gap-12 py-16 md:grid-cols-12 md:py-20">
         <div className="md:col-span-5">

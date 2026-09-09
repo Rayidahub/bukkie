@@ -17,6 +17,7 @@ import {
 import { useContent } from "../store";
 import { SectionHead } from "./about";
 import { LazyImage } from "./LazyImage";
+import { ContactFormBackend } from "./ContactFormBackend";
 
 /* ------------------------------------------------------------------ */
 /*  Philosophy                                                         */
@@ -384,42 +385,6 @@ function CopyRow({
 }
 
 export function Contact() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [org, setOrg] = useState("");
-  const [service, setService] = useState(SERVICES_OFFERED[0]);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const [sent, setSent] = useState(false);
-
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !message.trim()) {
-      setError("Please add your name and a short message.");
-      setSent(false);
-      return;
-    }
-    setError("");
-    const subject = `Project inquiry — ${service} (${name.trim()})`;
-    const body = [
-      `Hello Esther,`,
-      ``,
-      message.trim(),
-      ``,
-      `—`,
-      `Name: ${name.trim()}`,
-      email.trim() ? `Email: ${email.trim()}` : "",
-      org.trim() ? `Organization: ${org.trim()}` : "",
-      `Service: ${service}`,
-    ]
-      .filter((l) => l !== "")
-      .join("\n");
-    window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
-  };
-
-  const label = "mb-2 block text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate";
-
   return (
     <section id="contact" aria-label="Contact" className="relative overflow-hidden bg-mist py-20 md:py-28">
       <div className="container-x">
@@ -469,74 +434,7 @@ export function Contact() {
           </Reveal>
 
           <Reveal delay={140} className="lg:col-span-7">
-            <form onSubmit={submit} className="card h-full p-7 shadow-soft md:p-9" noValidate>
-              <p className="flex items-center gap-3 text-[12px] font-extrabold uppercase tracking-[0.22em] text-pine">
-                <span className="h-0.5 w-7 rounded bg-gold" /> Project brief — quick form
-              </p>
-
-              <div className="mt-7 grid gap-5 md:grid-cols-2">
-                <div>
-                  <label htmlFor="cf-name" className={label}>
-                    Your name *
-                  </label>
-                  <input id="cf-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Adaeze Okoye" className="input-base" />
-                </div>
-                <div>
-                  <label htmlFor="cf-email" className={label}>
-                    Email
-                  </label>
-                  <input id="cf-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@organization.org" className="input-base" />
-                </div>
-                <div>
-                  <label htmlFor="cf-org" className={label}>
-                    Organization
-                  </label>
-                  <input id="cf-org" value={org} onChange={(e) => setOrg(e.target.value)} placeholder="Company, church, NGO…" className="input-base" />
-                </div>
-                <div>
-                  <label htmlFor="cf-service" className={label}>
-                    What do you need?
-                  </label>
-                  <select id="cf-service" value={service} onChange={(e) => setService(e.target.value)} className="input-base cursor-pointer">
-                    {SERVICES_OFFERED.map((s) => (
-                      <option key={s}>{s}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="md:col-span-2">
-                  <label htmlFor="cf-msg" className={label}>
-                    Tell me about the project *
-                  </label>
-                  <textarea
-                    id="cf-msg"
-                    rows={5}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Goals, audience, timeline, references — anything that helps."
-                    className="input-base resize-none"
-                  />
-                </div>
-              </div>
-
-              {error && (
-                <p className="mt-5 flex items-center gap-2 rounded-full bg-gold/15 px-4 py-2.5 text-[13px] font-bold text-pine">
-                  <IcSpark className="h-3.5 w-3.5 text-gold" /> {error}
-                </p>
-              )}
-              {sent && !error && (
-                <p className="mt-5 flex items-center gap-2 rounded-full bg-sage px-4 py-2.5 text-[13px] font-bold text-pine">
-                  <IcCheck className="h-3.5 w-3.5" /> Draft opened in your mail app — talk soon!
-                </p>
-              )}
-
-              <button type="submit" className="btn btn-pine mt-7 w-full">
-                Send via Email
-                <IcArrowUpRight className="h-4 w-4" />
-              </button>
-              <p className="mt-4 text-center text-[12px] font-medium text-slate">
-                Opens a draft in your email app — nothing is stored or sent from this site.
-              </p>
-            </form>
+            <ContactFormBackend />
           </Reveal>
         </div>
 

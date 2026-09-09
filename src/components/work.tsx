@@ -31,6 +31,7 @@ import {
 import { useContent } from "../store";
 import { LazyImage } from "./LazyImage";
 import { SectionHead } from "./about";
+import { useSwipe } from "../hooks/useSwipe";
 
 /* ------------------------------------------------------------------ */
 /*  Tools & skills                                                     */
@@ -187,6 +188,12 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
   );
   const items = cat === "All" && !showAll ? filtered.slice(0, 6) : filtered;
 
+  // Swipe gesture handlers for lightbox navigation
+  const lightboxSwipeHandlers = useSwipe({
+    onSwipeLeft: () => setLightbox((v) => (v === null ? v : (v + 1) % items.length)),
+    onSwipeRight: () => setLightbox((v) => (v === null ? v : (v - 1 + items.length) % items.length)),
+  }, { threshold: 50 });
+
   useEffect(() => {
     if (lightbox === null) return;
     document.body.style.overflow = "hidden";
@@ -309,6 +316,7 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
           role="dialog"
           aria-modal="true"
           aria-label={`${active.title} case study`}
+          {...lightboxSwipeHandlers}
         >
           <button
             aria-label="Close case study"

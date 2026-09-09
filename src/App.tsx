@@ -2,7 +2,18 @@ import { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Footer, Navbar } from "./components/chrome";
 import { WhatsAppButton } from "./components/WhatsAppButton";
-import { ContentProvider } from "./store";
+import {
+  AboutPage,
+  AdminPage,
+  BlogPage,
+  ContactPage,
+  Home,
+  NotFound,
+  ProjectsPage,
+  ServicesPage,
+  TestimonialsPage,
+} from "./pages";
+import { ContentProvider } from "./store-supabase";
 import { ThemeProvider } from "./ThemeContext";
 import { CONTACT } from "./data";
 

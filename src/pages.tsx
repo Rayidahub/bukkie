@@ -1714,39 +1714,64 @@ export function AdminPage() {
         ) : tab === "social" ? (
           <SocialLinksEditor />
         ) : (
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {items.map((it) => (
-            <div key={it.id} className="card group flex items-center gap-4 p-4 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift">
-              {it.img && (
-                <div className="h-16 w-20 shrink-0 overflow-hidden rounded-xl">
-                  <img src={it.img} alt="" className="h-full w-full object-cover" />
+        <div className="mt-8">
+          <DraggableList
+            items={items}
+            onReorder={(reorderedDisplayItems) => {
+              // Map display items back to actual data and update store
+              const getOriginalIndex = (displayId: string) => {
+                return items.findIndex(item => item.id === displayId);
+              };
+              
+              const newOrder = reorderedDisplayItems.map(item => getOriginalIndex(item.id));
+              
+              if (tab === "services") {
+                const reordered = newOrder.map(i => store.services[i]);
+                store.setServices(reordered);
+              } else if (tab === "projects") {
+                const reordered = newOrder.map(i => store.projects[i]);
+                store.setProjects(reordered);
+              } else if (tab === "articles") {
+                const reordered = newOrder.map(i => store.articles[i]);
+                store.setArticles(reordered);
+              } else if (tab === "testimonials") {
+                const reordered = newOrder.map(i => store.testimonials[i]);
+                store.setTestimonials(reordered);
+              }
+            }}
+            renderItem={(it, index) => (
+              <div key={it.id} className="card group flex items-center gap-4 p-4 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift">
+                {it.img && (
+                  <div className="h-16 w-20 shrink-0 overflow-hidden rounded-xl">
+                    <img src={it.img} alt="" className="h-full w-full object-cover" />
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate font-display text-[17px] font-bold text-ink">{it.title}</h3>
+                  <p className="truncate text-[12.5px] font-semibold text-slate">{it.sub}</p>
                 </div>
-              )}
-              <div className="min-w-0 flex-1">
-                <h3 className="truncate font-display text-[17px] font-bold text-ink">{it.title}</h3>
-                <p className="truncate text-[12.5px] font-semibold text-slate">{it.sub}</p>
+                <div className="flex shrink-0 gap-2">
+                  <button
+                    onClick={() => setEditing({ kind: tab, id: it.id })}
+                    className="rounded-full border border-line px-4 py-2 text-[12px] font-bold text-pine transition-colors hover:border-pine hover:bg-pine hover:text-white"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => removeItem(it.id)}
+                    aria-label={`Delete ${it.title}`}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-slate transition-colors hover:border-gold hover:bg-gold hover:text-pine"
+                  >
+                    <IcClose className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
-              <div className="flex shrink-0 gap-2">
-                <button
-                  onClick={() => setEditing({ kind: tab, id: it.id })}
-                  className="rounded-full border border-line px-4 py-2 text-[12px] font-bold text-pine transition-colors hover:border-pine hover:bg-pine hover:text-white"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => removeItem(it.id)}
-                  aria-label={`Delete ${it.title}`}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-slate transition-colors hover:border-gold hover:bg-gold hover:text-pine"
-                >
-                  <IcClose className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            </div>
-          ))}
+            )}
+          />
 
           <button
             onClick={startAdd}
-            className="flex min-h-[92px] items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-line text-[14px] font-bold text-slate transition-all duration-300 hover:-translate-y-0.5 hover:border-pine hover:text-pine md:col-span-2"
+            className="mt-4 flex min-h-[92px] w-full items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-line text-[14px] font-bold text-slate transition-all duration-300 hover:-translate-y-0.5 hover:border-pine hover:text-pine"
           >
             <IcSpark className="h-4 w-4 text-gold" />
             Add {TABS.find((t) => t.key === tab)?.label.replace(/s$/, "") ?? "item"}

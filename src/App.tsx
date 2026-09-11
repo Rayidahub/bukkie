@@ -6,6 +6,7 @@ import { WhatsAppButton } from "./components/WhatsAppButton";
 import { PageTransition } from "./components/PageTransition";
 import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 import { CookieConsent } from "./components/CookieConsent";
+import { CursorEffect } from "./components/CursorEffect";
 import { ContentProvider } from "./store";
 import { ThemeProvider } from "./ThemeContext";
 import { 
@@ -29,6 +30,7 @@ const AdminPage = lazy(() => import("./pages").then(module => ({ default: module
 const NotFound = lazy(() => import("./pages").then(module => ({ default: module.NotFound })));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage").then(module => ({ default: module.PrivacyPolicyPage })));
 const TermsOfServicePage = lazy(() => import("./pages/TermsOfServicePage").then(module => ({ default: module.TermsOfServicePage })));
+const VisualEffectsDemo = lazy(() => import("./pages/VisualEffectsDemo").then(module => ({ default: module.VisualEffectsDemo })));
 
 const PAGE_DATA: Record<string, { title: string; description: string }> = {
   "/": {
@@ -149,6 +151,7 @@ function Shell() {
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                 <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                <Route path="/visual-effects-demo" element={<VisualEffectsDemo />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </PageTransition>
@@ -159,6 +162,7 @@ function Shell() {
       <WhatsAppButton />
       <PWAInstallPrompt />
       <CookieConsent />
+      <CursorEffect />
     </div>
   );
 }

@@ -21,6 +21,7 @@ import {
 import { useContent } from "../store";
 import { generateCV } from "../utils/generateCV";
 import { LazyImage } from "./LazyImage";
+import { ParallaxSection } from "./ParallaxSection";
 
 /* ------------------------------------------------------------------ */
 /*  Shared section heading                                             */
@@ -219,25 +220,27 @@ export function AboutSection() {
       <div className="container-x grid items-center gap-14 lg:grid-cols-12">
         {/* image composition */}
         <div className="lg:col-span-5">
-          <Reveal y={36}>
-            <div className="relative mx-auto max-w-[440px]">
-              <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rounded-[28px] bg-gold" />
-              <div className="relative overflow-hidden rounded-[28px] shadow-lift">
-                <LazyImage
-                  src={about.image}
-                  alt="Olowomakan Esther Bukola — Creative Graphics Designer"
-                  className="w-full object-cover object-top transition-transform duration-700 hover:scale-105"
-                  onError={portraitFallback}
-                />
+          <ParallaxSection speed={0.3}>
+            <Reveal y={36}>
+              <div className="relative mx-auto max-w-[440px]">
+                <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rounded-[28px] bg-gold" />
+                <div className="relative overflow-hidden rounded-[28px] shadow-lift">
+                  <LazyImage
+                    src={about.image}
+                    alt="Olowomakan Esther Bukola — Creative Graphics Designer"
+                    className="w-full object-cover object-top transition-transform duration-700 hover:scale-105"
+                    onError={portraitFallback}
+                  />
+                </div>
+                <span className="animate-float absolute -right-4 top-8 z-10 rounded-full bg-pine-dark px-4 py-2 text-[12.5px] font-bold text-white shadow-lift">
+                  {about.tag1}
+                </span>
+                <span className="animate-float-late absolute -left-5 bottom-10 z-10 rounded-full bg-white px-4 py-2 text-[12.5px] font-bold text-pine shadow-lift">
+                  {about.tag2}
+                </span>
               </div>
-              <span className="animate-float absolute -right-4 top-8 z-10 rounded-full bg-pine-dark px-4 py-2 text-[12.5px] font-bold text-white shadow-lift">
-                {about.tag1}
-              </span>
-              <span className="animate-float-late absolute -left-5 bottom-10 z-10 rounded-full bg-white px-4 py-2 text-[12.5px] font-bold text-pine shadow-lift">
-                {about.tag2}
-              </span>
-            </div>
-          </Reveal>
+            </Reveal>
+          </ParallaxSection>
         </div>
 
         {/* copy + stats */}

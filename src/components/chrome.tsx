@@ -387,10 +387,19 @@ export function Footer() {
           <p>
             © {new Date().getFullYear()} {CONTACT.name}. All rights reserved.
           </p>
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link to="/privacy-policy" className="transition-colors hover:text-gold">
+              Privacy Policy
+            </Link>
+            <span className="text-white/30">•</span>
+            <Link to="/terms-of-service" className="transition-colors hover:text-gold">
+              Terms of Service
+            </Link>
+            <span className="text-white/30">•</span>
             <p className="flex items-center gap-2">
               Designed with <IcSpark className="h-3 w-3 text-gold" /> in Lagos, Nigeria
             </p>
+            <span className="text-white/30">•</span>
             <Link to="/admin" className="rounded-full border border-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white/45 transition-colors hover:border-gold hover:text-gold">
               Admin Studio
             </Link>

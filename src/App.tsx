@@ -4,8 +4,17 @@ import { AnimatePresence } from "framer-motion";
 import { Footer, Navbar } from "./components/chrome";
 import { WhatsAppButton } from "./components/WhatsAppButton";
 import { PageTransition } from "./components/PageTransition";
+import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
+import { CookieConsent } from "./components/CookieConsent";
 import { ContentProvider } from "./store";
 import { ThemeProvider } from "./ThemeContext";
+import { 
+  generateOrganizationSchema, 
+  generatePersonSchema, 
+  generateWebSiteSchema,
+  generateBreadcrumbSchema,
+  injectStructuredData 
+} from "./utils/structuredData";
 
 // Code splitting - lazy load pages for better performance
 const Home = lazy(() => import("./pages").then(module => ({ default: module.Home })));
@@ -18,6 +27,8 @@ const TestimonialsPage = lazy(() => import("./pages").then(module => ({ default:
 const ContactPage = lazy(() => import("./pages").then(module => ({ default: module.ContactPage })));
 const AdminPage = lazy(() => import("./pages").then(module => ({ default: module.AdminPage })));
 const NotFound = lazy(() => import("./pages").then(module => ({ default: module.NotFound })));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage").then(module => ({ default: module.PrivacyPolicyPage })));
+const TermsOfServicePage = lazy(() => import("./pages/TermsOfServicePage").then(module => ({ default: module.TermsOfServicePage })));
 
 const PAGE_DATA: Record<string, { title: string; description: string }> = {
   "/": {
@@ -84,6 +95,19 @@ function ScrollAndTitle() {
 
     const twitterDesc = document.querySelector('meta[name="twitter:description"]');
     if (twitterDesc) twitterDesc.setAttribute("content", pageData.description);
+
+    // Inject structured data (JSON-LD)
+    // Remove existing structured data
+    const existingScripts = document.querySelectorAll('script[type="application/ld+json"]');
+    existingScripts.forEach(script => script.remove());
+
+    // Inject organization and person schema on all pages
+    injectStructuredData(generateOrganizationSchema());
+    injectStructuredData(generatePersonSchema());
+    injectStructuredData(generateWebSiteSchema());
+    
+    // Inject breadcrumb schema
+    injectStructuredData(generateBreadcrumbSchema(pathname));
   }, [pathname, pageData]);
 
   return null;
@@ -123,6 +147,8 @@ function Shell() {
                 <Route path="/testimonials" element={<TestimonialsPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/admin" element={<AdminPage />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="/terms-of-service" element={<TermsOfServicePage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </PageTransition>
@@ -131,6 +157,8 @@ function Shell() {
       </main>
       <Footer />
       <WhatsAppButton />
+      <PWAInstallPrompt />
+      <CookieConsent />
     </div>
   );
 }

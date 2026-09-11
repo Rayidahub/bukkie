@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { getBlogReadingTime } from "./utils/readingTime";
+import { ImageLightbox } from "./components/ImageLightbox";
 import { AboutSection, SectionHead, ServicesSection } from "./components/about";
 import { ExperienceSection } from "./components/career";
 import { CtaBanner, Contact, Insights, Philosophy, Testimonials } from "./components/closing";
@@ -459,8 +461,13 @@ export function BlogPostPage() {
   const { articles } = useContent();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState({ src: '', alt: '' });
   
   const post = articles.find(a => a.id === id);
+  
+  // Calculate reading time
+  const readingTime = post ? getBlogReadingTime(post.body) : '';
   
   if (!post) {
     return (
@@ -479,24 +486,39 @@ export function BlogPostPage() {
     );
   }
   
+  const handleImageClick = (src: string, alt: string) => {
+    setLightboxImage({ src, alt });
+    setLightboxOpen(true);
+  };
+  
   return (
     <>
       <PageHeader
         crumb={`Blog / ${post.tag}`}
         title={[post.title]}
-        blurb={`${post.date} · ${post.read}`}
+        blurb={`${post.date} · ${readingTime}`}
       />
       
       <article className="relative bg-white py-16 md:py-20">
         <div className="container-x max-w-4xl">
           {/* Cover Image */}
           {post.cover && (
-            <div className="mb-12 aspect-video overflow-hidden rounded-2xl">
+            <div 
+              className="mb-12 aspect-video overflow-hidden rounded-2xl cursor-zoom-in group"
+              onClick={() => handleImageClick(post.cover, post.title)}
+            >
               <img
                 src={post.cover}
                 alt={post.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 rounded-full p-3">
+                  <svg className="w-6 h-6 text-pine" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                  </svg>
+                </div>
+              </div>
             </div>
           )}
           
@@ -520,6 +542,14 @@ export function BlogPostPage() {
           <CtaBanner />
         </div>
       </section>
+      
+      {/* Image Lightbox */}
+      <ImageLightbox
+        src={lightboxImage.src}
+        alt={lightboxImage.alt}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+      />
     </>
   );
 }

@@ -18,6 +18,7 @@ import { useContent } from "../store";
 import { SectionHead } from "./about";
 import { LazyImage } from "./LazyImage";
 import { ContactFormBackend } from "./ContactFormBackend";
+import { getBlogReadingTime } from "../utils/readingTime";
 
 /* ------------------------------------------------------------------ */
 /*  Philosophy                                                         */
@@ -246,36 +247,39 @@ export function Insights({ showHead = true }: { showHead?: boolean }) {
         )}
 
         <div className="grid gap-7 md:grid-cols-3">
-          {articles.map((a, i) => (
-            <Reveal key={a.id} delay={i * 120}>
-              <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-soft transition-all duration-300 hover:-translate-y-2 hover:shadow-lift">
-                <div className="relative h-48 overflow-hidden">
-                  <LazyImage
-                    src={a.cover}
-                    alt=""
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
-                  />
-                  <span className="absolute left-4 top-4 rounded-full bg-gold px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-wide text-pine">
-                    {a.tag}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-slate">
-                    {a.date} · {a.read}
-                  </p>
-                  <h3 className="mt-2 font-display text-[20px] font-bold leading-snug text-ink">{a.title}</h3>
-                  <p className="mt-2.5 text-[14px] leading-[1.65] text-slate">{a.excerpt}</p>
-                  <Link
-                    to={`/blog/${a.id}`}
-                    className="mt-auto inline-flex items-center gap-2 pt-5 text-left text-[14px] font-bold text-pine transition-colors hover:text-pine-dark"
-                  >
-                    Read Article
-                    <IcArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                  </Link>
-                </div>
-              </article>
-            </Reveal>
-          ))}
+          {articles.map((a, i) => {
+            const readingTime = getBlogReadingTime(a.body);
+            return (
+              <Reveal key={a.id} delay={i * 120}>
+                <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-soft transition-all duration-300 hover:-translate-y-2 hover:shadow-lift">
+                  <div className="relative h-48 overflow-hidden">
+                    <LazyImage
+                      src={a.cover}
+                      alt=""
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                    />
+                    <span className="absolute left-4 top-4 rounded-full bg-gold px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-wide text-pine">
+                      {a.tag}
+                    </span>
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-slate">
+                      {a.date} · {readingTime}
+                    </p>
+                    <h3 className="mt-2 font-display text-[20px] font-bold leading-snug text-ink">{a.title}</h3>
+                    <p className="mt-2.5 text-[14px] leading-[1.65] text-slate">{a.excerpt}</p>
+                    <Link
+                      to={`/blog/${a.id}`}
+                      className="mt-auto inline-flex items-center gap-2 pt-5 text-left text-[14px] font-bold text-pine transition-colors hover:text-pine-dark"
+                    >
+                      Read Article
+                      <IcArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </Link>
+                  </div>
+                </article>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
 

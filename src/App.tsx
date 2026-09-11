@@ -7,8 +7,11 @@ import { PageTransition } from "./components/PageTransition";
 import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 import { CookieConsent } from "./components/CookieConsent";
 import { CursorEffect } from "./components/CursorEffect";
+import { ScrollProgress } from "./components/ScrollProgress";
 import { ContentProvider } from "./store";
 import { ThemeProvider } from "./ThemeContext";
+import { usePortfolioShortcuts } from "./hooks/useKeyboardShortcuts";
+import { useBackButtonHandler } from "./hooks/useBackButton";
 import { 
   generateOrganizationSchema, 
   generatePersonSchema, 
@@ -132,8 +135,12 @@ function PageLoader() {
 
 function Shell() {
   const { pathname } = useLocation();
+  usePortfolioShortcuts();
+  useBackButtonHandler();
+  
   return (
     <div className="min-h-screen bg-white font-body text-ink antialiased">
+      <ScrollProgress />
       <Navbar />
       <main id="main" tabIndex={-1} className="outline-none">
         <AnimatePresence mode="wait">

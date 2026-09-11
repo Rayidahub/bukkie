@@ -11,6 +11,7 @@ The logout button is positioned in the admin toolbar alongside other action butt
 - Copy JSON
 - Reset
 - **Logout** (new)
+# ew
 
 ### Functionality
 When clicked, the logout button:

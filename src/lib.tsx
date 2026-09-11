@@ -356,3 +356,92 @@ export const IcMoon = ({ className = "h-5 w-5" }: IconProps) => (
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
   </svg>
 );
+
+export const IcBold = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className} strokeWidth={2.5}>
+    <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
+    <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
+  </svg>
+);
+
+export const IcItalic = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}>
+    <line x1="19" y1="4" x2="10" y2="4" />
+    <line x1="14" y1="20" x2="5" y2="20" />
+    <line x1="15" y1="4" x2="9" y2="20" />
+  </svg>
+);
+
+export const IcList = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}>
+    <line x1="8" y1="6" x2="21" y2="6" />
+    <line x1="8" y1="12" x2="21" y2="12" />
+    <line x1="8" y1="18" x2="21" y2="18" />
+    <line x1="3" y1="6" x2="3.01" y2="6" />
+    <line x1="3" y1="12" x2="3.01" y2="12" />
+    <line x1="3" y1="18" x2="3.01" y2="18" />
+  </svg>
+);
+
+export const IcListOrdered = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}>
+    <line x1="10" y1="6" x2="21" y2="6" />
+    <line x1="10" y1="12" x2="21" y2="12" />
+    <line x1="10" y1="18" x2="21" y2="18" />
+    <path d="M4 6h1v4" />
+    <path d="M4 10h2" />
+    <path d="M6 18H4c0-1 2-2 2-3s-1-.5-2-1" />
+  </svg>
+);
+
+export const IcLink = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+  </svg>
+);
+
+export const IcHeading = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M6 4v16" />
+    <path d="M18 4v16" />
+    <path d="M6 12h12" />
+  </svg>
+);
+
+export const IcQuoteBlock = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
+    <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" />
+  </svg>
+);
+
+export const IcCode = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}>
+    <polyline points="16 18 22 12 16 6" />
+    <polyline points="8 6 2 12 8 18" />
+  </svg>
+);
+
+export const IcChevronLeft = ({ className = "h-5 w-5" }: IconProps) => (
+  <svg {...base} className={className}>
+    <polyline points="15 18 9 12 15 6" />
+  </svg>
+);
+
+export const IcChevronRight = ({ className = "h-5 w-5" }: IconProps) => (
+  <svg {...base} className={className}>
+    <polyline points="9 18 15 12 9 6" />
+  </svg>
+);
+
+export const IcGripVertical = ({ className = "h-5 w-5" }: IconProps) => (
+  <svg {...base} className={className}>
+    <circle cx="9" cy="5" r="1" />
+    <circle cx="9" cy="12" r="1" />
+    <circle cx="9" cy="19" r="1" />
+    <circle cx="15" cy="5" r="1" />
+    <circle cx="15" cy="12" r="1" />
+    <circle cx="15" cy="19" r="1" />
+  </svg>
+);

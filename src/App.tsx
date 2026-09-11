@@ -1,7 +1,9 @@
 import { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import { Footer, Navbar } from "./components/chrome";
 import { WhatsAppButton } from "./components/WhatsAppButton";
+import { PageTransition } from "./components/PageTransition";
 import { ContentProvider } from "./store";
 import { ThemeProvider } from "./ThemeContext";
 
@@ -11,6 +13,7 @@ const ServicesPage = lazy(() => import("./pages").then(module => ({ default: mod
 const AboutPage = lazy(() => import("./pages").then(module => ({ default: module.AboutPage })));
 const ProjectsPage = lazy(() => import("./pages").then(module => ({ default: module.ProjectsPage })));
 const BlogPage = lazy(() => import("./pages").then(module => ({ default: module.BlogPage })));
+const BlogPostPage = lazy(() => import("./pages").then(module => ({ default: module.BlogPostPage })));
 const TestimonialsPage = lazy(() => import("./pages").then(module => ({ default: module.TestimonialsPage })));
 const ContactPage = lazy(() => import("./pages").then(module => ({ default: module.ContactPage })));
 const AdminPage = lazy(() => import("./pages").then(module => ({ default: module.AdminPage })));
@@ -106,21 +109,25 @@ function Shell() {
   return (
     <div className="min-h-screen bg-white font-body text-ink antialiased">
       <Navbar />
-      {/* key remounts per route → subtle page-transition fade */}
-      <main id="main" tabIndex={-1} key={pathname} className="animate-fade-in outline-none">
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/testimonials" element={<TestimonialsPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+      <main id="main" tabIndex={-1} className="outline-none">
+        <AnimatePresence mode="wait">
+          <Suspense fallback={<PageLoader />}>
+            <PageTransition>
+              <Routes location={location} key={pathname}>
+                <Route path="/" element={<Home />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/projects" element={<ProjectsPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/:id" element={<BlogPostPage />} />
+                <Route path="/testimonials" element={<TestimonialsPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </PageTransition>
+          </Suspense>
+        </AnimatePresence>
       </main>
       <Footer />
       <WhatsAppButton />

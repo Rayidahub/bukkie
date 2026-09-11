@@ -265,13 +265,13 @@ export function Insights({ showHead = true }: { showHead?: boolean }) {
                   </p>
                   <h3 className="mt-2 font-display text-[20px] font-bold leading-snug text-ink">{a.title}</h3>
                   <p className="mt-2.5 text-[14px] leading-[1.65] text-slate">{a.excerpt}</p>
-                  <button
-                    onClick={() => setOpenId(a.id)}
+                  <Link
+                    to={`/blog/${a.id}`}
                     className="mt-auto inline-flex items-center gap-2 pt-5 text-left text-[14px] font-bold text-pine transition-colors hover:text-pine-dark"
                   >
                     Read Article
                     <IcArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                  </button>
+                  </Link>
                 </div>
               </article>
             </Reveal>

@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { AboutSection, SectionHead, ServicesSection } from "./components/about";
 import { ExperienceSection } from "./components/career";
 import { CtaBanner, Contact, Insights, Philosophy, Testimonials } from "./components/closing";
 import { Hero, Ticker } from "./components/hero";
 import { FeaturedProjects, Gallery, ToolsSection } from "./components/work";
+import { RichTextEditor } from "./components/RichTextEditor";
+import { TestimonialCarousel } from "./components/TestimonialCarousel";
+import { RelatedPosts } from "./components/RelatedPosts";
+import { DraggableList } from "./components/DraggableList";
 import {
   CATEGORIES,
   IMG,
@@ -449,9 +453,83 @@ export function BlogPage() {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Blog Post Detail Page                                              */
+/* ------------------------------------------------------------------ */
+export function BlogPostPage() {
+  const { articles } = useContent();
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  
+  const post = articles.find(a => a.id === id);
+  
+  if (!post) {
+    return (
+      <section className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="font-display text-3xl font-bold text-ink mb-4">Post not found</h2>
+          <p className="text-slate mb-6">The blog post you're looking for doesn't exist.</p>
+          <button
+            onClick={() => navigate('/blog')}
+            className="btn btn-pine"
+          >
+            Back to Blog
+          </button>
+        </div>
+      </section>
+    );
+  }
+  
+  return (
+    <>
+      <PageHeader
+        crumb={`Blog / ${post.tag}`}
+        title={[post.title]}
+        blurb={`${post.date} · ${post.read}`}
+      />
+      
+      <article className="relative bg-white py-16 md:py-20">
+        <div className="container-x max-w-4xl">
+          {/* Cover Image */}
+          {post.cover && (
+            <div className="mb-12 aspect-video overflow-hidden rounded-2xl">
+              <img
+                src={post.cover}
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+          
+          {/* Article Content */}
+          <div className="prose prose-lg max-w-none">
+            <div 
+              className="text-ink leading-relaxed"
+              dangerouslySetInnerHTML={{ 
+                __html: post.body.map(p => `<p>${p}</p>`).join('')
+              }}
+            />
+          </div>
+          
+          {/* Related Posts */}
+          <RelatedPosts currentPost={post} allPosts={articles} maxPosts={3} />
+        </div>
+      </article>
+      
+      <section className="relative bg-mist py-20 md:py-24">
+        <div className="container-x">
+          <CtaBanner />
+        </div>
+      </section>
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /*  Testimonials page                                                  */
 /* ------------------------------------------------------------------ */
 export function TestimonialsPage() {
+  const { testimonials } = useContent();
+  
   return (
     <>
       <PageHeader
@@ -464,7 +542,14 @@ export function TestimonialsPage() {
         ]}
         blurb="Feedback from the organizations behind the campaigns, newsletters, and outreach materials in this portfolio."
       />
-      <Testimonials showHead={false} />
+      
+      {/* Auto-sliding testimonial carousel */}
+      <section className="relative bg-white py-20 md:py-24">
+        <div className="container-x">
+          <TestimonialCarousel testimonials={testimonials} autoPlay={true} interval={5000} />
+        </div>
+      </section>
+      
       <OrgSection />
       <section className="relative bg-mist py-20 md:py-24">
         <div className="container-x">
@@ -777,8 +862,22 @@ function ProjectEditor({ initial, onSave, onClose }: { initial: GalleryItem; onS
 function ArticleEditor({ initial, onSave, onClose }: { initial: Insight; onSave: (a: Insight) => void; onClose: () => void }) {
   const [d, setD] = useState(initial);
   const set = (patch: Partial<Insight>) => setD((v) => ({ ...v, ...patch }));
+  
+  // Convert body array to HTML string for rich text editor
+  const bodyToHtml = (body: string[]) => {
+    return body.map(paragraph => `<p>${paragraph}</p>`).join('');
+  };
+  
+  // Convert HTML string back to body array
+  const htmlToBody = (html: string): string[] => {
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    const paragraphs = Array.from(temp.querySelectorAll('p')).map(p => p.textContent || '');
+    return paragraphs.filter(p => p.trim());
+  };
+  
   return (
-    <EditorShell title={initial.title ? "Edit Article" : "New Article"} subtitle="Blank lines in the body create new paragraphs." onClose={onClose} onSave={() => onSave(d)}>
+    <EditorShell title={initial.title ? "Edit Article" : "New Article"} subtitle="Use the rich text editor to format your content." onClose={onClose} onSave={() => onSave(d)}>
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField label="Tag / category" value={d.tag} onChange={(v) => set({ tag: v })} />
         <TextField label="Date" value={d.date} onChange={(v) => set({ date: v })} placeholder="e.g. Feb 2026" />
@@ -789,7 +888,16 @@ function ArticleEditor({ initial, onSave, onClose }: { initial: Insight; onSave:
         <TextField label="Read time" value={d.read} onChange={(v) => set({ read: v })} placeholder="4 min read" />
         <ImageField label="Cover image URL" value={d.cover} onChange={(v) => set({ cover: v })} />
       </div>
-      <AreaField label="Body" value={d.body.join("\n\n")} onChange={(v) => set({ body: v.split(/\n{2,}/).map((t) => t.trim()).filter(Boolean) })} rows={8} />
+      <div>
+        <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate">
+          Body (Rich Text Editor)
+        </label>
+        <RichTextEditor
+          value={bodyToHtml(d.body)}
+          onChange={(html) => set({ body: htmlToBody(html) })}
+          placeholder="Start writing your article..."
+        />
+      </div>
     </EditorShell>
   );
 }

@@ -13,6 +13,7 @@ const ServicesPage = lazy(() => import("./pages").then(module => ({ default: mod
 const AboutPage = lazy(() => import("./pages").then(module => ({ default: module.AboutPage })));
 const ProjectsPage = lazy(() => import("./pages").then(module => ({ default: module.ProjectsPage })));
 const BlogPage = lazy(() => import("./pages").then(module => ({ default: module.BlogPage })));
+const BlogPostPage = lazy(() => import("./pages").then(module => ({ default: module.BlogPostPage })));
 const TestimonialsPage = lazy(() => import("./pages").then(module => ({ default: module.TestimonialsPage })));
 const ContactPage = lazy(() => import("./pages").then(module => ({ default: module.ContactPage })));
 const AdminPage = lazy(() => import("./pages").then(module => ({ default: module.AdminPage })));
@@ -118,6 +119,7 @@ function Shell() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/projects" element={<ProjectsPage />} />
                 <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/:id" element={<BlogPostPage />} />
                 <Route path="/testimonials" element={<TestimonialsPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/admin" element={<AdminPage />} />

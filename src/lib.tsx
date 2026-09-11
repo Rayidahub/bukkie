@@ -445,3 +445,19 @@ export const IcGripVertical = ({ className = "h-5 w-5" }: IconProps) => (
     <circle cx="15" cy="19" r="1" />
   </svg>
 );
+
+export const IcZoomIn = ({ className = "h-5 w-5" }: IconProps) => (
+  <svg {...base} className={className}>
+    <circle cx="11" cy="11" r="8" />
+    <path d="M21 21l-4.35-4.35" />
+    <path d="M11 8v6M8 11h6" />
+  </svg>
+);
+
+export const IcZoomOut = ({ className = "h-5 w-5" }: IconProps) => (
+  <svg {...base} className={className}>
+    <circle cx="11" cy="11" r="8" />
+    <path d="M21 21l-4.35-4.35" />
+    <path d="M8 11h6" />
+  </svg>
+);

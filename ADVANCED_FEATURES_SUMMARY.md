@@ -13,7 +13,7 @@ This document summarizes the implementation of 5 advanced features for the portf
 ### Component: `RichTextEditor.tsx`
 **Location:** `src/components/RichTextEditor.tsx`
 
-**Features:**
+**Feature:**
 - WYSIWYG (What You See Is What You Get) editor
 - Toolbar with formatting options:
   - Bold

@@ -13,6 +13,9 @@ import {
   Reveal,
 } from "../lib";
 import { LazyImage } from "./LazyImage";
+import { ParticleBackground } from "./ParticleBackground";
+import { TextReveal } from "./TextReveal";
+import { MagneticButton } from "./MagneticButton";
 
 /* ------------------------------------------------------------------ */
 /*  Category ticker (gold band by default)                             */
@@ -102,24 +105,34 @@ function HeroButton({
   ) : (
     <IcArrowUpRight className="h-4 w-4" />
   );
+  
+  const buttonContent = (
+    <>
+      {label}
+      {icon}
+    </>
+  );
+  
   if (link.startsWith("/") && !link.startsWith("//")) {
     return (
-      <Link to={link} className={cls}>
-        {label}
-        {icon}
-      </Link>
+      <MagneticButton strength={0.2}>
+        <Link to={link} className={cls}>
+          {buttonContent}
+        </Link>
+      </MagneticButton>
     );
   }
   const external = /^https?:/i.test(link);
   return (
-    <a
-      href={link}
-      className={cls}
-      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-    >
-      {label}
-      {icon}
-    </a>
+    <MagneticButton strength={0.2}>
+      <a
+        href={link}
+        className={cls}
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      >
+        {buttonContent}
+      </a>
+    </MagneticButton>
   );
 }
 
@@ -128,6 +141,9 @@ export function Hero() {
   const { hero } = useContent();
   return (
     <section id="home" className="relative overflow-hidden bg-white">
+      {/* Particle background */}
+      <ParticleBackground particleCount={30} particleColor="#f7b900" speed={0.3} />
+      
       <div aria-hidden className="dots-bg pointer-events-none absolute left-0 top-24 h-64 w-64 opacity-60" />
       <div aria-hidden className="pointer-events-none absolute -right-28 -top-28 h-[420px] w-[420px] rounded-full border border-line" />
       <div aria-hidden className="pointer-events-none absolute -right-14 -top-14 h-[420px] w-[420px] rounded-full border border-gold/30" />
@@ -140,31 +156,33 @@ export function Hero() {
           </Reveal>
 
           <h1 className="mt-6 font-display text-[clamp(2.6rem,6vw,4.4rem)] font-black leading-[1.02] tracking-[-0.02em] text-ink">
-            <MaskLines
-              lines={[
-                <>{hero.greeting}</>,
-                <>{hero.line2}</>,
-                <>
-                  <span className="relative inline-block italic text-pine">
-                    {hero.highlight}
-                    <svg
-                      viewBox="0 0 220 12"
-                      preserveAspectRatio="none"
-                      className="absolute -bottom-1 left-0 h-[0.18em] w-full"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M3 9c40-6 140-6 214-3"
-                        fill="none"
-                        stroke="var(--color-gold)"
-                        strokeWidth="6"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </span>
-                </>,
-              ]}
-            />
+            <TextReveal type="word" delay={0} stagger={100}>
+              {hero.greeting}
+            </TextReveal>
+            <br />
+            <TextReveal type="word" delay={300} stagger={100}>
+              {hero.line2}
+            </TextReveal>
+            <br />
+            <span className="relative inline-block italic text-pine">
+              <TextReveal type="word" delay={600} stagger={100}>
+                {hero.highlight}
+              </TextReveal>
+              <svg
+                viewBox="0 0 220 12"
+                preserveAspectRatio="none"
+                className="absolute -bottom-1 left-0 h-[0.18em] w-full"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3 9c40-6 140-6 214-3"
+                  fill="none"
+                  stroke="var(--color-gold)"
+                  strokeWidth="6"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
           </h1>
 
           <Reveal delay={300}>

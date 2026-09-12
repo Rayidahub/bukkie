@@ -249,7 +249,7 @@ function SocialIcon({ platform, className = "h-5 w-5" }: { platform: string; cla
 /* ------------------------------------------------------------------ */
 export function Footer() {
   const [showTop, setShowTop] = useState(false);
-  const { socialLinks } = useContent();
+  const { socialLinks, footer } = useContent();
   const activeLinks = socialLinks.filter((s) => s.url.trim());
 
   useEffect(() => {
@@ -269,9 +269,9 @@ export function Footer() {
         <div className="grid gap-8 md:grid-cols-2 md:items-center">
           <div>
             <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-gold">Newsletter</p>
-            <h3 className="font-display text-3xl font-bold">Stay in the loop</h3>
+            <h3 className="font-display text-3xl font-bold">{footer.newsletterTitle}</h3>
             <p className="mt-2 text-[15px] text-white/65">
-              Get updates on new projects, design insights, and creative tips. No spam, unsubscribe anytime.
+              {footer.newsletterDescription}
             </p>
           </div>
           <div className="md:max-w-md">
@@ -284,16 +284,14 @@ export function Footer() {
         <div className="md:col-span-5">
           <Logo light />
           <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-white/65">
-            Creative Graphics Designer & Digital Media Specialist — building
-            brands through visual storytelling, strategic communication, and
-            print that survives the real world.
+            {footer.brandStatement}
           </p>
           <p className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-white/15 px-4 py-2 text-[12.5px] font-semibold text-white/80">
             <span className="relative flex h-2 w-2">
               <span className="animate-pulse-soft absolute h-2 w-2 rounded-full bg-gold" />
               <span className="h-2 w-2 rounded-full bg-gold" />
             </span>
-            Open for projects — {CONTACT.location.split(",")[0]}, Lagos
+            {footer.availabilityText} — {CONTACT.location.split(",")[0]}, Lagos
           </p>
         </div>
 
@@ -370,12 +368,12 @@ export function Footer() {
 
           <p className="mt-7 text-xs font-bold uppercase tracking-[0.22em] text-gold">Specialties</p>
           <ul className="mt-4 flex flex-wrap gap-2">
-            {SERVICES.map((s) => (
+            {footer.specialties.map((specialty, index) => (
               <li
-                key={s.no}
+                key={index}
                 className="rounded-full border border-white/15 px-3.5 py-1.5 text-[12px] font-semibold text-white/70"
               >
-                {s.title.split(" & ")[0]}
+                {specialty}
               </li>
             ))}
           </ul>
@@ -385,16 +383,17 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="container-x flex flex-col items-center justify-between gap-4 py-6 text-[13px] text-white/50 sm:flex-row">
           <p>
-            © {new Date().getFullYear()} {CONTACT.name}. All rights reserved.
+            © {new Date().getFullYear()} {CONTACT.name}. {footer.copyrightText}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link to="/privacy-policy" className="transition-colors hover:text-gold">
-              Privacy Policy
-            </Link>
-            <span className="text-white/30">•</span>
-            <Link to="/terms-of-service" className="transition-colors hover:text-gold">
-              Terms of Service
-            </Link>
+            {footer.legalLinks.map((link, index) => (
+              <div key={index} className="flex items-center gap-4">
+                {index > 0 && <span className="text-white/30">•</span>}
+                <Link to={link.path} className="transition-colors hover:text-gold">
+                  {link.label}
+                </Link>
+              </div>
+            ))}
             <span className="text-white/30">•</span>
             <p className="flex items-center gap-2">
               Designed with <IcSpark className="h-3 w-3 text-gold" /> in Lagos, Nigeria

@@ -869,7 +869,12 @@ function ProjectEditor({ initial, onSave, onClose }: { initial: GalleryItem; onS
         <SelectField label="Category" value={d.cat} onChange={(v) => set({ cat: v as GalleryCat })} options={CATEGORIES.filter((c) => c !== "All")} />
         <TextField label="Year" value={d.year} onChange={(v) => set({ year: v })} />
       </div>
-      <ImageField label="Cover image URL" value={d.img} onChange={(v) => set({ img: v })} />
+      <ImageUpload
+        label="Cover image"
+        value={d.img}
+        onPick={(v) => set({ img: v })}
+        pathFallback="./img/placeholder.jpeg"
+      />
       <TextField label="Project type" value={d.study.type} onChange={(v) => setStudy({ type: v })} placeholder="e.g. Social media campaign" />
       <AreaField label="Objective" value={d.study.objective} onChange={(v) => setStudy({ objective: v })} />
       <AreaField
@@ -916,7 +921,12 @@ function ArticleEditor({ initial, onSave, onClose }: { initial: Insight; onSave:
       <AreaField label="Excerpt" value={d.excerpt} onChange={(v) => set({ excerpt: v })} rows={2} />
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField label="Read time" value={d.read} onChange={(v) => set({ read: v })} placeholder="4 min read" />
-        <ImageField label="Cover image URL" value={d.cover} onChange={(v) => set({ cover: v })} />
+        <ImageUpload
+          label="Cover image"
+          value={d.cover}
+          onPick={(v) => set({ cover: v })}
+          pathFallback="./img/placeholder.jpeg"
+        />
       </div>
       <div>
         <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate">

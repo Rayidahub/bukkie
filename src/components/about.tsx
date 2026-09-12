@@ -76,7 +76,36 @@ function ServiceIcon({ icon, className = "h-7 w-7" }: { icon: string; className?
 }
 
 export function ServicesSection({ showHead = true }: { showHead?: boolean }) {
-  const { services } = useContent();
+  const { services, loading } = useContent();
+
+  // Show skeleton while loading
+  if (loading) {
+    return (
+      <section className="relative bg-mist py-20 md:py-28">
+        <div className="container-x">
+          {showHead && (
+            <div className="mb-12">
+              <div className="h-8 w-48 bg-white rounded animate-pulse mb-4" />
+              <div className="h-12 w-96 bg-white rounded animate-pulse" />
+            </div>
+          )}
+          <div className="grid gap-6 md:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="animate-pulse bg-white rounded-2xl p-7">
+                <div className="h-14 w-14 bg-mist rounded-2xl mb-6" />
+                <div className="h-4 w-24 bg-mist rounded mb-2" />
+                <div className="h-6 w-3/4 bg-mist rounded mb-3" />
+                <div className="h-3 w-full bg-mist rounded mb-2" />
+                <div className="h-3 w-full bg-mist rounded mb-2" />
+                <div className="h-3 w-2/3 bg-mist rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="services" aria-label="Services" className="relative bg-mist py-20 md:py-28">
       <div className="container-x">

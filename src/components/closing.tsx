@@ -102,7 +102,41 @@ function initials(name: string) {
 }
 
 export function Testimonials({ showHead = true }: { showHead?: boolean }) {
-  const { testimonials } = useContent();
+  const { testimonials, loading } = useContent();
+
+  // Show skeleton while loading
+  if (loading) {
+    return (
+      <section className="relative bg-pine py-20 md:py-28">
+        <div className="container-x">
+          {showHead && (
+            <div className="mb-12">
+              <div className="h-8 w-48 bg-white/10 rounded animate-pulse mb-4" />
+              <div className="h-12 w-96 bg-white/10 rounded animate-pulse" />
+            </div>
+          )}
+          <div className="grid gap-6 md:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="animate-pulse bg-white/5 rounded-2xl p-7">
+                <div className="h-6 w-6 bg-white/10 rounded mb-4" />
+                <div className="h-3 w-full bg-white/10 rounded mb-2" />
+                <div className="h-3 w-full bg-white/10 rounded mb-2" />
+                <div className="h-3 w-2/3 bg-white/10 rounded mb-6" />
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 bg-white/10 rounded-full" />
+                  <div className="flex-1">
+                    <div className="h-4 w-24 bg-white/10 rounded mb-2" />
+                    <div className="h-3 w-32 bg-white/10 rounded" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="testimonials" aria-label="Testimonials" className="relative overflow-hidden bg-pine py-20 text-white md:py-28">
       <div aria-hidden className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full border border-white/10" />
@@ -225,9 +259,35 @@ function ArticleModal({ article, onClose }: { article: Insight; onClose: () => v
 }
 
 export function Insights({ showHead = true }: { showHead?: boolean }) {
-  const { articles } = useContent();
+  const { articles, loading } = useContent();
   const [openId, setOpenId] = useState<string | null>(null);
   const article = articles.find((a) => a.id === openId) ?? null;
+
+  // Show skeleton while loading
+  if (loading) {
+    return (
+      <section className="relative bg-mist py-20 md:py-28">
+        <div className="container-x">
+          {showHead && (
+            <div className="mb-12">
+              <div className="h-8 w-48 bg-white rounded animate-pulse mb-4" />
+              <div className="h-12 w-96 bg-white rounded animate-pulse" />
+            </div>
+          )}
+          <div className="grid gap-7 md:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="animate-pulse bg-white rounded-2xl p-6">
+                <div className="h-48 bg-mist rounded mb-4" />
+                <div className="h-4 w-3/4 bg-mist rounded mb-2" />
+                <div className="h-3 w-full bg-mist rounded mb-2" />
+                <div className="h-3 w-2/3 bg-mist rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="insights" aria-label="Blog and insights" className="relative bg-mist py-20 md:py-28">

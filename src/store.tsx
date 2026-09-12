@@ -113,10 +113,10 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<SiteContent>({
     hero: DEFAULT_HERO,
     about: DEFAULT_ABOUT,
-    services: DEFAULT_SERVICES,
-    projects: DEFAULT_PROJECTS,
-    articles: DEFAULT_ARTICLES,
-    testimonials: DEFAULT_TESTIMONIALS,
+    services: [], // Start empty to prevent flash
+    projects: [], // Start empty to prevent flash
+    articles: [], // Start empty to prevent flash
+    testimonials: [], // Start empty to prevent flash
     socialLinks: DEFAULT_SOCIAL_LINKS,
   });
   const [loading, setLoading] = useState(true);

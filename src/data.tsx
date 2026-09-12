@@ -532,6 +532,39 @@ export const SOCIAL_LINKS: SocialLink[] = [
   { platform: "whatsapp", url: "", label: "WhatsApp" },
 ];
 
+/* ---------------- footer -------------------------------------- */
+export type FooterContent = {
+  brandStatement: string;
+  availabilityText: string;
+  newsletterTitle: string;
+  newsletterDescription: string;
+  copyrightText: string;
+  specialties: string[];
+  legalLinks: { label: string; path: string }[];
+};
+
+export const FOOTER: FooterContent = {
+  brandStatement:
+    "Creative Graphics Designer & Digital Media Specialist — building brands through visual storytelling, strategic communication, and print that survives the real world.",
+  availabilityText: "Open for projects",
+  newsletterTitle: "Stay in the loop",
+  newsletterDescription:
+    "Get updates on new projects, design insights, and creative tips. No spam, unsubscribe anytime.",
+  copyrightText: "All rights reserved.",
+  specialties: [
+    "Graphic Design",
+    "Digital Media",
+    "Branding",
+    "Social Media",
+    "Print Design",
+    "Church Design",
+  ],
+  legalLinks: [
+    { label: "Privacy Policy", path: "/privacy-policy" },
+    { label: "Terms of Service", path: "/terms-of-service" },
+  ],
+};
+
 /* ---------------- testimonials -------------------------------------- */
 export const TESTIMONIALS: {
   quote: string;

@@ -8,12 +8,14 @@ import {
   HERO as DEFAULT_HERO,
   ABOUT as DEFAULT_ABOUT,
   SOCIAL_LINKS as DEFAULT_SOCIAL_LINKS,
+  FOOTER as DEFAULT_FOOTER,
   type Service,
   type GalleryItem,
   type Insight,
   type HeroContent,
   type AboutContent,
-  type SocialLink
+  type SocialLink,
+  type FooterContent
 } from './data';
 
 export type Testimonial = (typeof DEFAULT_TESTIMONIALS)[number];
@@ -26,6 +28,7 @@ export type SiteContent = {
   articles: Insight[];
   testimonials: Testimonial[];
   socialLinks: SocialLink[];
+  footer: FooterContent;
 };
 
 type ContentCtx = SiteContent & {
@@ -37,6 +40,7 @@ type ContentCtx = SiteContent & {
   setArticles: (v: Insight[]) => Promise<void>;
   setTestimonials: (v: Testimonial[]) => Promise<void>;
   setSocialLinks: (v: SocialLink[]) => Promise<void>;
+  setFooter: (v: FooterContent) => Promise<void>;
   reset: () => Promise<void>;
 };
 
@@ -118,6 +122,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     articles: [], // Start empty to prevent flash
     testimonials: [], // Start empty to prevent flash
     socialLinks: DEFAULT_SOCIAL_LINKS,
+    footer: DEFAULT_FOOTER,
   });
   const [loading, setLoading] = useState(true);
 
@@ -396,6 +401,18 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     if (error) console.error('Error updating social links:', error);
   };
 
+  // Update footer content
+  const setFooter = async (footer: FooterContent) => {
+    setContent(prev => ({ ...prev, footer }));
+    
+    // Footer is stored in localStorage for now (no Supabase table needed)
+    try {
+      localStorage.setItem('portfolio_footer', JSON.stringify(footer));
+    } catch (error) {
+      console.error('Error saving footer:', error);
+    }
+  };
+
   // Reset to defaults
   const reset = async () => {
     const defaults: SiteContent = {
@@ -406,6 +423,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       articles: DEFAULT_ARTICLES,
       testimonials: DEFAULT_TESTIMONIALS,
       socialLinks: DEFAULT_SOCIAL_LINKS,
+      footer: DEFAULT_FOOTER,
     };
     
     setContent(defaults);
@@ -418,6 +436,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     await setArticles(defaults.articles);
     await setTestimonials(defaults.testimonials);
     await setSocialLinks(defaults.socialLinks);
+    await setFooter(defaults.footer);
   };
 
   const api: ContentCtx = {
@@ -430,6 +449,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     setArticles,
     setTestimonials,
     setSocialLinks,
+    setFooter,
     reset,
   };
 

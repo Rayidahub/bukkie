@@ -1462,6 +1462,7 @@ const TABS = [
   { key: "articles", label: "Blog Posts" },
   { key: "testimonials", label: "Testimonials" },
   { key: "social", label: "Social Links" },
+  { key: "footer", label: "Footer" },
 ] as const;
 type TabKey = (typeof TABS)[number]["key"];
 
@@ -1562,6 +1563,144 @@ function SocialLinksEditor() {
   );
 }
 
+/* ---------- footer editor ---------- */
+function FooterEditor() {
+  const store = useContent();
+  const [d, setD] = useState(store.footer);
+  const [toast, setToast] = useState(false);
+
+  const set = (patch: Partial<typeof d>) => setD((v) => ({ ...v, ...patch }));
+
+  const save = async () => {
+    await store.setFooter(d);
+    setToast(true);
+    setTimeout(() => setToast(false), 3000);
+  };
+
+  const addSpecialty = () => {
+    set({ specialties: [...d.specialties, ""] });
+  };
+
+  const updateSpecialty = (index: number, value: string) => {
+    const updated = [...d.specialties];
+    updated[index] = value;
+    set({ specialties: updated });
+  };
+
+  const removeSpecialty = (index: number) => {
+    set({ specialties: d.specialties.filter((_, i) => i !== index) });
+  };
+
+  const addLegalLink = () => {
+    set({ legalLinks: [...d.legalLinks, { label: "", path: "" }] });
+  };
+
+  const updateLegalLink = (index: number, field: "label" | "path", value: string) => {
+    const updated = [...d.legalLinks];
+    updated[index] = { ...updated[index], [field]: value };
+    set({ legalLinks: updated });
+  };
+
+  const removeLegalLink = (index: number) => {
+    set({ legalLinks: d.legalLinks.filter((_, i) => i !== index) });
+  };
+
+  return (
+    <div className="mt-8 space-y-6">
+      <div className="card p-6">
+        <h3 className="mb-4 font-display text-xl font-bold text-ink">Newsletter Section</h3>
+        <div className="space-y-4">
+          <TextField label="Newsletter Title" value={d.newsletterTitle} onChange={(v) => set({ newsletterTitle: v })} />
+          <AreaField label="Newsletter Description" value={d.newsletterDescription} onChange={(v) => set({ newsletterDescription: v })} rows={3} />
+        </div>
+      </div>
+
+      <div className="card p-6">
+        <h3 className="mb-4 font-display text-xl font-bold text-ink">Brand Information</h3>
+        <div className="space-y-4">
+          <AreaField label="Brand Statement" value={d.brandStatement} onChange={(v) => set({ brandStatement: v })} rows={3} />
+          <TextField label="Availability Text" value={d.availabilityText} onChange={(v) => set({ availabilityText: v })} />
+        </div>
+      </div>
+
+      <div className="card p-6">
+        <h3 className="mb-4 font-display text-xl font-bold text-ink">Specialties</h3>
+        <div className="space-y-3">
+          {d.specialties.map((specialty, index) => (
+            <div key={index} className="flex items-center gap-3">
+              <input
+                type="text"
+                value={specialty}
+                onChange={(e) => updateSpecialty(index, e.target.value)}
+                placeholder="Specialty name"
+                className="input-base flex-1"
+              />
+              <button
+                onClick={() => removeSpecialty(index)}
+                className="btn btn-outline !px-3 !py-2 text-red-600 hover:bg-red-50"
+              >
+                <IcClose className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+          <button onClick={addSpecialty} className="btn btn-outline w-full">
+            <IcSpark className="h-4 w-4" />
+            Add Specialty
+          </button>
+        </div>
+      </div>
+
+      <div className="card p-6">
+        <h3 className="mb-4 font-display text-xl font-bold text-ink">Legal Links</h3>
+        <div className="space-y-3">
+          {d.legalLinks.map((link, index) => (
+            <div key={index} className="flex items-center gap-3">
+              <input
+                type="text"
+                value={link.label}
+                onChange={(e) => updateLegalLink(index, "label", e.target.value)}
+                placeholder="Link label"
+                className="input-base flex-1"
+              />
+              <input
+                type="text"
+                value={link.path}
+                onChange={(e) => updateLegalLink(index, "path", e.target.value)}
+                placeholder="/path"
+                className="input-base flex-1"
+              />
+              <button
+                onClick={() => removeLegalLink(index)}
+                className="btn btn-outline !px-3 !py-2 text-red-600 hover:bg-red-50"
+              >
+                <IcClose className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+          <button onClick={addLegalLink} className="btn btn-outline w-full">
+            <IcSpark className="h-4 w-4" />
+            Add Legal Link
+          </button>
+        </div>
+      </div>
+
+      <div className="card p-6">
+        <h3 className="mb-4 font-display text-xl font-bold text-ink">Copyright</h3>
+        <TextField label="Copyright Text" value={d.copyrightText} onChange={(v) => set({ copyrightText: v })} />
+      </div>
+
+      <div className="flex justify-end">
+        <button onClick={save} className="btn btn-pine">
+          <IcCheck className="h-4 w-4" />
+          Save Footer
+        </button>
+      </div>
+
+      <SavedToast show={toast}>Footer saved — live on the site</SavedToast>
+    </div>
+  );
+}
+
 export function AdminPage() {
   const [authed, setAuthed] = useState(() => {
     try {
@@ -1597,6 +1736,7 @@ export function AdminPage() {
     articles: store.articles.length,
     testimonials: store.testimonials.length,
     social: "✎",
+    footer: "✎",
   };
 
   const exportJson = () => {
@@ -1795,6 +1935,8 @@ export function AdminPage() {
           <AboutEditor />
         ) : tab === "social" ? (
           <SocialLinksEditor />
+        ) : tab === "footer" ? (
+          <FooterEditor />
         ) : (
         <div className="mt-8">
           <DraggableList

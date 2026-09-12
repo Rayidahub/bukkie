@@ -235,6 +235,9 @@ export const IcAlertCircle = ({ className = "h-4 w-4" }: IconProps) => (
 export const IcInfo = ({ className = "h-4 w-4" }: IconProps) => (
   <svg {...base} className={className}><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
 );
+export const IcUpload = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+);
 export const IcCheck = ({ className = "h-4 w-4" }: IconProps) => (
   <svg {...base} className={className}><path d="M4 12.5l5 5L20 6.5" /></svg>
 );

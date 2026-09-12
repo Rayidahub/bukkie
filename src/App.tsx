@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense } from "react";
+import { useEffect, lazy, Suspense, useState } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { Footer, Navbar } from "./components/chrome";
@@ -8,6 +8,9 @@ import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 import { CookieConsent } from "./components/CookieConsent";
 import { CursorEffect } from "./components/CursorEffect";
 import { ScrollProgress } from "./components/ScrollProgress";
+import { SearchModal, SearchButton } from "./components/SearchModal";
+import { ToastProvider } from "./components/Toast";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ContentProvider } from "./store";
 import { ThemeProvider } from "./ThemeContext";
 import { usePortfolioShortcuts } from "./hooks/useKeyboardShortcuts";
@@ -135,42 +138,63 @@ function PageLoader() {
 
 function Shell() {
   const { pathname } = useLocation();
+  const [searchOpen, setSearchOpen] = useState(false);
   usePortfolioShortcuts();
   useBackButtonHandler();
   
+  // Add keyboard shortcut for search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === '/' && !searchOpen) {
+        const target = e.target as HTMLElement;
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          setSearchOpen(true);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [searchOpen]);
+  
   return (
-    <div className="min-h-screen bg-white font-body text-ink antialiased">
-      <ScrollProgress />
-      <Navbar />
-      <main id="main" tabIndex={-1} className="outline-none">
-        <AnimatePresence mode="wait">
-          <Suspense fallback={<PageLoader />}>
-            <PageTransition>
-              <Routes location={location} key={pathname}>
-                <Route path="/" element={<Home />} />
-                <Route path="/services" element={<ServicesPage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/projects" element={<ProjectsPage />} />
-                <Route path="/blog" element={<BlogPage />} />
-                <Route path="/blog/:id" element={<BlogPostPage />} />
-                <Route path="/testimonials" element={<TestimonialsPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="/admin" element={<AdminPage />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-                <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-                <Route path="/visual-effects-demo" element={<VisualEffectsDemo />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </PageTransition>
-          </Suspense>
-        </AnimatePresence>
-      </main>
-      <Footer />
-      <WhatsAppButton />
-      <PWAInstallPrompt />
-      <CookieConsent />
-      <CursorEffect />
-    </div>
+    <ErrorBoundary>
+      <ToastProvider>
+        <div className="min-h-screen bg-white font-body text-ink antialiased">
+          <ScrollProgress />
+          <Navbar />
+          <main id="main" tabIndex={-1} className="outline-none">
+            <AnimatePresence mode="wait">
+              <Suspense fallback={<PageLoader />}>
+                <PageTransition>
+                  <Routes location={location} key={pathname}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/services" element={<ServicesPage />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/projects" element={<ProjectsPage />} />
+                    <Route path="/blog" element={<BlogPage />} />
+                    <Route path="/blog/:id" element={<BlogPostPage />} />
+                    <Route path="/testimonials" element={<TestimonialsPage />} />
+                    <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                    <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                    <Route path="/visual-effects-demo" element={<VisualEffectsDemo />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </PageTransition>
+              </Suspense>
+            </AnimatePresence>
+          </main>
+          <Footer />
+          <WhatsAppButton />
+          <PWAInstallPrompt />
+          <CookieConsent />
+          <CursorEffect />
+          <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+        </div>
+      </ToastProvider>
+    </ErrorBoundary>
   );
 }
 

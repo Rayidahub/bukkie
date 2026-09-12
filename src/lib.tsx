@@ -217,6 +217,24 @@ export const IcMenu = ({ className = "h-5 w-5" }: IconProps) => (
 export const IcClose = ({ className = "h-4 w-4" }: IconProps) => (
   <svg {...base} className={className}><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
 );
+export const IcSearch = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>
+);
+export const IcFilter = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" /></svg>
+);
+export const IcSortAsc = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}><path d="M12 5v14" /><path d="M5 12l7-7 7 7" /></svg>
+);
+export const IcSortDesc = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}><path d="M12 5v14" /><path d="M5 12l7 7 7-7" /></svg>
+);
+export const IcAlertCircle = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}><circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" /></svg>
+);
+export const IcInfo = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></svg>
+);
 export const IcCheck = ({ className = "h-4 w-4" }: IconProps) => (
   <svg {...base} className={className}><path d="M4 12.5l5 5L20 6.5" /></svg>
 );

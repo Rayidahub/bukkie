@@ -11,10 +11,15 @@ import { ScrollProgress } from "./components/ScrollProgress";
 import { SearchModal, SearchButton } from "./components/SearchModal";
 import { ToastProvider } from "./components/Toast";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { SocialProofPopup } from "./components/SocialProofPopup";
+import { ExitIntentNewsletter } from "./components/ExitIntentNewsletter";
+import { ChatbotWidget } from "./components/ChatbotWidget";
 import { ContentProvider } from "./store";
 import { ThemeProvider } from "./ThemeContext";
 import { usePortfolioShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useBackButtonHandler } from "./hooks/useBackButton";
+import { useReferralTracking } from "./utils/referralTracking";
+import { useHeatmapTracking } from "./utils/heatmapTracking";
 import { 
   generateOrganizationSchema, 
   generatePersonSchema, 
@@ -141,6 +146,8 @@ function Shell() {
   const [searchOpen, setSearchOpen] = useState(false);
   usePortfolioShortcuts();
   useBackButtonHandler();
+  useReferralTracking();
+  useHeatmapTracking();
   
   // Add keyboard shortcut for search
   useEffect(() => {
@@ -191,6 +198,9 @@ function Shell() {
           <PWAInstallPrompt />
           <CookieConsent />
           <CursorEffect />
+          <SocialProofPopup />
+          <ExitIntentNewsletter />
+          <ChatbotWidget />
           <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
         </div>
       </ToastProvider>

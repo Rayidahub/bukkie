@@ -12,7 +12,6 @@ import { SearchModal, SearchButton } from "./components/SearchModal";
 import { ToastProvider } from "./components/Toast";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { SocialProofPopup } from "./components/SocialProofPopup";
-import { ExitIntentNewsletter } from "./components/ExitIntentNewsletter";
 import { ChatbotWidget } from "./components/ChatbotWidget";
 import { ContentProvider } from "./store";
 import { ThemeProvider } from "./ThemeContext";
@@ -199,7 +198,6 @@ function Shell() {
           <CookieConsent />
           <CursorEffect />
           <SocialProofPopup />
-          <ExitIntentNewsletter />
           <ChatbotWidget />
           <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
         </div>

@@ -2,10 +2,7 @@ import { CONTACT } from "../data";
 import { IcWhatsApp } from "../lib";
 
 export function WhatsAppButton() {
-  // Format phone number for WhatsApp (remove + and spaces)
-  const phoneNumber = CONTACT.phone1.replace(/[\s+]/g, "");
-  const message = encodeURIComponent("Hello! I'm interested in your design services.");
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+  const whatsappUrl = "https://wa.link/r43m3e";
 
   return (
     <a

@@ -1463,6 +1463,7 @@ const TABS = [
   { key: "testimonials", label: "Testimonials" },
   { key: "social", label: "Social Links" },
   { key: "footer", label: "Footer" },
+  { key: "contact", label: "Contact Page" },
 ] as const;
 type TabKey = (typeof TABS)[number]["key"];
 
@@ -1701,6 +1702,93 @@ function FooterEditor() {
   );
 }
 
+/* ---------- contact editor ---------- */
+function ContactEditor() {
+  const store = useContent();
+  const [d, setD] = useState(store.contact);
+  const [toast, setToast] = useState(false);
+
+  const set = (patch: Partial<typeof d>) => setD((v) => ({ ...v, ...patch }));
+
+  const save = async () => {
+    await store.setContact(d);
+    setToast(true);
+    setTimeout(() => setToast(false), 3000);
+  };
+
+  const addService = () => {
+    set({ servicesOffered: [...d.servicesOffered, ""] });
+  };
+
+  const updateService = (index: number, value: string) => {
+    const updated = [...d.servicesOffered];
+    updated[index] = value;
+    set({ servicesOffered: updated });
+  };
+
+  const removeService = (index: number) => {
+    set({ servicesOffered: d.servicesOffered.filter((_, i) => i !== index) });
+  };
+
+  return (
+    <div className="mt-8 space-y-6">
+      <div className="card p-6">
+        <h3 className="mb-4 font-display text-xl font-bold text-ink">Contact Page Header</h3>
+        <div className="space-y-4">
+          <TextField label="Status Text" value={d.statusText} onChange={(v) => set({ statusText: v })} placeholder="e.g., Currently accepting projects" />
+          <TextField label="Title" value={d.title} onChange={(v) => set({ title: v })} placeholder="e.g., Direct line to the studio" />
+          <AreaField label="Response Time Text" value={d.responseTimeText} onChange={(v) => set({ responseTimeText: v })} rows={2} />
+        </div>
+      </div>
+
+      <div className="card p-6">
+        <h3 className="mb-4 font-display text-xl font-bold text-ink">Services Offered</h3>
+        <div className="space-y-3">
+          {d.servicesOffered.map((service, index) => (
+            <div key={index} className="flex items-center gap-3">
+              <input
+                type="text"
+                value={service}
+                onChange={(e) => updateService(index, e.target.value)}
+                placeholder="Service name"
+                className="input-base flex-1"
+              />
+              <button
+                onClick={() => removeService(index)}
+                className="btn btn-outline !px-3 !py-2 text-red-600 hover:bg-red-50"
+              >
+                <IcClose className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+          <button onClick={addService} className="btn btn-outline w-full">
+            <IcSpark className="h-4 w-4" />
+            Add Service
+          </button>
+        </div>
+      </div>
+
+      <div className="card p-6">
+        <h3 className="mb-4 font-display text-xl font-bold text-ink">CTA Banner</h3>
+        <div className="space-y-4">
+          <AreaField label="CTA Title" value={d.ctaTitle} onChange={(v) => set({ ctaTitle: v })} rows={2} />
+          <AreaField label="CTA Description" value={d.ctaDescription} onChange={(v) => set({ ctaDescription: v })} rows={3} />
+          <TextField label="CTA Button Text" value={d.ctaButtonText} onChange={(v) => set({ ctaButtonText: v })} />
+        </div>
+      </div>
+
+      <div className="flex justify-end">
+        <button onClick={save} className="btn btn-pine">
+          <IcCheck className="h-4 w-4" />
+          Save Contact Page
+        </button>
+      </div>
+
+      <SavedToast show={toast}>Contact page saved — live on the site</SavedToast>
+    </div>
+  );
+}
+
 export function AdminPage() {
   const [authed, setAuthed] = useState(() => {
     try {
@@ -1737,6 +1825,7 @@ export function AdminPage() {
     testimonials: store.testimonials.length,
     social: "✎",
     footer: "✎",
+    contact: "✎",
   };
 
   const exportJson = () => {
@@ -1937,6 +2026,8 @@ export function AdminPage() {
           <SocialLinksEditor />
         ) : tab === "footer" ? (
           <FooterEditor />
+        ) : tab === "contact" ? (
+          <ContactEditor />
         ) : (
         <div className="mt-8">
           <DraggableList

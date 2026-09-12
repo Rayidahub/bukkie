@@ -352,6 +352,8 @@ export function Insights({ showHead = true }: { showHead?: boolean }) {
 /*  CTA banner (reused across pages)                                   */
 /* ------------------------------------------------------------------ */
 export function CtaBanner() {
+  const { contact } = useContent();
+  
   return (
     <Reveal>
       <div className="relative overflow-hidden rounded-3xl bg-pine p-9 text-center text-white shadow-lift md:p-16">
@@ -360,16 +362,14 @@ export function CtaBanner() {
         <div aria-hidden className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full border border-gold/25" />
         <p className="eyebrow eyebrow-light justify-center">Let's Work Together</p>
         <h2 className="mx-auto mt-5 max-w-3xl font-display text-[clamp(2rem,4.6vw,3.6rem)] font-black leading-[1.06] tracking-[-0.015em]">
-          Have a project in mind? Let's build something{" "}
-          <span className="italic text-gold">meaningful together.</span>
+          {contact.ctaTitle}
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-[1.7] text-white/70">
-          From a single flyer to a full campaign system — tell me what you're
-          building and I'll tell you how design can carry it.
+          {contact.ctaDescription}
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <Link to="/contact" className="btn btn-gold">
-            Start a Project
+            {contact.ctaButtonText}
             <IcArrowUpRight className="h-4 w-4" />
           </Link>
           <a href={`mailto:${CONTACT.email}`} className="btn btn-outline-light">
@@ -385,16 +385,6 @@ export function CtaBanner() {
 /* ------------------------------------------------------------------ */
 /*  Contact                                                            */
 /* ------------------------------------------------------------------ */
-const SERVICES_OFFERED = [
-  "Graphic Design",
-  "Social Media Design",
-  "Digital Media",
-  "Branding",
-  "Marketing Design",
-  "Content Creation",
-  "Communications",
-  "Creative Support",
-];
 
 function CopyRow({
   icon,
@@ -449,6 +439,8 @@ function CopyRow({
 }
 
 export function Contact() {
+  const { contact } = useContent();
+  
   return (
     <section id="contact" aria-label="Contact" className="relative overflow-hidden bg-mist py-20 md:py-28">
       <div className="container-x">
@@ -460,9 +452,9 @@ export function Contact() {
                   <span className="animate-pulse-soft absolute h-2.5 w-2.5 rounded-full bg-gold" />
                   <span className="h-2.5 w-2.5 rounded-full bg-gold" />
                 </span>
-                Currently accepting projects
+                {contact.statusText}
               </p>
-              <h3 className="mt-3 font-display text-2xl font-black text-ink">Direct line to the studio</h3>
+              <h3 className="mt-3 font-display text-2xl font-black text-ink">{contact.title}</h3>
 
               <div className="mt-5">
                 <CopyRow icon={<IcMail className="h-5 w-5" />} label="Email" value={CONTACT.email} href={`mailto:${CONTACT.email}`} />
@@ -483,8 +475,8 @@ export function Contact() {
 
               <p className="mt-7 text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate">Available for</p>
               <ul className="mt-3.5 flex flex-wrap gap-2">
-                {SERVICES_OFFERED.map((s) => (
-                  <li key={s} className="chip cursor-default">
+                {contact.servicesOffered.map((s, index) => (
+                  <li key={index} className="chip cursor-default">
                     {s}
                   </li>
                 ))}
@@ -492,7 +484,7 @@ export function Contact() {
 
               <p className="mt-7 flex items-start gap-2.5 rounded-r-2xl border-l-4 border-gold bg-mist p-4 text-[13px] font-semibold leading-[1.6] text-slate">
                 <IcSpark className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                Response within 24 hours on weekdays — faster if it involves a printing deadline.
+                {contact.responseTimeText}
               </p>
             </div>
           </Reveal>

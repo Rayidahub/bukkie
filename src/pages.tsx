@@ -710,9 +710,6 @@ function AdminGate({ onUnlock }: { onUnlock: () => void }) {
             Unlock Studio
             <IcArrowRight className="h-4 w-4" />
           </button>
-          <p className="mt-4 text-center text-[12px] text-slate">
-            Hint for this demo: <span className="font-bold">bukkie2026</span>
-          </p>
         </div>
       </div>
     </section>

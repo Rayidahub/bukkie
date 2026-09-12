@@ -11,6 +11,7 @@ import { RichTextEditor } from "./components/RichTextEditor";
 import { TestimonialCarousel } from "./components/TestimonialCarousel";
 import { RelatedPosts } from "./components/RelatedPosts";
 import { DraggableList } from "./components/DraggableList";
+import { ProjectGalleryModal } from "./components/ProjectGalleryModal";
 import {
   CATEGORIES,
   IMG,
@@ -409,6 +410,8 @@ export function AboutPage() {
 /*  Projects page                                                      */
 /* ------------------------------------------------------------------ */
 export function ProjectsPage() {
+  const [galleryOpen, setGalleryOpen] = useState(false);
+
   return (
     <>
       <PageHeader
@@ -421,9 +424,38 @@ export function ProjectsPage() {
         ]}
         blurb="Campaigns, publications, brand systems, and print production — each with the story of why it was designed."
       />
+      
+      {/* Gallery Button */}
+      <section className="relative bg-white py-12 md:py-16">
+        <div className="container-x">
+          <div className="flex flex-col items-center justify-center text-center">
+            <button
+              onClick={() => setGalleryOpen(true)}
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pine to-pine-dark px-12 py-8 text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-pine/50"
+            >
+              <div className="relative z-10">
+                <div className="mb-3 flex items-center justify-center gap-3">
+                  <IcSpark className="h-6 w-6 text-gold transition-transform duration-300 group-hover:rotate-12" />
+                  <span className="font-display text-2xl font-bold md:text-3xl">
+                    View Full Gallery
+                  </span>
+                </div>
+                <p className="text-sm text-white/80">
+                  See all project images in one beautiful view
+                </p>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-gold/0 via-gold/10 to-gold/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            </button>
+          </div>
+        </div>
+      </section>
+
       <Gallery showHead={false} />
       <FeaturedProjects />
       <ToolsSection />
+
+      {/* Gallery Modal */}
+      <ProjectGalleryModal isOpen={galleryOpen} onClose={() => setGalleryOpen(false)} />
     </>
   );
 }

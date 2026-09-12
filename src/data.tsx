@@ -145,7 +145,8 @@ export type GalleryCat =
   | "Social Media"
   | "Print Design"
   | "Branding"
-  | "Video & Motion";
+  | "Video & Motion"
+  | "Church Design";
 
 export type GalleryItem = {
   id: string;
@@ -334,6 +335,7 @@ export const CATEGORIES: ("All" | GalleryCat)[] = [
   "Print Design",
   "Branding",
   "Video & Motion",
+  "Church Design",
 ];
 
 /* ---------------- featured case studies --------------------------- */

@@ -532,6 +532,36 @@ export const SOCIAL_LINKS: SocialLink[] = [
   { platform: "whatsapp", url: "", label: "WhatsApp" },
 ];
 
+/* ---------------- contact -------------------------------------- */
+export type ContactContent = {
+  statusText: string;
+  title: string;
+  responseTimeText: string;
+  servicesOffered: string[];
+  ctaTitle: string;
+  ctaDescription: string;
+  ctaButtonText: string;
+};
+
+export const CONTACT_CONTENT: ContactContent = {
+  statusText: "Currently accepting projects",
+  title: "Direct line to the studio",
+  responseTimeText: "Response within 24 hours on weekdays — faster if it involves a printing deadline.",
+  servicesOffered: [
+    "Graphic Design",
+    "Social Media Design",
+    "Digital Media",
+    "Branding",
+    "Marketing Design",
+    "Content Creation",
+    "Communications",
+    "Creative Support",
+  ],
+  ctaTitle: "Have a project in mind? Let's build something meaningful together.",
+  ctaDescription: "From a single flyer to a full campaign system — tell me what you're building and I'll tell you how design can carry it.",
+  ctaButtonText: "Start a Project",
+};
+
 /* ---------------- footer -------------------------------------- */
 export type FooterContent = {
   brandStatement: string;

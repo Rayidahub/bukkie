@@ -9,13 +9,15 @@ import {
   ABOUT as DEFAULT_ABOUT,
   SOCIAL_LINKS as DEFAULT_SOCIAL_LINKS,
   FOOTER as DEFAULT_FOOTER,
+  CONTACT_CONTENT as DEFAULT_CONTACT,
   type Service,
   type GalleryItem,
   type Insight,
   type HeroContent,
   type AboutContent,
   type SocialLink,
-  type FooterContent
+  type FooterContent,
+  type ContactContent
 } from './data';
 
 export type Testimonial = (typeof DEFAULT_TESTIMONIALS)[number];
@@ -29,6 +31,7 @@ export type SiteContent = {
   testimonials: Testimonial[];
   socialLinks: SocialLink[];
   footer: FooterContent;
+  contact: ContactContent;
 };
 
 type ContentCtx = SiteContent & {
@@ -41,6 +44,7 @@ type ContentCtx = SiteContent & {
   setTestimonials: (v: Testimonial[]) => Promise<void>;
   setSocialLinks: (v: SocialLink[]) => Promise<void>;
   setFooter: (v: FooterContent) => Promise<void>;
+  setContact: (v: ContactContent) => Promise<void>;
   reset: () => Promise<void>;
 };
 
@@ -123,6 +127,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     testimonials: [], // Start empty to prevent flash
     socialLinks: DEFAULT_SOCIAL_LINKS,
     footer: DEFAULT_FOOTER,
+    contact: DEFAULT_CONTACT,
   });
   const [loading, setLoading] = useState(true);
 
@@ -413,6 +418,18 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Update contact content
+  const setContact = async (contact: ContactContent) => {
+    setContent(prev => ({ ...prev, contact }));
+    
+    // Contact is stored in localStorage for now (no Supabase table needed)
+    try {
+      localStorage.setItem('portfolio_contact', JSON.stringify(contact));
+    } catch (error) {
+      console.error('Error saving contact:', error);
+    }
+  };
+
   // Reset to defaults
   const reset = async () => {
     const defaults: SiteContent = {
@@ -424,6 +441,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       testimonials: DEFAULT_TESTIMONIALS,
       socialLinks: DEFAULT_SOCIAL_LINKS,
       footer: DEFAULT_FOOTER,
+      contact: DEFAULT_CONTACT,
     };
     
     setContent(defaults);
@@ -437,6 +455,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     await setTestimonials(defaults.testimonials);
     await setSocialLinks(defaults.socialLinks);
     await setFooter(defaults.footer);
+    await setContact(defaults.contact);
   };
 
   const api: ContentCtx = {
@@ -450,6 +469,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     setTestimonials,
     setSocialLinks,
     setFooter,
+    setContact,
     reset,
   };
 

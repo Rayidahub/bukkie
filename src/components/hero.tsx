@@ -138,7 +138,34 @@ function HeroButton({
 
 export function Hero() {
   const years = yearsOfExperience();
-  const { hero } = useContent();
+  const { hero, loading } = useContent();
+
+  // Show skeleton while loading
+  if (loading) {
+    return (
+      <section className="relative bg-white py-20 md:py-28">
+        <div className="container-x">
+          <div className="grid gap-14 lg:grid-cols-2 lg:gap-8">
+            <div>
+              <div className="h-6 w-64 bg-mist rounded animate-pulse mb-6" />
+              <div className="h-16 w-full bg-mist rounded animate-pulse mb-4" />
+              <div className="h-16 w-3/4 bg-mist rounded animate-pulse mb-4" />
+              <div className="h-16 w-1/2 bg-mist rounded animate-pulse mb-8" />
+              <div className="h-24 w-full bg-mist rounded animate-pulse mb-8" />
+              <div className="flex gap-4">
+                <div className="h-12 w-40 bg-mist rounded-full animate-pulse" />
+                <div className="h-12 w-32 bg-mist rounded-full animate-pulse" />
+              </div>
+            </div>
+            <div className="flex items-center justify-center">
+              <div className="h-96 w-96 bg-mist rounded-full animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="home" className="relative overflow-hidden bg-white">
       {/* Particle background */}

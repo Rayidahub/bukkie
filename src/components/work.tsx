@@ -177,7 +177,7 @@ export function ToolsSection() {
 /*  Projects gallery + case-study lightbox                             */
 /* ------------------------------------------------------------------ */
 export function Gallery({ showHead = true }: { showHead?: boolean }) {
-  const { projects } = useContent();
+  const { projects, loading } = useContent();
   const [cat, setCat] = useState<(typeof CATEGORIES)[number]>("All");
   const [showAll, setShowAll] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -187,6 +187,31 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
     [cat, projects]
   );
   const items = cat === "All" && !showAll ? filtered.slice(0, 6) : filtered;
+
+  // Show skeleton while loading
+  if (loading) {
+    return (
+      <section className="relative bg-mist py-20 md:py-28">
+        <div className="container-x">
+          {showHead && (
+            <div className="mb-12">
+              <div className="h-8 w-48 bg-mist rounded animate-pulse mb-4" />
+              <div className="h-12 w-96 bg-mist rounded animate-pulse" />
+            </div>
+          )}
+          <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="aspect-[4/3] bg-white rounded-2xl mb-4" />
+                <div className="h-4 w-3/4 bg-white rounded mb-2" />
+                <div className="h-3 w-1/2 bg-white rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   // Swipe gesture handlers for lightbox navigation
   const lightboxSwipeHandlers = useSwipe({

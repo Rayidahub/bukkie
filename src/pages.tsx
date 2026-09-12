@@ -412,12 +412,6 @@ export function AboutPage() {
 /* ------------------------------------------------------------------ */
 export function ProjectsPage() {
   const [galleryOpen, setGalleryOpen] = useState(false);
-  const [excelUploadOpen, setExcelUploadOpen] = useState(false);
-  const { projects, setProjects } = useContent();
-
-  const handleExcelImport = (newProjects: GalleryItem[]) => {
-    setProjects([...projects, ...newProjects]);
-  };
 
   return (
     <>
@@ -432,14 +426,13 @@ export function ProjectsPage() {
         blurb="Campaigns, publications, brand systems, and print production — each with the story of why it was designed."
       />
       
-      {/* Action Buttons */}
+      {/* Gallery Button */}
       <section className="relative bg-white py-12 md:py-16">
         <div className="container-x">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-            {/* Gallery Button */}
+          <div className="flex flex-col items-center justify-center text-center">
             <button
               onClick={() => setGalleryOpen(true)}
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pine to-pine-dark px-12 py-8 text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-pine/50 w-full md:w-auto"
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pine to-pine-dark px-12 py-8 text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-pine/50"
             >
               <div className="relative z-10">
                 <div className="mb-3 flex items-center justify-center gap-3">
@@ -454,27 +447,6 @@ export function ProjectsPage() {
               </div>
               <div className="absolute inset-0 bg-gradient-to-br from-gold/0 via-gold/10 to-gold/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             </button>
-
-            {/* Excel Upload Button */}
-            <button
-              onClick={() => setExcelUploadOpen(true)}
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-gold to-honey px-12 py-8 text-pine shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-gold/50 w-full md:w-auto"
-            >
-              <div className="relative z-10">
-                <div className="mb-3 flex items-center justify-center gap-3">
-                  <svg className="h-6 w-6 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <span className="font-display text-2xl font-bold md:text-3xl">
-                    Import from Excel
-                  </span>
-                </div>
-                <p className="text-sm text-pine/80">
-                  Bulk import multiple projects at once
-                </p>
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-            </button>
           </div>
         </div>
       </section>
@@ -485,7 +457,6 @@ export function ProjectsPage() {
 
       {/* Gallery Modal */}
       <ProjectGalleryModal isOpen={galleryOpen} onClose={() => setGalleryOpen(false)} />
-      <ExcelUpload isOpen={excelUploadOpen} onClose={() => setExcelUploadOpen(false)} onImport={handleExcelImport} />
     </>
   );
 }
@@ -1601,6 +1572,7 @@ export function AdminPage() {
   });
   const [tab, setTab] = useState<TabKey>("hero");
   const [editing, setEditing] = useState<{ kind: TabKey; id: string } | null>(null);
+  const [excelUploadOpen, setExcelUploadOpen] = useState(false);
   const store = useContent();
 
   if (!authed)
@@ -1748,6 +1720,17 @@ export function AdminPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
+            {tab === "projects" && (
+              <button
+                onClick={() => setExcelUploadOpen(true)}
+                className="btn btn-gold !py-2.5 text-[13.5px]"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Import Excel
+              </button>
+            )}
             <button onClick={exportJson} className="btn btn-pine !py-2.5 text-[13.5px]">
               Export JSON
             </button>
@@ -1899,6 +1882,16 @@ export function AdminPage() {
       {editing && editingItem && tab === "testimonials" && (
         <TestimonialEditor initial={editingItem as Testimonial} onSave={saveItem} onClose={() => setEditing(null)} />
       )}
+
+      {/* Excel Upload Modal */}
+      <ExcelUpload
+        isOpen={excelUploadOpen}
+        onClose={() => setExcelUploadOpen(false)}
+        onImport={(newProjects) => {
+          store.setProjects([...store.projects, ...newProjects]);
+          setExcelUploadOpen(false);
+        }}
+      />
     </section>
   );
 }

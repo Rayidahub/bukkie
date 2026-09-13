@@ -118,17 +118,31 @@ function rowToSocialLink(row: any): SocialLink {
 }
 
 export function ContentProvider({ children }: { children: ReactNode }) {
-  const [content, setContent] = useState<SiteContent>({
-    hero: DEFAULT_HERO,
-    about: DEFAULT_ABOUT,
-    services: [], // Start empty to prevent flash
-    projects: [], // Start empty to prevent flash
-    articles: [], // Start empty to prevent flash
-    testimonials: [], // Start empty to prevent flash
-    socialLinks: DEFAULT_SOCIAL_LINKS,
-    footer: DEFAULT_FOOTER,
-    contact: DEFAULT_CONTACT,
-  });
+  // Try to load from sessionStorage cache first for instant loading
+  const getCachedContent = (): SiteContent => {
+    try {
+      const cached = sessionStorage.getItem('portfolio_cache');
+      if (cached) {
+        return JSON.parse(cached);
+      }
+    } catch (error) {
+      console.error('Error loading cache:', error);
+    }
+    // Return defaults if no cache
+    return {
+      hero: DEFAULT_HERO,
+      about: DEFAULT_ABOUT,
+      services: DEFAULT_SERVICES,
+      projects: DEFAULT_PROJECTS,
+      articles: DEFAULT_ARTICLES,
+      testimonials: DEFAULT_TESTIMONIALS,
+      socialLinks: DEFAULT_SOCIAL_LINKS,
+      footer: DEFAULT_FOOTER,
+      contact: DEFAULT_CONTACT,
+    };
+  };
+
+  const [content, setContent] = useState<SiteContent>(getCachedContent());
   const [loading, setLoading] = useState(true);
 
   // Load all data from Supabase on mount
@@ -239,6 +253,16 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         if (socialData && socialData.length > 0) {
           setContent(prev => ({ ...prev, socialLinks: socialData.map(rowToSocialLink) }));
         }
+
+        // Cache the loaded data in sessionStorage for faster subsequent loads
+        setContent(currentContent => {
+          try {
+            sessionStorage.setItem('portfolio_cache', JSON.stringify(currentContent));
+          } catch (error) {
+            console.error('Error caching data:', error);
+          }
+          return currentContent;
+        });
       } catch (error) {
         console.error('Error loading data from Supabase:', error);
       } finally {
@@ -249,9 +273,22 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     loadData();
   }, []);
 
+  // Helper to update cache
+  const updateCache = (content: SiteContent) => {
+    try {
+      sessionStorage.setItem('portfolio_cache', JSON.stringify(content));
+    } catch (error) {
+      console.error('Error caching:', error);
+    }
+  };
+
   // Update hero content
   const setHero = async (hero: HeroContent) => {
-    setContent(prev => ({ ...prev, hero }));
+    setContent(prev => {
+      const updated = { ...prev, hero };
+      updateCache(updated);
+      return updated;
+    });
     
     const { error } = await supabase
       .from('hero_content')
@@ -281,7 +318,11 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   // Update about content
   const setAbout = async (about: AboutContent) => {
-    setContent(prev => ({ ...prev, about }));
+    setContent(prev => {
+      const updated = { ...prev, about };
+      updateCache(updated);
+      return updated;
+    });
     
     const { error } = await supabase
       .from('about_content')
@@ -305,7 +346,11 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   // Update services
   const setServices = async (services: Service[]) => {
-    setContent(prev => ({ ...prev, services }));
+    setContent(prev => {
+      const updated = { ...prev, services };
+      updateCache(updated);
+      return updated;
+    });
     
     // Delete all existing services and insert new ones
     await supabase.from('services').delete().neq('id', '00000000-0000-0000-0000-000000000000');
@@ -327,7 +372,11 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   // Update projects
   const setProjects = async (projects: GalleryItem[]) => {
-    setContent(prev => ({ ...prev, projects }));
+    setContent(prev => {
+      const updated = { ...prev, projects };
+      updateCache(updated);
+      return updated;
+    });
     
     await supabase.from('projects').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     
@@ -351,7 +400,11 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   // Update articles
   const setArticles = async (articles: Insight[]) => {
-    setContent(prev => ({ ...prev, articles }));
+    setContent(prev => {
+      const updated = { ...prev, articles };
+      updateCache(updated);
+      return updated;
+    });
     
     await supabase.from('articles').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     
@@ -372,7 +425,11 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   // Update testimonials
   const setTestimonials = async (testimonials: Testimonial[]) => {
-    setContent(prev => ({ ...prev, testimonials }));
+    setContent(prev => {
+      const updated = { ...prev, testimonials };
+      updateCache(updated);
+      return updated;
+    });
     
     await supabase.from('testimonials').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     
@@ -391,7 +448,11 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   // Update social links
   const setSocialLinks = async (socialLinks: SocialLink[]) => {
-    setContent(prev => ({ ...prev, socialLinks }));
+    setContent(prev => {
+      const updated = { ...prev, socialLinks };
+      updateCache(updated);
+      return updated;
+    });
     
     await supabase.from('social_links').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     
@@ -408,26 +469,20 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   // Update footer content
   const setFooter = async (footer: FooterContent) => {
-    setContent(prev => ({ ...prev, footer }));
-    
-    // Footer is stored in localStorage for now (no Supabase table needed)
-    try {
-      localStorage.setItem('portfolio_footer', JSON.stringify(footer));
-    } catch (error) {
-      console.error('Error saving footer:', error);
-    }
+    setContent(prev => {
+      const updated = { ...prev, footer };
+      updateCache(updated);
+      return updated;
+    });
   };
 
   // Update contact content
   const setContact = async (contact: ContactContent) => {
-    setContent(prev => ({ ...prev, contact }));
-    
-    // Contact is stored in localStorage for now (no Supabase table needed)
-    try {
-      localStorage.setItem('portfolio_contact', JSON.stringify(contact));
-    } catch (error) {
-      console.error('Error saving contact:', error);
-    }
+    setContent(prev => {
+      const updated = { ...prev, contact };
+      updateCache(updated);
+      return updated;
+    });
   };
 
   // Reset to defaults

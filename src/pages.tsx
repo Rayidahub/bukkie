@@ -13,8 +13,8 @@ import { RelatedPosts } from "./components/RelatedPosts";
 import { DraggableList } from "./components/DraggableList";
 import { ExcelUpload } from "./components/ExcelUpload";
 import { GalleryManager } from "./components/GalleryManager";
+import { CategoriesManager } from "./components/CategoriesManager";
 import {
-  CATEGORIES,
   IMG,
   ORGS,
   yearsOfExperience,
@@ -883,6 +883,7 @@ function ServiceEditor({ initial, onSave, onClose }: { initial: Service; onSave:
 }
 
 function ProjectEditor({ initial, onSave, onClose }: { initial: GalleryItem; onSave: (p: GalleryItem) => void; onClose: () => void }) {
+  const { categories } = useContent();
   const [d, setD] = useState(initial);
   const set = (patch: Partial<GalleryItem>) => setD((v) => ({ ...v, ...patch }));
   const setStudy = (patch: Partial<GalleryItem["study"]>) => setD((v) => ({ ...v, study: { ...v.study, ...patch } }));
@@ -891,7 +892,7 @@ function ProjectEditor({ initial, onSave, onClose }: { initial: GalleryItem; onS
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField label="Project title" value={d.title} onChange={(v) => set({ title: v })} />
         <TextField label="Client / organization" value={d.org} onChange={(v) => set({ org: v })} />
-        <SelectField label="Category" value={d.cat} onChange={(v) => set({ cat: v as GalleryCat })} options={CATEGORIES.filter((c) => c !== "All")} />
+        <SelectField label="Category" value={d.cat} onChange={(v) => set({ cat: v as GalleryCat })} options={categories.filter(c => c.active).map(c => c.name)} />
         <TextField label="Year" value={d.year} onChange={(v) => set({ year: v })} />
       </div>
       <ImageUpload
@@ -1455,6 +1456,7 @@ const TABS = [
   { key: "services", label: "Services" },
   { key: "projects", label: "Projects" },
   { key: "gallery", label: "Gallery" },
+  { key: "categories", label: "Categories" },
   { key: "articles", label: "Blog Posts" },
   { key: "testimonials", label: "Testimonials" },
   { key: "social", label: "Social Links" },
@@ -1818,6 +1820,7 @@ export function AdminPage() {
     services: store.services.length,
     projects: store.projects.length,
     gallery: store.projects.filter(p => p.org === 'Gallery').length,
+    categories: store.categories.length,
     articles: store.articles.length,
     testimonials: store.testimonials.length,
     social: "✎",
@@ -2025,6 +2028,8 @@ export function AdminPage() {
           <FooterEditor />
         ) : tab === "gallery" ? (
           <GalleryManager />
+        ) : tab === "categories" ? (
+          <CategoriesManager />
         ) : tab === "contact" ? (
           <ContactEditor />
         ) : (

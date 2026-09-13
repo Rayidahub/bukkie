@@ -4,9 +4,12 @@ import { IcClose, IcSpark, IcArrowLeft } from '../lib';
 import { Link } from 'react-router-dom';
 
 export default function GalleryPage() {
-  const { projects } = useContent();
+  const { projects, categories } = useContent();
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
   const [filter, setFilter] = useState<string>('all');
+
+  // Get active category names
+  const activeCategoryNames = categories.filter(c => c.active).map(c => c.name);
 
   // Collect all images from all projects
   const allImages = projects
@@ -24,8 +27,8 @@ export default function GalleryPage() {
     ? allImages 
     : allImages.filter(img => img.category === filter);
 
-  // Get unique categories
-  const categories = ['all', ...Array.from(new Set(allImages.map(img => img.category)))];
+  // Get unique categories from active categories
+  const displayCategories = ['all', ...activeCategoryNames];
 
   return (
     <div className="min-h-screen bg-mist">
@@ -52,7 +55,7 @@ export default function GalleryPage() {
       <div className="bg-white border-b border-line sticky top-0 z-10">
         <div className="container-x py-4">
           <div className="flex flex-wrap gap-2">
-            {categories.map(cat => (
+            {displayCategories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}

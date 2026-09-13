@@ -9,7 +9,61 @@ export function GalleryManager() {
   const [error, setError] = useState<string | null>(null);
   const [skippedFiles, setSkippedFiles] = useState<string[]>([]);
   const [dragOver, setDragOver] = useState(false);
+  const [showDuplicatesOnly, setShowDuplicatesOnly] = useState(false);
+  const [selectedDuplicates, setSelectedDuplicates] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Detect duplicates (images with the same title)
+  const galleryImages = projects.filter(p => p.org === 'Gallery');
+  const duplicateGroups = galleryImages.reduce((acc, img) => {
+    if (!acc[img.title]) {
+      acc[img.title] = [];
+    }
+    acc[img.title].push(img);
+    return acc;
+  }, {} as Record<string, typeof galleryImages>);
+
+  const duplicates = Object.values(duplicateGroups).filter(group => group.length > 1).flat();
+  const hasDuplicates = duplicates.length > 0;
+
+  // Filter to show only duplicates if toggle is on
+  const displayImages = showDuplicatesOnly ? duplicates : galleryImages;
+
+  // Toggle duplicate selection
+  const toggleDuplicateSelection = (id: string) => {
+    const newSelected = new Set(selectedDuplicates);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedDuplicates(newSelected);
+  };
+
+  // Select all duplicates
+  const selectAllDuplicates = () => {
+    if (selectedDuplicates.size === duplicates.length) {
+      setSelectedDuplicates(new Set());
+    } else {
+      setSelectedDuplicates(new Set(duplicates.map(d => d.id)));
+    }
+  };
+
+  // Delete selected duplicates
+  const deleteSelectedDuplicates = async () => {
+    if (selectedDuplicates.size === 0) return;
+
+    const confirmed = confirm(
+      `Are you sure you want to delete ${selectedDuplicates.size} duplicate image(s)?\n\nThis action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    const updatedProjects = projects.filter(p => !selectedDuplicates.has(p.id));
+    await setProjects(updatedProjects);
+    setSelectedDuplicates(new Set());
+    setShowDuplicatesOnly(false);
+  };
 
   const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -122,8 +176,6 @@ export function GalleryManager() {
     await setProjects(updatedProjects);
   };
 
-  const galleryImages = projects.filter(p => p.org === 'Gallery');
-
   return (
     <div className="space-y-6">
       {/* Upload Area */}
@@ -201,33 +253,101 @@ export function GalleryManager() {
       {/* Gallery Images */}
       {galleryImages.length > 0 && (
         <div>
-          <h3 className="text-lg font-bold text-ink mb-4">
-            Gallery Images ({galleryImages.length})
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {galleryImages.map((project) => (
-              <div key={project.id} className="relative group">
-                <img
-                  src={project.img}
-                  alt={project.title}
-                  className="w-full h-48 object-cover rounded-lg"
-                />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-ink">
+              {showDuplicatesOnly ? 'Duplicate Images' : 'Gallery Images'} ({displayImages.length})
+              {hasDuplicates && !showDuplicatesOnly && (
+                <span className="ml-2 text-sm font-normal text-orange-600">
+                  ({duplicates.length} duplicates found)
+                </span>
+              )}
+            </h3>
+            
+            <div className="flex items-center gap-3">
+              {hasDuplicates && (
+                <>
                   <button
-                    onClick={() => removeImage(project.id)}
-                    className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-colors"
-                    aria-label="Remove image"
+                    onClick={() => setShowDuplicatesOnly(!showDuplicatesOnly)}
+                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                      showDuplicatesOnly
+                        ? 'bg-orange-600 text-white hover:bg-orange-700'
+                        : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                    }`}
                   >
-                    <IcTrash className="h-5 w-5" />
+                    {showDuplicatesOnly ? 'Show All' : 'Show Duplicates Only'}
                   </button>
+                  
+                  {showDuplicatesOnly && (
+                    <>
+                      <button
+                        onClick={selectAllDuplicates}
+                        className="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                      >
+                        {selectedDuplicates.size === duplicates.length ? 'Deselect All' : 'Select All'}
+                      </button>
+                      
+                      {selectedDuplicates.size > 0 && (
+                        <button
+                          onClick={deleteSelectedDuplicates}
+                          className="px-4 py-2 rounded-lg text-sm font-semibold bg-red-600 text-white hover:bg-red-700 transition-colors"
+                        >
+                          Delete Selected ({selectedDuplicates.size})
+                        </button>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {displayImages.map((project) => {
+              const isDuplicate = duplicates.some(d => d.id === project.id);
+              const isSelected = selectedDuplicates.has(project.id);
+              
+              return (
+                <div 
+                  key={project.id} 
+                  className={`relative group ${
+                    isDuplicate && showDuplicatesOnly ? 'ring-2 ring-orange-500' : ''
+                  }`}
+                >
+                  {isDuplicate && showDuplicatesOnly && (
+                    <div className="absolute top-2 left-2 z-10">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleDuplicateSelection(project.id)}
+                        className="w-5 h-5 rounded border-2 border-white bg-white/90 cursor-pointer"
+                      />
+                    </div>
+                  )}
+                  <img
+                    src={project.img}
+                    alt={project.title}
+                    className="w-full h-48 object-cover rounded-lg"
+                  />
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                    <button
+                      onClick={() => removeImage(project.id)}
+                      className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-colors"
+                      aria-label="Remove image"
+                    >
+                      <IcTrash className="h-5 w-5" />
+                    </button>
+                  </div>
+                  <div className="mt-2">
+                    <p className="text-sm font-semibold text-ink truncate">
+                      {project.title}
+                      {isDuplicate && !showDuplicatesOnly && (
+                        <span className="ml-1 text-xs text-orange-600">(duplicate)</span>
+                      )}
+                    </p>
+                  </div>
                 </div>
-                <div className="mt-2">
-                  <p className="text-sm font-semibold text-ink truncate">
-                    {project.title}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
@@ -238,6 +358,16 @@ export function GalleryManager() {
           <p className="text-lg font-bold text-ink mb-2">No gallery images yet</p>
           <p className="text-sm text-slate">
             Upload images above to add them to the gallery
+          </p>
+        </div>
+      )}
+
+      {showDuplicatesOnly && duplicates.length === 0 && galleryImages.length > 0 && (
+        <div className="text-center py-12">
+          <IcSpark className="h-12 w-12 text-green-500 mx-auto mb-4" />
+          <p className="text-lg font-bold text-ink mb-2">No duplicates found!</p>
+          <p className="text-sm text-slate">
+            All images in your gallery are unique
           </p>
         </div>
       )}

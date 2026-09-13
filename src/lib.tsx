@@ -211,6 +211,16 @@ export const IcArrowDown = ({ className = "h-4 w-4" }: IconProps) => (
 export const IcArrowUp = ({ className = "h-4 w-4" }: IconProps) => (
   <svg {...base} className={className}><path d="M12 20V4" /><path d="M5 11l7-7 7 7" /></svg>
 );
+export const IcArrowLeft = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
+);
+export const IcTrash = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M3 6h18" />
+    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6" />
+    <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+  </svg>
+);
 export const IcMenu = ({ className = "h-5 w-5" }: IconProps) => (
   <svg {...base} className={className}><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></svg>
 );

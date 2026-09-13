@@ -12,7 +12,7 @@ import { TestimonialCarousel } from "./components/TestimonialCarousel";
 import { RelatedPosts } from "./components/RelatedPosts";
 import { DraggableList } from "./components/DraggableList";
 import { ExcelUpload } from "./components/ExcelUpload";
-import { ProjectGalleryModal } from "./components/ProjectGalleryModal";
+import { GalleryManager } from "./components/GalleryManager";
 import {
   CATEGORIES,
   IMG,
@@ -411,8 +411,6 @@ export function AboutPage() {
 /*  Projects page                                                      */
 /* ------------------------------------------------------------------ */
 export function ProjectsPage() {
-  const [galleryOpen, setGalleryOpen] = useState(false);
-
   return (
     <>
       <PageHeader
@@ -430,8 +428,8 @@ export function ProjectsPage() {
       <section className="relative bg-white py-12 md:py-16">
         <div className="container-x">
           <div className="flex flex-col items-center justify-center text-center">
-            <button
-              onClick={() => setGalleryOpen(true)}
+            <Link
+              to="/gallery"
               className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pine to-pine-dark px-12 py-8 text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-pine/50"
             >
               <div className="relative z-10">
@@ -446,7 +444,7 @@ export function ProjectsPage() {
                 </p>
               </div>
               <div className="absolute inset-0 bg-gradient-to-br from-gold/0 via-gold/10 to-gold/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -454,9 +452,6 @@ export function ProjectsPage() {
       <Gallery showHead={false} />
       <FeaturedProjects />
       <ToolsSection />
-
-      {/* Gallery Modal */}
-      <ProjectGalleryModal isOpen={galleryOpen} onClose={() => setGalleryOpen(false)} />
     </>
   );
 }
@@ -1459,6 +1454,7 @@ const TABS = [
   { key: "about", label: "About Page" },
   { key: "services", label: "Services" },
   { key: "projects", label: "Projects" },
+  { key: "gallery", label: "Gallery" },
   { key: "articles", label: "Blog Posts" },
   { key: "testimonials", label: "Testimonials" },
   { key: "social", label: "Social Links" },
@@ -1821,6 +1817,7 @@ export function AdminPage() {
     about: "✎",
     services: store.services.length,
     projects: store.projects.length,
+    gallery: store.projects.filter(p => p.org === 'Gallery').length,
     articles: store.articles.length,
     testimonials: store.testimonials.length,
     social: "✎",
@@ -2026,6 +2023,8 @@ export function AdminPage() {
           <SocialLinksEditor />
         ) : tab === "footer" ? (
           <FooterEditor />
+        ) : tab === "gallery" ? (
+          <GalleryManager />
         ) : tab === "contact" ? (
           <ContactEditor />
         ) : (

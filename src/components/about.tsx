@@ -78,8 +78,8 @@ function ServiceIcon({ icon, className = "h-7 w-7" }: { icon: string; className?
 export function ServicesSection({ showHead = true }: { showHead?: boolean }) {
   const { services, loading } = useContent();
 
-  // Show skeleton while loading
-  if (loading) {
+  // Show skeleton only if loading AND no services data yet
+  if (loading && services.length === 0) {
     return (
       <section className="relative bg-mist py-20 md:py-28">
         <div className="container-x">

@@ -188,15 +188,16 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
   );
   const items = cat === "All" && !showAll ? filtered.slice(0, 6) : filtered;
 
-  // Show skeleton while loading
-  if (loading) {
+  // Show skeleton only if loading AND no projects data yet
+  // If we have cached data, show it immediately even if background refresh is happening
+  if (loading && projects.length === 0) {
     return (
       <section className="relative bg-mist py-20 md:py-28">
         <div className="container-x">
           {showHead && (
             <div className="mb-12">
-              <div className="h-8 w-48 bg-mist rounded animate-pulse mb-4" />
-              <div className="h-12 w-96 bg-mist rounded animate-pulse" />
+              <div className="h-8 w-48 bg-white rounded animate-pulse mb-4" />
+              <div className="h-12 w-96 bg-white rounded animate-pulse" />
             </div>
           )}
           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">

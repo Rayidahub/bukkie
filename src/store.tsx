@@ -175,129 +175,125 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<SiteContent>(getCachedContent());
   const [loading, setLoading] = useState(true);
 
-  // Load all data from Supabase on mount
+  // Load all data from Supabase on mount - OPTIMIZED FOR SPEED
   useEffect(() => {
     async function loadData() {
       try {
-        // Load hero content
-        const { data: heroData } = await supabase
-          .from('hero_content')
-          .select('*')
-          .single();
+        // Check if we have valid cache first - if yes, show it immediately
+        const cachedContent = getCachedContent();
+        const hasCache = sessionStorage.getItem('portfolio_cache') !== null;
         
-        if (heroData) {
-          setContent(prev => ({
-            ...prev,
-            hero: {
-              eyebrow: heroData.eyebrow,
-              greeting: heroData.greeting,
-              line2: heroData.line2,
-              highlight: heroData.highlight,
-              paragraph: heroData.paragraph,
-              primary: { label: heroData.primary_label, link: heroData.primary_link },
-              secondary: { label: heroData.secondary_label, link: heroData.secondary_link },
-              teamsLabel: heroData.teams_label,
-              orgs: heroData.orgs,
-              portrait: heroData.portrait,
-              tags: heroData.tags,
-              badgeLabel: heroData.badge_label,
-              availability: heroData.availability,
-              coords: heroData.coords,
-              tickerWords: heroData.ticker_words,
-            },
-          }));
+        // If we have cache, show it immediately and refresh in background
+        if (hasCache) {
+          setContent(cachedContent);
+          setLoading(false);
+          
+          // Refresh from Supabase in background (don't block UI)
+          refreshFromSupabase();
+          return;
         }
-
-        // Load about content
-        const { data: aboutData } = await supabase
-          .from('about_content')
-          .select('*')
-          .single();
         
-        if (aboutData) {
-          setContent(prev => ({
-            ...prev,
-            about: {
-              image: aboutData.image,
-              tag1: aboutData.tag1,
-              tag2: aboutData.tag2,
-              eyebrow: aboutData.eyebrow,
-              heading1: aboutData.heading1,
-              heading2: aboutData.heading2,
-              intro: aboutData.intro,
-              approach: aboutData.approach,
-              mission: aboutData.mission,
-              cvLabel: aboutData.cv_label,
-              expLabel: aboutData.exp_label,
-              stats: [], // Stats are calculated dynamically
-            },
-          }));
-        }
-
-        // Load services
-        const { data: servicesData } = await supabase
-          .from('services')
-          .select('*')
-          .order('sort_order');
-        
-        if (servicesData && servicesData.length > 0) {
-          setContent(prev => ({ ...prev, services: servicesData.map(rowToService) }));
-        }
-
-        // Load projects
-        const { data: projectsData } = await supabase
-          .from('projects')
-          .select('*')
-          .order('sort_order');
-        
-        if (projectsData && projectsData.length > 0) {
-          setContent(prev => ({ ...prev, projects: projectsData.map(rowToProject) }));
-        }
-
-        // Load articles
-        const { data: articlesData } = await supabase
-          .from('articles')
-          .select('*')
-          .order('sort_order');
-        
-        if (articlesData && articlesData.length > 0) {
-          setContent(prev => ({ ...prev, articles: articlesData.map(rowToArticle) }));
-        }
-
-        // Load testimonials
-        const { data: testimonialsData } = await supabase
-          .from('testimonials')
-          .select('*')
-          .order('sort_order');
-        
-        if (testimonialsData && testimonialsData.length > 0) {
-          setContent(prev => ({ ...prev, testimonials: testimonialsData.map(rowToTestimonial) }));
-        }
-
-        // Load social links
-        const { data: socialData } = await supabase
-          .from('social_links')
-          .select('*')
-          .order('sort_order');
-        
-        if (socialData && socialData.length > 0) {
-          setContent(prev => ({ ...prev, socialLinks: socialData.map(rowToSocialLink) }));
-        }
-
-        // Cache the loaded data in sessionStorage for faster subsequent loads
-        setContent(currentContent => {
-          try {
-            sessionStorage.setItem('portfolio_cache', JSON.stringify(currentContent));
-            sessionStorage.setItem('portfolio_cache_version', CACHE_VERSION);
-          } catch (error) {
-            console.error('Error caching data:', error);
-          }
-          return currentContent;
-        });
+        // No cache - load everything from Supabase
+        await refreshFromSupabase();
       } catch (error) {
         console.error('Error loading data from Supabase:', error);
       } finally {
         setLoading(false);
+      }
+    }
+
+    async function refreshFromSupabase() {
+      try {
+        // Load ALL data in PARALLEL for maximum speed
+        const [
+          { data: heroData },
+          { data: aboutData },
+          { data: servicesData },
+          { data: projectsData },
+          { data: articlesData },
+          { data: testimonialsData },
+          { data: socialData },
+        ] = await Promise.all([
+          supabase.from('hero_content').select('*').single(),
+          supabase.from('about_content').select('*').single(),
+          supabase.from('services').select('*').order('sort_order'),
+          supabase.from('projects').select('*').order('sort_order'),
+          supabase.from('articles').select('*').order('sort_order'),
+          supabase.from('testimonials').select('*').order('sort_order'),
+          supabase.from('social_links').select('*').order('sort_order'),
+        ]);
+
+        // Build complete content object
+        const newContent: SiteContent = {
+          hero: heroData ? {
+            eyebrow: heroData.eyebrow,
+            greeting: heroData.greeting,
+            line2: heroData.line2,
+            highlight: heroData.highlight,
+            paragraph: heroData.paragraph,
+            primary: { label: heroData.primary_label, link: heroData.primary_link },
+            secondary: { label: heroData.secondary_label, link: heroData.secondary_link },
+            teamsLabel: heroData.teams_label,
+            orgs: heroData.orgs,
+            portrait: heroData.portrait,
+            tags: heroData.tags,
+            badgeLabel: heroData.badge_label,
+            availability: heroData.availability,
+            coords: heroData.coords,
+            tickerWords: heroData.ticker_words,
+          } : DEFAULT_HERO,
+          
+          about: aboutData ? {
+            image: aboutData.image,
+            tag1: aboutData.tag1,
+            tag2: aboutData.tag2,
+            eyebrow: aboutData.eyebrow,
+            heading1: aboutData.heading1,
+            heading2: aboutData.heading2,
+            intro: aboutData.intro,
+            approach: aboutData.approach,
+            mission: aboutData.mission,
+            cvLabel: aboutData.cv_label,
+            expLabel: aboutData.exp_label,
+            stats: [],
+          } : DEFAULT_ABOUT,
+          
+          services: servicesData && servicesData.length > 0 
+            ? servicesData.map(rowToService) 
+            : DEFAULT_SERVICES,
+            
+          projects: projectsData && projectsData.length > 0 
+            ? projectsData.map(rowToProject) 
+            : DEFAULT_PROJECTS,
+            
+          articles: articlesData && articlesData.length > 0 
+            ? articlesData.map(rowToArticle) 
+            : DEFAULT_ARTICLES,
+            
+          testimonials: testimonialsData && testimonialsData.length > 0 
+            ? testimonialsData.map(rowToTestimonial) 
+            : DEFAULT_TESTIMONIALS,
+            
+          socialLinks: socialData && socialData.length > 0 
+            ? socialData.map(rowToSocialLink) 
+            : DEFAULT_SOCIAL_LINKS,
+            
+          footer: DEFAULT_FOOTER,
+          contact: DEFAULT_CONTACT,
+        };
+
+        // Update state with all data at once
+        setContent(newContent);
+        
+        // Cache the loaded data for instant loading next time
+        try {
+          sessionStorage.setItem('portfolio_cache', JSON.stringify(newContent));
+          sessionStorage.setItem('portfolio_cache_version', CACHE_VERSION);
+        } catch (error) {
+          console.error('Error caching data:', error);
+        }
+      } catch (error) {
+        console.error('Error refreshing from Supabase:', error);
       }
     }
 

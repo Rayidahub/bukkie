@@ -104,8 +104,8 @@ function initials(name: string) {
 export function Testimonials({ showHead = true }: { showHead?: boolean }) {
   const { testimonials, loading } = useContent();
 
-  // Show skeleton while loading
-  if (loading) {
+  // Show skeleton only if loading AND no testimonials data yet
+  if (loading && testimonials.length === 0) {
     return (
       <section className="relative bg-pine py-20 md:py-28">
         <div className="container-x">
@@ -263,8 +263,8 @@ export function Insights({ showHead = true }: { showHead?: boolean }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const article = articles.find((a) => a.id === openId) ?? null;
 
-  // Show skeleton while loading
-  if (loading) {
+  // Show skeleton only if loading AND no articles data yet
+  if (loading && articles.length === 0) {
     return (
       <section className="relative bg-mist py-20 md:py-28">
         <div className="container-x">

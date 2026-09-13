@@ -140,8 +140,8 @@ export function Hero() {
   const years = yearsOfExperience();
   const { hero, loading } = useContent();
 
-  // Show skeleton while loading
-  if (loading) {
+  // Show skeleton only if loading AND no hero data yet
+  if (loading && !hero.greeting) {
     return (
       <section className="relative bg-white py-20 md:py-28">
         <div className="container-x">

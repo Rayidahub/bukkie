@@ -117,18 +117,48 @@ function rowToSocialLink(row: any): SocialLink {
   };
 }
 
+// Cache version - increment when data structure changes
+const CACHE_VERSION = '1.0.0';
+
 export function ContentProvider({ children }: { children: ReactNode }) {
   // Try to load from sessionStorage cache first for instant loading
   const getCachedContent = (): SiteContent => {
     try {
       const cached = sessionStorage.getItem('portfolio_cache');
-      if (cached) {
-        return JSON.parse(cached);
+      const cachedVersion = sessionStorage.getItem('portfolio_cache_version');
+      
+      if (cached && cachedVersion === CACHE_VERSION) {
+        const parsed = JSON.parse(cached);
+        // Validate cached data has all required fields
+        // If any field is missing, return defaults instead
+        if (
+          parsed.hero &&
+          parsed.about &&
+          parsed.services &&
+          parsed.projects &&
+          parsed.articles &&
+          parsed.testimonials &&
+          parsed.socialLinks &&
+          parsed.footer &&
+          parsed.contact
+        ) {
+          return parsed;
+        }
+        // Cache is incomplete, clear it and return defaults
+        sessionStorage.removeItem('portfolio_cache');
+        sessionStorage.removeItem('portfolio_cache_version');
+      } else if (cached && cachedVersion !== CACHE_VERSION) {
+        // Cache version mismatch, clear old cache
+        sessionStorage.removeItem('portfolio_cache');
+        sessionStorage.removeItem('portfolio_cache_version');
       }
     } catch (error) {
       console.error('Error loading cache:', error);
+      // Clear corrupted cache
+      sessionStorage.removeItem('portfolio_cache');
+      sessionStorage.removeItem('portfolio_cache_version');
     }
-    // Return defaults if no cache
+    // Return defaults if no cache or invalid cache
     return {
       hero: DEFAULT_HERO,
       about: DEFAULT_ABOUT,
@@ -258,6 +288,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         setContent(currentContent => {
           try {
             sessionStorage.setItem('portfolio_cache', JSON.stringify(currentContent));
+            sessionStorage.setItem('portfolio_cache_version', CACHE_VERSION);
           } catch (error) {
             console.error('Error caching data:', error);
           }
@@ -277,6 +308,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const updateCache = (content: SiteContent) => {
     try {
       sessionStorage.setItem('portfolio_cache', JSON.stringify(content));
+      sessionStorage.setItem('portfolio_cache_version', CACHE_VERSION);
     } catch (error) {
       console.error('Error caching:', error);
     }

@@ -7,6 +7,7 @@ export function GalleryManager() {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [skippedFiles, setSkippedFiles] = useState<string[]>([]);
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -14,15 +15,30 @@ export function GalleryManager() {
     if (!files || files.length === 0) return;
 
     setError(null);
+    setSkippedFiles([]);
     setUploading(true);
     setUploadProgress(0);
 
     const newProjects = [...projects];
     const totalFiles = files.length;
     let uploadedCount = 0;
+    const skipped: string[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
+      const fileName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
+      
+      // Check for duplicate by name
+      const isDuplicate = newProjects.some(
+        project => project.org === 'Gallery' && project.title === fileName
+      );
+
+      if (isDuplicate) {
+        console.log(`Skipping duplicate: ${file.name}`);
+        skipped.push(file.name);
+        setUploadProgress(((uploadedCount + skipped.length) / totalFiles) * 100);
+        continue;
+      }
       
       // Validate file type
       if (!file.type.startsWith('image/')) {
@@ -43,7 +59,7 @@ export function GalleryManager() {
         // Create a new project entry for the image
         newProjects.push({
           id: `gallery-${Date.now()}-${i}`,
-          title: file.name.replace(/\.[^/.]+$/, ''), // Remove extension
+          title: fileName,
           org: 'Gallery',
           cat: 'Social Media', // Default category
           year: new Date().getFullYear().toString(),
@@ -59,7 +75,7 @@ export function GalleryManager() {
         });
 
         uploadedCount++;
-        setUploadProgress((uploadedCount / totalFiles) * 100);
+        setUploadProgress(((uploadedCount + skipped.length) / totalFiles) * 100);
       } catch (error) {
         console.error('Upload error:', error);
         setError(`Failed to upload ${file.name}`);
@@ -76,6 +92,11 @@ export function GalleryManager() {
     
     if (uploadedCount > 0) {
       setError(null);
+    }
+
+    // Show message if files were skipped
+    if (skipped.length > 0) {
+      setSkippedFiles(skipped);
     }
   };
 
@@ -161,6 +182,19 @@ export function GalleryManager() {
       {error && (
         <div className="rounded-lg bg-red-50 border border-red-200 p-4">
           <p className="text-sm text-red-800">{error}</p>
+        </div>
+      )}
+
+      {skippedFiles.length > 0 && (
+        <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-4">
+          <p className="text-sm font-semibold text-yellow-800 mb-2">
+            {skippedFiles.length} duplicate file(s) skipped:
+          </p>
+          <ul className="list-disc list-inside text-sm text-yellow-700">
+            {skippedFiles.map((file, index) => (
+              <li key={index}>{file}</li>
+            ))}
+          </ul>
         </div>
       )}
 

@@ -45,7 +45,7 @@ const VisualEffectsDemo = lazy(() => import("./pages/VisualEffectsDemo").then(mo
 const PAGE_DATA: Record<string, { title: string; description: string }> = {
   "/": {
     title: "Olowomakan Esther Bukola — Creative Graphics Designer",
-    description: "Creative Graphics Designer & Digital Media Specialist in Ikorodu, Lagos. Building brands through visual storytelling, strategic communication, and print that survives the real world.",
+    description: "Creative Graphics Designer & Digital Media Specialist in Lagos. Building brands through visual storytelling, strategic communication, and print that survives the real world.",
   },
   "/services": {
     title: "Services — Esther Bukola",

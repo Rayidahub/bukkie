@@ -291,7 +291,7 @@ export function Footer() {
               <span className="animate-pulse-soft absolute h-2 w-2 rounded-full bg-gold" />
               <span className="h-2 w-2 rounded-full bg-gold" />
             </span>
-            {footer.availabilityText} — {CONTACT.location.split(",")[0]}, Lagos
+            {footer.availabilityText} — {CONTACT.location}
           </p>
         </div>
 

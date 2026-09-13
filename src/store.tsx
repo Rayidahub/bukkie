@@ -10,6 +10,7 @@ import {
   SOCIAL_LINKS as DEFAULT_SOCIAL_LINKS,
   FOOTER as DEFAULT_FOOTER,
   CONTACT_CONTENT as DEFAULT_CONTACT,
+  DEFAULT_CATEGORIES,
   type Service,
   type GalleryItem,
   type Insight,
@@ -17,7 +18,8 @@ import {
   type AboutContent,
   type SocialLink,
   type FooterContent,
-  type ContactContent
+  type ContactContent,
+  type Category
 } from './data';
 
 export type Testimonial = (typeof DEFAULT_TESTIMONIALS)[number];
@@ -32,6 +34,7 @@ export type SiteContent = {
   socialLinks: SocialLink[];
   footer: FooterContent;
   contact: ContactContent;
+  categories: Category[];
 };
 
 type ContentCtx = SiteContent & {
@@ -45,6 +48,7 @@ type ContentCtx = SiteContent & {
   setSocialLinks: (v: SocialLink[]) => Promise<void>;
   setFooter: (v: FooterContent) => Promise<void>;
   setContact: (v: ContactContent) => Promise<void>;
+  setCategories: (v: Category[]) => Promise<void>;
   uploadImage: (file: File, folder?: string) => Promise<string>;
   reset: () => Promise<void>;
 };
@@ -170,6 +174,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       socialLinks: DEFAULT_SOCIAL_LINKS,
       footer: DEFAULT_FOOTER,
       contact: DEFAULT_CONTACT,
+      categories: DEFAULT_CATEGORIES,
     };
   };
 
@@ -281,6 +286,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
             
           footer: DEFAULT_FOOTER,
           contact: DEFAULT_CONTACT,
+          categories: DEFAULT_CATEGORIES,
         };
 
         // Update state with all data at once
@@ -561,6 +567,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       socialLinks: DEFAULT_SOCIAL_LINKS,
       footer: DEFAULT_FOOTER,
       contact: DEFAULT_CONTACT,
+      categories: DEFAULT_CATEGORIES,
     };
     
     setContent(defaults);
@@ -575,6 +582,16 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     await setSocialLinks(defaults.socialLinks);
     await setFooter(defaults.footer);
     await setContact(defaults.contact);
+    await setCategories(defaults.categories);
+  };
+
+  // Update categories
+  const setCategories = async (categories: Category[]) => {
+    setContent(prev => {
+      const updated = { ...prev, categories };
+      updateCache(updated);
+      return updated;
+    });
   };
 
   const api: ContentCtx = {
@@ -589,6 +606,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     setSocialLinks,
     setFooter,
     setContact,
+    setCategories,
     uploadImage,
     reset,
   };

@@ -221,6 +221,18 @@ export const IcTrash = ({ className = "h-4 w-4" }: IconProps) => (
     <path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" />
   </svg>
 );
+
+export const IcPlus = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M12 5v14M5 12h14" />
+  </svg>
+);
+
+export const IcX = ({ className = "h-4 w-4" }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M18 6L6 18M6 6l12 12" />
+  </svg>
+);
 export const IcMenu = ({ className = "h-5 w-5" }: IconProps) => (
   <svg {...base} className={className}><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></svg>
 );

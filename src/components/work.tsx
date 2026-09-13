@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   CASE_STUDIES,
-  CATEGORIES,
   COMM_SKILLS,
   DESIGN_SKILLS,
   SOFT_SKILLS,
@@ -177,10 +176,13 @@ export function ToolsSection() {
 /*  Projects gallery + case-study lightbox                             */
 /* ------------------------------------------------------------------ */
 export function Gallery({ showHead = true }: { showHead?: boolean }) {
-  const { projects, loading } = useContent();
-  const [cat, setCat] = useState<(typeof CATEGORIES)[number]>("All");
+  const { projects, loading, categories } = useContent();
+  const [cat, setCat] = useState<string>("All");
   const [showAll, setShowAll] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
+
+  // Get active categories for filtering
+  const activeCategories = categories.filter(c => c.active);
 
   const filtered = useMemo(
     () => (cat === "All" ? projects : projects.filter((g) => g.cat === cat)),
@@ -262,7 +264,7 @@ export function Gallery({ showHead = true }: { showHead?: boolean }) {
         )}
 
         <Reveal className="mb-10 flex flex-wrap gap-2.5">
-          {CATEGORIES.map((c) => {
+          {["All", ...activeCategories.map(c => c.name)].map((c) => {
             const count = c === "All" ? projects.length : projects.filter((g) => g.cat === c).length;
             const isActive = cat === c;
             return (

@@ -141,12 +141,19 @@ export const TOOLS: Tool[] = [
 ];
 
 /* ---------------- gallery / selected works ------------------------ */
-export type GalleryCat =
-  | "Social Media"
-  | "Print Design"
-  | "Branding"
-  | "Video & Motion"
-  | "Church Design";
+export type GalleryCat = string;
+
+export type Category = {
+  id: string;
+  name: string;
+  active: boolean;
+};
+
+export const DEFAULT_CATEGORIES: Category[] = [
+  { id: "social-media", name: "Social Media", active: true },
+  { id: "print-design", name: "Print Design", active: true },
+  { id: "church-design", name: "Church Design", active: true },
+];
 
 export type GalleryItem = {
   id: string;
@@ -329,14 +336,8 @@ export const GALLERY: GalleryItem[] = [
   },
 ];
 
-export const CATEGORIES: ("All" | GalleryCat)[] = [
-  "All",
-  "Social Media",
-  "Print Design",
-  "Branding",
-  "Video & Motion",
-  "Church Design",
-];
+// Categories are now dynamic and managed through admin panel
+// See DEFAULT_CATEGORIES for initial categories
 
 /* ---------------- featured case studies --------------------------- */
 export type CaseStudy = {

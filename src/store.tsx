@@ -45,6 +45,7 @@ type ContentCtx = SiteContent & {
   setSocialLinks: (v: SocialLink[]) => Promise<void>;
   setFooter: (v: FooterContent) => Promise<void>;
   setContact: (v: ContactContent) => Promise<void>;
+  uploadImage: (file: File, folder?: string) => Promise<string>;
   reset: () => Promise<void>;
 };
 
@@ -303,10 +304,45 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   // Helper to update cache
   const updateCache = (content: SiteContent) => {
     try {
-      sessionStorage.setItem('portfolio_cache', JSON.stringify(content));
+      // Don't cache base64 images in sessionStorage (too large)
+      // Images should be stored in Supabase Storage
+      const cacheableContent = { ...content };
+      sessionStorage.setItem('portfolio_cache', JSON.stringify(cacheableContent));
       sessionStorage.setItem('portfolio_cache_version', CACHE_VERSION);
     } catch (error) {
       console.error('Error caching:', error);
+    }
+  };
+
+  // Upload image to Supabase Storage
+  const uploadImage = async (file: File, folder: string = 'images'): Promise<string> => {
+    try {
+      // Create unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      
+      // Upload to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('portfolio')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+      
+      if (error) {
+        console.error('Error uploading image:', error);
+        throw error;
+      }
+      
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('portfolio')
+        .getPublicUrl(data.path);
+      
+      return publicUrl;
+    } catch (error) {
+      console.error('Error in uploadImage:', error);
+      throw error;
     }
   };
 
@@ -553,6 +589,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     setSocialLinks,
     setFooter,
     setContact,
+    uploadImage,
     reset,
   };
 

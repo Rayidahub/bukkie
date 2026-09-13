@@ -110,7 +110,7 @@ export function PrivacyPolicyPage() {
                 <p className="text-ink font-bold">Esther Bukola</p>
                 <p className="text-slate">Email: esther.olowomakan@gmail.com</p>
                 <p className="text-slate">Phone: +234 814 590 4088</p>
-                <p className="text-slate">Location: Ikorodu, Lagos State, Nigeria</p>
+                <p className="text-slate">Location: Lagos State, Nigeria</p>
               </div>
             </section>
 

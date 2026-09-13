@@ -398,7 +398,7 @@ export function AboutPage() {
             <span className="italic text-gold">visual storytelling.</span>
           </>,
         ]}
-        blurb="Detail-oriented, result-driven, and based in Ikorodu, Lagos — meet the designer behind the campaigns."
+        blurb="Detail-oriented, result-driven, and based in Lagos — meet the designer behind the campaigns."
       />
       <AboutSection />
       <ExperienceSection />

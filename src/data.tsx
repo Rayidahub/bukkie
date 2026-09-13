@@ -27,7 +27,7 @@ export const CONTACT = {
   email: "esther.olowomakan@gmail.com",
   phone1: "+234 814 590 4088",
   phone2: "+234 701 492 1004",
-  location: "Ikorodu, Lagos State, Nigeria",
+  location: "Lagos State, Nigeria",
   coords: "6.6191° N — 3.5123° E",
 };
 
@@ -284,7 +284,7 @@ export const GALLERY: GalleryItem[] = [
   {
     id: "ndlea-banner",
     title: "Community Awareness Banner",
-    org: "NDLEA Outreach — Ikorodu",
+    org: "NDLEA Outreach — Lagos",
     cat: "Print Design",
     year: "2024",
     img: IMG.banner,
@@ -770,7 +770,7 @@ export const ABOUT: AboutContent = {
   heading1: "Who is",
   heading2: "Esther Bukola?",
   intro:
-    "I'm a detail-oriented, result-driven creative professional based in Ikorodu, Lagos — working across graphics design, digital media, social media management, communications, customer service, and IT support.",
+    "I'm a detail-oriented, result-driven creative professional based in Lagos — working across graphics design, digital media, social media management, communications, customer service, and IT support.",
   approach:
     "My approach combines creative visual storytelling, attention to detail, strategic communication, and a strong understanding of audience needs. My mission is simple:",
   mission:

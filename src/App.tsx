@@ -32,6 +32,7 @@ const Home = lazy(() => import("./pages").then(module => ({ default: module.Home
 const ServicesPage = lazy(() => import("./pages").then(module => ({ default: module.ServicesPage })));
 const AboutPage = lazy(() => import("./pages").then(module => ({ default: module.AboutPage })));
 const ProjectsPage = lazy(() => import("./pages").then(module => ({ default: module.ProjectsPage })));
+const GalleryPage = lazy(() => import("./pages/GalleryPage").then(module => ({ default: module.default })));
 const BlogPage = lazy(() => import("./pages").then(module => ({ default: module.BlogPage })));
 const BlogPostPage = lazy(() => import("./pages").then(module => ({ default: module.BlogPostPage })));
 const TestimonialsPage = lazy(() => import("./pages").then(module => ({ default: module.TestimonialsPage })));
@@ -58,6 +59,10 @@ const PAGE_DATA: Record<string, { title: string; description: string }> = {
   "/projects": {
     title: "Projects — Esther Bukola",
     description: "Explore selected works including social media campaigns, print designs, branding projects, and video content for organizations across Nigeria.",
+  },
+  "/gallery": {
+    title: "Gallery — Esther Bukola",
+    description: "Browse all project images in a beautiful gallery view.",
   },
   "/blog": {
     title: "Blog & Insights — Esther Bukola",
@@ -178,6 +183,7 @@ function Shell() {
                     <Route path="/services" element={<ServicesPage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/projects" element={<ProjectsPage />} />
+                    <Route path="/gallery" element={<GalleryPage />} />
                     <Route path="/blog" element={<BlogPage />} />
                     <Route path="/blog/:id" element={<BlogPostPage />} />
                     <Route path="/testimonials" element={<TestimonialsPage />} />

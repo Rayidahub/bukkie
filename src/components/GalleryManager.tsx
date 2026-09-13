@@ -100,9 +100,9 @@ export function GalleryManager() {
         continue;
       }
 
-      // Validate file size (5MB max)
-      if (file.size > 5 * 1024 * 1024) {
-        setError(`File ${file.name} is too large (max 5MB)`);
+      // Validate file size (15MB max)
+      if (file.size > 15 * 1024 * 1024) {
+        setError(`File ${file.name} is too large (max 15MB)`);
         continue;
       }
 
@@ -225,7 +225,7 @@ export function GalleryManager() {
               Drag & drop images here or click to browse
             </p>
             <p className="text-sm text-slate">
-              Upload multiple images at once • Max 5MB per file • JPG, PNG, WebP, GIF
+              Upload multiple images at once • Max 15MB per file • JPG, PNG, WebP, GIF
             </p>
           </>
         )}

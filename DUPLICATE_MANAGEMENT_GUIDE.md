@@ -198,6 +198,7 @@ w-5 h-5 rounded border-2 border-white bg-white/90 cursor-pointer
 1. Review your files before uploading
 3. Remove obvious duplicates from your local folder
 5. Use consistent naming conventions
+7. Ensure files are under 15MB each
 
 ### After Uploading
 1. Check for duplicates using the filter
